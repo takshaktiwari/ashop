@@ -1,0 +1,29 @@
+{
+    "name": "takshak/adash-shop",
+    "keywords": ["laravel", "adash", "admin", "shop"],
+    "description": "shop extension for adash admin panel",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Takshak Tiwari",
+            "email": "takshaktiwari@gmail.com"
+        }
+    ],
+    "require": {
+        "takshak/adash": "*"
+    },
+    "autoload": {
+        "psr-4" : {
+            "Takshak\\Ashop\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Takshak\\Ashop\\AshopServiceProvider"
+            ]
+        }
+    }
+}
