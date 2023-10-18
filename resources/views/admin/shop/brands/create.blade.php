@@ -23,7 +23,7 @@
                         </div>
                         <div class="small text-info">
                             <div><b>*</b> Image format should be 'jpg' or 'png'</div>
-                            <div><b>*</b> Image should be in 800 x 900
+                            <div><b>*</b> Image should be in {{ config('ashop.brands.images.width', 800) . ' x ' . config('shopze.brands.images.height', 900) }}
                             </div>
                         </div>
                     </div>

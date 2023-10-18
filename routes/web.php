@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\AttributeController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\BrandController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\CategoryController;
+use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductController;
+use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductImageController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\VariationController;
 
 Route::middleware('web')->group(function () {
@@ -33,7 +35,34 @@ Route::middleware('web')->group(function () {
                     Route::get('delete/{category}', 'destroy')->name('destroy');
                 });
 
+
             Route::resource('brands', BrandController::class)->except(['show']);
             Route::get('brands/status/{brand}', [BrandController::class, 'statusToggle'])->name('brands.status.toggle');
+
+            Route::resource('products', ProductController::class);
+            Route::prefix('products')->name('products.')->group(function () {
+                Route::controller(ProductController::class)->group(function () {
+                    Route::get('detail/{product}', 'detail')->name('detail');
+                    Route::post('detail/update/{product}', 'detailUpdate')->name('detail.update');
+
+                    Route::get('attributes/{product}', 'attributes')->name('attributes');
+                    Route::post('attributes/update/{product}', 'attributesUpdate')->name('attributes.update');
+
+                    Route::post('selected/delete', 'selectedDelete')->name('selected.delete');
+                    Route::post('selected/featured/{value}', 'selectedFeatured')->name('selected.featured');
+                    Route::get('copy/{product}', 'copy')->name('copy');
+                    Route::get('export/sheets', 'exportSheets')->name('export.sheets');
+                    Route::get('export/sheets/do', 'exportSheetsDo')->name('export.sheets.do');
+                    Route::get('import/sheets', 'import')->name('import.sheets');
+                    Route::post('import/sheets', 'importUpdate')->name('import.update');
+                });
+
+                Route::controller(ProductImageController::class)->group(function () {
+                    Route::get('images/{product}', 'index')->name('images');
+                    Route::post('images/store/{product}', 'store')->name('images.store');
+                    Route::get('images/delete/{productImage}', 'destroy')->name('images.destroy');
+                    Route::post('images/bulk/delete', 'bulkDelete')->name('images.bulk.destroy');
+                });
+            });
         });
 });

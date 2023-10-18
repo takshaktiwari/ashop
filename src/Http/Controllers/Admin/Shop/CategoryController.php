@@ -121,17 +121,19 @@ class CategoryController extends Controller
             ]);
         }
 
-        foreach ($request->file('metas') as $key => $meta) {
-            $fileImage = $request->file('metas')[$key];
-            $filePath = $fileImage->storeAs(
-                'metas/categories/',
-                time() . rand() . '.' . $fileImage->extension(),
-                'public'
-            );
-            $category->metas()->create([
-                'key' => $key,
-                'value' => storage($filePath),
-            ]);
+        if ($request->file('metas')) {
+            foreach ($request->file('metas') as $key => $meta) {
+                $fileImage = $request->file('metas')[$key];
+                $filePath = $fileImage->storeAs(
+                    'metas/categories/',
+                    time() . rand() . '.' . $fileImage->extension(),
+                    'public'
+                );
+                $category->metas()->create([
+                    'name' => $key,
+                    'value' => storage($filePath),
+                ]);
+            }
         }
 
         return redirect()->route('admin.shop.categories.attributes', [$category])

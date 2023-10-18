@@ -28,7 +28,5 @@ class InnerNav extends Component
             'components.ashop.inner-nav',
             'ashop::components.ashop.inner-nav'
         ]);
-
-        return view('components.admin.inner-nav');
     }
 }

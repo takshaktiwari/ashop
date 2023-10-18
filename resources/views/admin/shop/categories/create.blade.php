@@ -21,10 +21,10 @@
                             <input type="file" name="image_file" required="" class="form-control" id="crop-image">
                         </div>
 
-                        <div class="small text-secondary">
+                        <div class="small text-info">
                             <div><b>*</b> Image format should be 'jpg' or 'png'</div>
                             <div><b>*</b> Image should be in ratio of
-                                {{ config('shopze.images.categories.width') . ' x ' . config('shopze.images.categories.height') }}
+                                {{ config('ashop.categories.images.width', 800) . ' x ' . config('shopze.categories.images.height', 900) }}
                             </div>
                         </div>
                     </div>

@@ -48,7 +48,7 @@
                         <div class="small text-secondary">
                             <div><b>*</b> Image format should be 'jpg' or 'png'</div>
                             <div><b>*</b> Image should be in ratio of 4:5, eg:
-                                {{ config('shopze.images.categories.width') . ' x ' . config('shopze.images.categories.height') }}
+                                {{ config('ashop.categories.images.width', 800) . ' x ' . config('shopze.categories.images.height', 900) }}
                             </div>
                         </div>
                     </div>

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
+use Takshak\Ashop\Models\Shop\Attribute;
 use Takshak\Ashop\Models\Shop\Category;
 use Takshak\Imager\Facades\Picsum;
 
@@ -41,10 +42,13 @@ class CategorySeeder extends Seeder
         $category->image_lg = 'categories/' . time() . rand() . '.jpg';
         $category->save();
 
-        Picsum::dimensions(900, 800)
+        Picsum::dimensions(800, 900)
             ->save(Storage::disk('public')->path($category->image_lg))
             ->save(Storage::disk('public')->path($category->image_md), 400)
             ->save(Storage::disk('public')->path($category->image_sm), 200)
             ->destroy();
+
+        $attributes = Attribute::inRandomOrder()->limit(rand(0, 6))->pluck('id');
+        $category->attributes()->sync($attributes);
     }
 }

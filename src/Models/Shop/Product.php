@@ -2,62 +2,70 @@
 
 namespace Takshak\Ashop\Models\Shop;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
 use Takshak\Imager\Facades\Placeholder;
 
-class Category extends Model
+class Product extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $casts = [
+        'deal_expiry'   =>  'date',
+        'sell_price'   =>  'decimal:2',
+        'net_price'   =>  'decimal:2',
+    ];
 
     /**
-     * Get the parentCategory that owns the Category
+     * The categories that belong to the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    /**
+     * Get the brand that owns the Product
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function parentCategory(): BelongsTo
+    public function brand(): BelongsTo
     {
-        return $this->belongsTo(Category::class, 'category_id', 'id');
-    }
-    public function parent(): BelongsTo
-    {
-        return $this->parentCategory();
+        return $this->belongsTo(Brand::class);
     }
 
     /**
-     * Get all of the children for the Category
+     * Get the user that owns the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get all of the images for the Product
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function children(): HasMany
+    public function images(): HasMany
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(ProductImage::class);
     }
 
     public function metas(): MorphMany
     {
         return $this->morphMany(ShopMeta::class, 'metable');
     }
-
-    public function attributes()
-    {
-        return $this->belongsToMany(Attribute::class);
-    }
-    public function variations()
-    {
-        return $this->belongsToMany(Variation::class);
-    }
-    public function products()
-    {
-        return $this->belongsToMany(Product::class);
-    }
-
 
     public function scopeActive(Builder $query)
     {
@@ -68,17 +76,26 @@ class Category extends Model
     {
         return $query->where('featured', true);
     }
-    public function scopeParent(Builder $query)
+
+
+    public function details($name = null, $value = true)
     {
-        return $query->whereNull('category_id');
+        if (!$name) {
+            return $this->metas;
+        }
+
+        $meta = $this->metas->where('name', $name)->first();
+        return $value ? $meta?->value : $meta;
     }
-    public function scopeChild(Builder $query)
+
+    public function formattedSellPrice($value = '')
     {
-        return $query->whereNotNull('parent');
+        return config('ashop.currency.sign', '₹') . number_format($this->sell_price, 2);
     }
-    public function scopeInFront(Builder $query)
+
+    public function formattedNetPrice($value = '')
     {
-        return $query->where('in_front', true);
+        return config('ashop.currency.sign', '₹') . number_format($this->net_price, 2);
     }
 
     public function image_lg()
@@ -101,12 +118,11 @@ class Category extends Model
     }
     public function placeholderImage()
     {
-        return Placeholder::width(config('ashop.categories.images.width', 800))
-            ->height(config('ashop.categories.images.height', 900))
+        return Placeholder::width(config('ashop.products.images.width', 800))
+            ->height(config('ashop.products.images.height', 900))
             ->text($this->display_name)
             ->url();
     }
-
     public function image($size = null)
     {
         if ($size == 'sm') {

@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shop_metas', function (Blueprint $table) {
+        Schema::create('product_images', function (Blueprint $table) {
             $table->id();
-            $table->nullableMorphs('metable');
-            $table->string('name');
-            $table->string('key')->nullable()->default(null);
-            $table->text('value')->nullable()->default(null);
-            $table->string('remarks')->nullable()->default(null);
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->string('image_sm');
+            $table->string('image_md');
+            $table->string('image_lg');
+            $table->string('title')->nullable()->default(null);
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shop_metas');
+        Schema::dropIfExists('product_images');
     }
 };

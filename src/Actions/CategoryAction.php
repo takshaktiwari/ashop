@@ -23,13 +23,15 @@ class CategoryAction
         	$category->image_md     = 'categories/md/'.$category->slug.'.jpg';
         	$category->image_sm     = 'categories/sm/'.$category->slug.'.jpg';
 
+            $imgWidth = config('ashop.categories.images.width', 800);
+            $imgHeight = config('ashop.categories.images.height', 900);
         	Imager::init($request->file('image_file'))
-        	    ->resizeFit(800, 900)
+        	    ->resizeFit($imgWidth, $imgHeight)
         	    ->inCanvas('#fff')
         	    ->basePath(Storage::disk('public')->path('/'))
         	    ->save($category->image_lg)
-        	    ->save($category->image_md, 800/2)
-        	    ->save($category->image_sm, 800/4);
+        	    ->save($category->image_md, $imgWidth/2)
+        	    ->save($category->image_sm, $imgWidth/4);
         }
 
         $category->save();

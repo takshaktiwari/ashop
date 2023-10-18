@@ -33,7 +33,7 @@
                                 <input type="file" name="image" class="form-control" id="crop-image">
                                 <div class="small text-info">
                                     <div><b>*</b> Image format should be 'jpg' or 'png'</div>
-                                    <div><b>*</b> Image should be in {{ config('shopze.images.brands.width').' x '.config('shopze.images.brands.height') }}</div>
+                                    <div><b>*</b> Image should be in {{ config('ashop.brands.images.width', 800) . ' x ' . config('shopze.brands.images.height', 900) }}</div>
                                 </div>
                             </div>
                         </div>
