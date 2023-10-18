@@ -33,8 +33,8 @@ class ProductAction
             $product->image_md  = 'products/md/' . $product->slug . '.jpg';
             $product->image_lg  = 'products/' . $product->slug . '.jpg';
 
-            $imgWidth = config('ashop.images.products.width', 800);
-            $imgHeight = config('ashop.images.products.height', 900);
+            $imgWidth = config('ashop.products.images.width', 800);
+            $imgHeight = config('ashop.products.images.height', 900);
             Imager::init($request->file('image'))
                 ->resizeFit($imgWidth, $imgHeight)->inCanvas('#fff')
                 ->basePath(Storage::disk('public')->path('/'))

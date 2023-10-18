@@ -27,21 +27,27 @@ class Brand extends Model
     {
         return ($this->image_lg && Storage::disk('public')->exists($this->image_lg))
                 ? storage($this->image_lg)
-                : 'https://via.placeholder.com/800x900?text=No+Image';
+                : $this->placeholderImage();
     }
 
     public function image_md()
     {
         return ($this->image_md && Storage::disk('public')->exists($this->image_md))
                 ? storage($this->image_md)
-                : 'https://via.placeholder.com/400x450?text=No+Image';
+                : $this->placeholderImage();
     }
 
     public function image_sm()
     {
         return ($this->image_sm && Storage::disk('public')->exists($this->image_sm))
                 ? storage($this->image_sm)
-                : 'https://via.placeholder.com/200x225?text=No+Image';
+                : $this->placeholderImage();
     }
-
+    public function placeholderImage()
+    {
+        return Placeholder::width(config('ashop.brands.images.width', 800))
+            ->height(config('ashop.brands.images.height', 900))
+            ->text($this->display_name)
+            ->url();
+    }
 }

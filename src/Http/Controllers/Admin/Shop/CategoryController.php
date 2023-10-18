@@ -114,23 +114,23 @@ class CategoryController extends Controller
             'metas.banner' => 'nullable|image',
         ]);
 
-        foreach ($request->post('metas') as $key => $meta) {
+        foreach ($request->post('metas') as $name => $meta) {
             $category->metas()->create([
-                'key' => $key,
+                'name' => $name,
                 'value' => $meta,
             ]);
         }
 
         if ($request->file('metas')) {
-            foreach ($request->file('metas') as $key => $meta) {
-                $fileImage = $request->file('metas')[$key];
+            foreach ($request->file('metas') as $name => $meta) {
+                $fileImage = $request->file('metas')[$name];
                 $filePath = $fileImage->storeAs(
                     'metas/categories/',
                     time() . rand() . '.' . $fileImage->extension(),
                     'public'
                 );
                 $category->metas()->create([
-                    'name' => $key,
+                    'name' => $name,
                     'value' => storage($filePath),
                 ]);
             }

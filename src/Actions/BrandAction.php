@@ -18,13 +18,15 @@ class BrandAction
             $brand->image_md = 'brands/md/' . $brand->slug . '.jpg';
             $brand->image_sm = 'brands/sm/' . $brand->slug . '.jpg';
 
+            $imgWidth = config('ashop.brands.images.width', 800);
+            $imgHeight = config('ashop.brands.images.height', 900);
             Imager::init($request->file('image'))
-                ->resizeFit(800, 900)
+                ->resizeFit($imgWidth, $imgHeight)
                 ->inCanvas('#fff')
                 ->basePath(Storage::disk('public')->path('/'))
                 ->save($brand->image_lg)
-                ->save($brand->image_md, 800 / 2)
-                ->save($brand->image_sm, 800 / 4);
+                ->save($brand->image_md, $imgWidth / 2)
+                ->save($brand->image_sm, $imgWidth / 4);
         }
 
         $brand->save();

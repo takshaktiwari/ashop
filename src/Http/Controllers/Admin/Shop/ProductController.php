@@ -119,9 +119,13 @@ class ProductController extends Controller
     public function detailUpdate(Request $request, Product $product)
     {
         $request->validate([
-            'metas.cancellable'   =>  'required|boolean',
-            'metas.returnable'    =>  'required|boolean',
-            'metas.replaceable'   =>  'required|boolean',
+            'metas.cancellable'   =>  'nullable|boolean',
+            'metas.cancel_within'   =>  'nullable|boolean',
+            'metas.returnable'    =>  'nullable|boolean',
+            'metas.return_within'    =>  'nullable|boolean',
+            'metas.replaceable'   =>  'nullable|boolean',
+            'metas.replace_within'   =>  'nullable|boolean',
+            'metas.description'       =>  'nullable|string',
             'metas.m_title'       =>  'nullable|string|max:254',
             'metas.m_keywords'    =>  'nullable|string|max:254',
             'metas.m_description' =>  'nullable|string|max:254',
