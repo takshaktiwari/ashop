@@ -29,6 +29,28 @@
                         </div>
                     @endif
 
+                    @if (!$products->count())
+                        <div class="card">
+                            <div class="card-body text-center py-5">
+                                <span class="display-2">
+                                    <i class="fas fa-exclamation-triangle text-danger"></i>
+                                </span>
+
+                                <h3>No products found.</h3>
+                                <p class="fw-light fs-5 ">Nothing found with your search creteria, please search or filter using some other keywords or you can write us or explore more.</p>
+
+                                <div class="actions">
+                                    <a href="{{ url('/') }}" class="btn btn-dark px-4">
+                                        <i class="fas fa-home"></i> Home
+                                    </a>
+                                    <a href="{{ route('shop.products.index') }}" class="btn btn-dark px-4">
+                                        <i class="fas fa-box"></i> Products
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="my-5">
                         {{ $products->links() }}
                     </div>

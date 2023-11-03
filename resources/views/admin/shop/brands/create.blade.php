@@ -7,12 +7,6 @@
                 class="card shadow-sm">
                 <div class="card-body">
                     @csrf
-                    <div class="form-group">
-                        <label for="">Brand Name <span class="text-danger">*</span></label>
-                        <input type="text" name="brand" class="form-control" placeholder="Brand name"
-                            required="">
-                    </div>
-
                     <div class="form-group" id="variants">
                         <div class="d-flex">
                             <div class="mr-2" id="preview-img"></div>
@@ -24,6 +18,33 @@
                         <div class="small text-info">
                             <div><b>*</b> Image format should be 'jpg' or 'png'</div>
                             <div><b>*</b> Image should be in {{ config('ashop.brands.images.width', 800) . ' x ' . config('shopze.brands.images.height', 900) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Brand Name <span class="text-danger">*</span></label>
+                        <input type="text" name="brand" class="form-control" placeholder="Brand name"
+                            required="">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="">Status <span class="text-danger">*</span></label>
+                                <select name="status" class="form-control" required>
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="">Featured <span class="text-danger">*</span></label>
+                                <select name="featured" class="form-control" required>
+                                    <option value="1">Featured</option>
+                                    <option value="0">Not Featured</option>
+                                </select>
                             </div>
                         </div>
                     </div>

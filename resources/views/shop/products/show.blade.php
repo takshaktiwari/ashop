@@ -131,7 +131,7 @@
             </div>
         </div>
         <hr />
-        <x-ashop-ashop:products-group title="Related Products" :categories="$product->categories->pluck('id')->toArray()" limit="10" />
+        <x-ashop-ashop:products-group title="Related Products" subtitle="Browse other products related to this category" :categories="$product->categories->pluck('id')->toArray()" limit="10" />
     </section>
 
     @push('scripts')

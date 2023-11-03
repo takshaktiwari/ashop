@@ -26,6 +26,9 @@ class ProductController extends Controller
             ->when($request->get('brands_ids'), function ($query) use ($request) {
                 $query->whereIn('brand_id', $request->get('brands_ids'));
             })
+            ->when($request->get('brand_id'), function ($query) use ($request) {
+                $query->where('brand_id', $request->get('brand_id'));
+            })
             ->when($request->get('search'), function ($query) use ($request) {
                 $query->where('search_tags', 'LIKE', '%' . $request->search . '%');
             })
@@ -36,6 +39,9 @@ class ProductController extends Controller
                         $query->where('shop_metas.value', 'LIKE', '%' . $attribute . '%');
                     }
                 });
+            })
+            ->when($request->get('featured'), function ($query) {
+                $query->featured();
             })
             ->when($request->get('short_by') == 'latest', function ($query) {
                 $query->orderBy('id', 'DESC');

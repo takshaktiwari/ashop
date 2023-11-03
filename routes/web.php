@@ -44,6 +44,7 @@ Route::middleware('web')->group(function () {
 
             Route::resource('brands', BrandController::class)->except(['show']);
             Route::get('brands/status/{brand}', [BrandController::class, 'statusToggle'])->name('brands.status.toggle');
+            Route::get('brands/featured/{brand}', [BrandController::class, 'featuredToggle'])->name('brands.featured.toggle');
 
             Route::resource('products', ProductController::class);
             Route::prefix('products')->name('products.')->group(function () {

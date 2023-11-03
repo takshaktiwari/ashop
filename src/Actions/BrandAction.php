@@ -10,6 +10,8 @@ class BrandAction
     public function save($request, $brand)
     {
         $brand->name    =  $request->post('brand');
+        $brand->status    =  $request->boolean('status');
+        $brand->featured    =  $request->boolean('featured');
         $brand->slug    = str()->of($request->post('brand'))->slug('-');
         $brand->user_id =  auth()->id();
 

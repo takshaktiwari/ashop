@@ -1,11 +1,13 @@
 <div class="card product list_item d-flex flex-sm-row ">
     <div class="product_image">
-        <a href="">
+        <a href="{{ route('shop.products.show', [$product]) }}">
             <img src="{{ $product->image() }}" alt="Card image" class="w-100">
         </a>
     </div>
     <div class="card-body">
-        <a href="" class="card-text lc-2">{{ $product->name }}</a>
+        <a href="{{ route('shop.products.show', [$product]) }}" class="card-text lc-2">
+            {{ $product->name }}
+        </a>
         <p class="subtitle my-1 lc-2">{{ $product->subtitle }}</p>
         <div class="mt-2">
             <b class="me-1">{{ $product->formattedNetPrice() }}</b>

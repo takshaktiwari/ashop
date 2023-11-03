@@ -59,6 +59,12 @@ class BrandController extends Controller
         return back()->withSuccess('SUCCESS !! Brand is successfully updated');
     }
 
+    public function featuredToggle(Brand $brand)
+    {
+        $brand->update(['featured' => $brand->featured ? false : true]);
+        return back()->withSuccess('SUCCESS !! Brand is successfully updated');
+    }
+
     public function destroy(Brand $brand)
     {
         try {

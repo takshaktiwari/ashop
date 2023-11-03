@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('image_lg', 255)->nullable()->default(null);
             $table->string('name');
             $table->string('slug');
+            $table->boolean('status')->nullable()->default(true);
+            $table->boolean('featured')->nullable()->default(false);
             $table->integer('user_id')->comment('added by');
-            $table->boolean('status')->nullable()->default(false);
             $table->timestamps();
         });
     }

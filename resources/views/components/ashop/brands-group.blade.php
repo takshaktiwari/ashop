@@ -17,9 +17,14 @@
         @endif
 
         <div class="row {{ $columns }} g-2 mt-4">
-            @foreach ($products as $product)
+            @foreach ($brands as $brand)
                 <div class="col">
-                    <x-ashop-ashop:product-card :product="$product" />
+                    <div class="card brand_card">
+                        <img class="card-img-top" src="{{ $brand->image() }}" alt="Card image">
+                        <div class="card-body">
+                            <a href="{{ route('shop.products.index', ['brand_id' => $brand->id]) }}" class="card-text">{{ $brand->name }}</a>
+                        </div>
+                    </div>
                 </div>
             @endforeach
         </div>

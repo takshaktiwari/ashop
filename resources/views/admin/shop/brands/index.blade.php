@@ -33,8 +33,12 @@
                             </td>
                             <td>
                                 <a href="{{ route('admin.shop.brands.status.toggle', [$brand]) }}"
-                                    class="text-nowrap {{ $brand->status ? 'font-weight-bold text-success' : 'text-success' }}">
+                                    class="text-nowrap d-block {{ $brand->status ? 'font-weight-bold text-success' : 'text-danger' }}">
                                     {{ $brand->status ? 'Active' : 'In-Active' }}
+                                </a>
+                                <a href="{{ route('admin.shop.brands.featured.toggle', [$brand]) }}"
+                                    class="text-nowrap d-block {{ $brand->featured ? 'font-weight-bold text-info' : 'text-dark' }}">
+                                    {{ $brand->featured ? 'Featured' : 'Not-Featured' }}
                                 </a>
                             </td>
                             <td class="text-nowrap">

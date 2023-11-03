@@ -8,7 +8,7 @@
                         <div class="card">
                             <img class="card-img-top" src="{{ $category->image() }}" alt="Card image">
                             <div class="card-body d-flex justify-content-between gap-3">
-                                <a href="" class="fs-5 my-auto">{{ $category->name }}</a>
+                                <a href="{{ route('shop.products.index', ['category' => $category->slug]) }}" class="fs-5 my-auto">{{ $category->name }}</a>
                                 @if ($category->children_count)
                                     <a href="{{ route('shop.categories.index', ['category_id' => $category->id]) }}" class="my-auto">
                                         <i class="fas fa-arrow-alt-circle-right"></i>

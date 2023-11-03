@@ -22,6 +22,7 @@ class AshopServiceProvider extends ServiceProvider
             View\Components\Ashop\ShopHeader::class,
             View\Components\Ashop\ProductsGroup::class,
             View\Components\Ashop\CategoriesGroup::class,
+            View\Components\Ashop\BrandsGroup::class,
         ]);
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');

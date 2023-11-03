@@ -7,7 +7,7 @@
             <ul>
                 @foreach ($categories as $category)
                     <li>
-                        <a href="{{ route('shop.products.index', ['category' => $category->slug]) }}">
+                        <a href="{{ route('shop.products.index', request()->except('category') + ['category' => $category->slug]) }}">
                             {{ $category->name }}
                         </a>
                     </li>
@@ -15,7 +15,7 @@
                         <ul>
                             @foreach ($category->children as $childCategory)
                                 <li>
-                                    <a href="{{ route('shop.products.index', ['category' => $childCategory->slug]) }}">
+                                    <a href="{{ route('shop.products.index', request()->except('category') + ['category' => $childCategory->slug]) }}">
                                         {{ $childCategory->name }}
                                     </a>
                                 </li>
