@@ -15,4 +15,11 @@ class ShopMeta extends Model
     {
         return $this->morphTo();
     }
+
+    public function getValue()
+    {
+        return json_decode($this->value)
+            ? collect(json_decode($this->value))
+            : $this->value;
+    }
 }

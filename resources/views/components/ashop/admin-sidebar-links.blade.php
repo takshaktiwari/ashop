@@ -11,15 +11,15 @@
     </a>
 </li>
 <li>
-    <a href="{{ route('admin.shop.categories.index') }}" class="waves-effect">
-        <i class="fas fa-tags"></i>
-        <span>Categories</span>
-    </a>
-</li>
-<li>
     <a href="{{ route('admin.shop.brands.index') }}" class="waves-effect">
         <i class="fas fa-store"></i>
         <span>Brands</span>
+    </a>
+</li>
+<li>
+    <a href="{{ route('admin.shop.categories.index') }}" class="waves-effect">
+        <i class="fas fa-tags"></i>
+        <span>Categories</span>
     </a>
 </li>
 <li>
@@ -30,7 +30,6 @@
     <ul class="sub-menu" aria-expanded="false">
         <li><a href="{{ route('admin.shop.products.create') }}">New Product</a></li>
         <li><a href="{{ route('admin.shop.products.index') }}">All Products</a></li>
-        <li><a href="{{ route('admin.shop.products.export.sheets') }}">Export Products</a></li>
         <li><a href="{{ route('admin.shop.products.import.sheets') }}">Import Products</a></li>
     </ul>
 </li>

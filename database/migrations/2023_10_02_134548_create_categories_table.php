@@ -21,7 +21,7 @@ return new class () extends Migration {
             $table->string('image_sm', 255)->nullable()->default(null);
             $table->string('image_md', 255)->nullable()->default(null);
             $table->string('image_lg', 255)->nullable()->default(null);
-            $table->text('description')->default(false)->nullable();
+            $table->text('description')->default(null)->nullable();
             $table->boolean('status')->default(true)->nullable();
             $table->boolean('featured')->default(false)->nullable();
             $table->boolean('is_top')->default(false)->nullable()->comment('to view at homepage');

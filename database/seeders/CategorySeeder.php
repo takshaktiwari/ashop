@@ -6,7 +6,9 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 use Takshak\Ashop\Models\Shop\Attribute;
+use Takshak\Ashop\Models\Shop\Brand;
 use Takshak\Ashop\Models\Shop\Category;
+use Takshak\Ashop\Models\Shop\Variation;
 use Takshak\Imager\Facades\Picsum;
 
 class CategorySeeder extends Seeder
@@ -20,19 +22,20 @@ class CategorySeeder extends Seeder
     {
         for ($i = 0; $i < 15; $i++) {
             $category = $this->createCategory();
-            for ($j = 0; $j < rand(0, 6); $j++) {
+            for ($j = 0; $j < rand(0, 10); $j++) {
                 $this->createCategory($category);
             }
         }
     }
 
-    public function createCategory($category = null)
+    public function createCategory($parentCategory = null)
     {
+
         $category = new Category();
         $category->name = fake()->name();
         $category->slug = str()->of($category->name)->slug();
         $category->display_name = $category->name;
-        $category->category_id = $category->id;
+        $category->category_id = $parentCategory?->id;
         $category->description = fake()->realText(rand(100, 500), 2);
         $category->status = true;
         $category->featured = rand(0, 1);
@@ -50,5 +53,12 @@ class CategorySeeder extends Seeder
 
         $attributes = Attribute::inRandomOrder()->limit(rand(0, 6))->pluck('id');
         $category->attributes()->sync($attributes);
+
+        $variations = Variation::inRandomOrder()->limit(rand(0, 6))->pluck('id');
+        $category->variations()->sync($variations);
+
+        $category->brands()->sync(Brand::inRandomOrder()->limit(rand(2, 8))->pluck('id'));
+
+        return $category;
     }
 }

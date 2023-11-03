@@ -29,7 +29,8 @@ class BrandSeeder extends Seeder
                 ->basePath(Storage::disk('public')->path('/'))
                 ->save($image_lg)
                 ->save($image_md, 400)
-                ->save($image_sm, 200);
+                ->save($image_sm, 200)
+                ->destroy();
 
             Brand::create([
                 'name'  =>  $name,

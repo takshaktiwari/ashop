@@ -8,6 +8,10 @@ use Takshak\Ashop\Http\Controllers\Admin\Shop\CategoryController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductImageController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\VariationController;
+use Takshak\Ashop\Http\Controllers\Shop\CategoryController as ShopCategoryController;
+use Takshak\Ashop\Http\Controllers\Shop\ProductController as ShopProductController;
+use Takshak\Ashop\Http\Controllers\Shop\ShopController;
+use Takshak\Ashop\Http\Controllers\Shop\WishlistController as ShopWishlistController;
 
 Route::middleware('web')->group(function () {
     Route::middleware(['auth', GatesMiddleware::class])
@@ -25,6 +29,8 @@ Route::middleware('web')->group(function () {
                 ->group(function () {
                     Route::get('details/{category}', 'details')->name('details');
                     Route::post('details/{category}/update', 'detailsUpdate')->name('details.update');
+                    Route::get('brands/{category}', 'brands')->name('brands');
+                    Route::post('brands/{category}/update', 'brandsUpdate')->name('brands.update');
                     Route::get('status/{category}', 'statusToggle')->name('status');
                     Route::get('featured/{category}', 'featuredToggle')->name('featured');
                     Route::get('is_top/{category}', 'isTopToggle')->name('is_top');
@@ -42,6 +48,7 @@ Route::middleware('web')->group(function () {
             Route::resource('products', ProductController::class);
             Route::prefix('products')->name('products.')->group(function () {
                 Route::controller(ProductController::class)->group(function () {
+                    Route::get('delete/{product}', 'delete')->name('delete');
                     Route::get('detail/{product}', 'detail')->name('detail');
                     Route::post('detail/update/{product}', 'detailUpdate')->name('detail.update');
 
@@ -51,8 +58,9 @@ Route::middleware('web')->group(function () {
                     Route::post('selected/delete', 'selectedDelete')->name('selected.delete');
                     Route::post('selected/featured/{value}', 'selectedFeatured')->name('selected.featured');
                     Route::get('copy/{product}', 'copy')->name('copy');
-                    Route::get('export/sheets', 'exportSheets')->name('export.sheets');
-                    Route::get('export/sheets/do', 'exportSheetsDo')->name('export.sheets.do');
+
+                    Route::get('export/excel', 'exportExcel')->name('export.excel');
+
                     Route::get('import/sheets', 'import')->name('import.sheets');
                     Route::post('import/sheets', 'importUpdate')->name('import.update');
                 });
@@ -65,4 +73,18 @@ Route::middleware('web')->group(function () {
                 });
             });
         });
+
+    Route::prefix('shop')->name('shop.')->group(function () {
+        Route::get('/', [ShopController::class, 'index'])->name('index');
+
+        Route::get('categories', [ShopCategoryController::class, 'index'])->name('categories.index');
+        Route::get('categories/list', [ShopCategoryController::class, 'list'])->name('categories.list');
+
+        Route::get('products', [ShopProductController::class, 'index'])->name('products.index');
+        Route::get('products/{product:slug}', [ShopProductController::class, 'show'])->name('products.show');
+
+        Route::middleware(['auth'])->group(function () {
+            Route::get('wishlist/items/toggle/{product}', [ShopWishlistController::class, 'itemToggle'])->name('wishlist.items.toggle');
+        });
+    });
 });

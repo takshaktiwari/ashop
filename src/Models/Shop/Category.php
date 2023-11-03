@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
 use Takshak\Imager\Facades\Placeholder;
@@ -40,6 +41,16 @@ class Category extends Model
         return $this->hasMany(Category::class);
     }
 
+    /**
+     * The brands that belong to the Category
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function brands(): BelongsToMany
+    {
+        return $this->belongsToMany(Brand::class);
+    }
+
     public function metas(): MorphMany
     {
         return $this->morphMany(ShopMeta::class, 'metable');
@@ -68,7 +79,7 @@ class Category extends Model
     {
         return $query->where('featured', true);
     }
-    public function scopeParent(Builder $query)
+    public function scopeIsParent(Builder $query)
     {
         return $query->whereNull('category_id');
     }
@@ -76,9 +87,9 @@ class Category extends Model
     {
         return $query->whereNotNull('parent');
     }
-    public function scopeInFront(Builder $query)
+    public function scopeIsTop(Builder $query)
     {
-        return $query->where('in_front', true);
+        return $query->where('is_top', true);
     }
 
     public function image_lg()

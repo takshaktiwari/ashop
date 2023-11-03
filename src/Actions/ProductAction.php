@@ -47,7 +47,7 @@ class ProductAction
         return $product;
     }
 
-    public function filteredProducts($paginate = 50, $withQueryString = true)
+    public function filteredProducts($paginate = 50, $withQueryString = true, $with = [])
     {
         $query   = Product::with(['categories']);
         if (request()->get('search')) {
@@ -63,7 +63,9 @@ class ProductAction
                 $query->where('categories.id', request()->get('category'));
             });
         }
-
+        if (request()->get('product_id')) {
+            $query->where('product_id', request()->get('product_id'));
+        }
         if (request()->get('brand_id')) {
             $query->where('brand_id', request()->get('brand_id'));
         }
@@ -93,6 +95,9 @@ class ProductAction
         }
         if (request()->get('user_id')) {
             $query->where('user_id', request()->get('user_id'));
+        }
+        if ($with && count($with)) {
+            $query->with($with);
         }
 
         if ($withQueryString) {

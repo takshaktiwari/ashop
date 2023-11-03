@@ -8,6 +8,7 @@ use Takshak\Ashop\Models\Shop\Category;
 use Illuminate\Support\Facades\View;
 use Takshak\Ashop\Actions\CategoryAction;
 use Takshak\Ashop\Models\Shop\Attribute;
+use Takshak\Ashop\Models\Shop\Brand;
 use Takshak\Ashop\Models\Shop\Variation;
 
 class CategoryController extends Controller
@@ -61,7 +62,7 @@ class CategoryController extends Controller
             'category_id'    =>  'nullable|numeric'
         ]);
 
-        $category = new Category;
+        $category = new Category();
         $action->save($request, $category);
 
         return redirect()->route('admin.shop.categories.details', [$category])->withSuccess('SUCCESS !! New Model is successfully generated.');
@@ -136,6 +137,27 @@ class CategoryController extends Controller
             }
         }
 
+        return redirect()->route('admin.shop.categories.brands', [$category])
+            ->withSuccess('SUCCESS !! Category detail is successfully updated');
+    }
+
+    public function brands(Category $category)
+    {
+        $brands = Brand::orderBy('name')->get();
+        return View::first(['admin.shop.categories.brands', 'ashop::admin.shop.categories.brands'])
+            ->with([
+                'category'   =>  $category,
+                'brands'   =>  $brands,
+            ]);
+    }
+
+    public function brandsUpdate(Request $request, Category $category)
+    {
+        $request->validate([
+            'brands' => 'required'
+        ]);
+
+        $category->brands()->sync($request->post('brands'));
         return redirect()->route('admin.shop.categories.attributes', [$category])
             ->withSuccess('SUCCESS !! Category detail is successfully updated');
     }

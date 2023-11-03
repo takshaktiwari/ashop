@@ -3,9 +3,11 @@
 namespace Takshak\Ashop\Models\Shop;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Storage;
 
 class Brand extends Model
@@ -21,6 +23,21 @@ class Brand extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * The categories that belong to the Brand
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    public function scopeIsActive(Builder $query)
+    {
+        return $query->where('status', true);
     }
 
     public function image_lg()

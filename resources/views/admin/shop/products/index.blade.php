@@ -109,7 +109,13 @@
 
     <form method="POST" action="" class="card" id="products-form">
         @csrf
-        <x-admin.paginator-info :items="$products" class="card-header" />
+        <x-admin.paginator-info :items="$products" class="card-header pb-0" />
+        <div class="card-header text-end pt-0">
+            <a href="{{ route('admin.shop.products.export.excel', request()->all()) }}"
+                class="badge bg-primary py-1 px-3 rounded-pill fs-12 no-loader">
+                <i class="fas fa-file-excel"></i> Export
+            </a>
+        </div>
         <div class="card-body table-responsive">
             <table class="table">
                 <thead>
@@ -139,19 +145,26 @@
                                 </div>
                             </td>
                             <td>
-                                <a href="#" target="_blank">
+                                <a href="{{ route('shop.products.show', [$product]) }}" target="_blank">
                                     <img src="{{ $product->image_sm() }}" alt="" style="max-height: 50px;"
                                         class="rounded">
                                 </a>
                             </td>
                             <td>
-                                {{ $product->name }}
+                                <span class="small lc-2">
+                                    @if ($product->product_id)
+                                        <a href="{{ route('admin.shop.products.index', ['product_id' => $product->product_id]) }}" title="{{ $product->productParent?->name }}" class="badge bg-primary d-inline-block fs-12">
+                                            <i class="fas fa-code-branch"></i>
+                                        </a>
+                                    @endif
+                                    {{ $product->name }}
+                                </span>
                                 <div class="small"><b>SKU: </b>{{ $product->sku }}</div>
                                 <div class="small text-success">
                                     {{ $product->updated_at->format('d-M-Y h:i a') }}
                                 </div>
                             </td>
-                            <td>
+                            <td class="lh-1">
                                 @foreach ($product->categories as $category)
                                     <a href="{{ route('admin.shop.products.index', ['category' => $category->id]) }}"
                                         class="small">
@@ -163,8 +176,17 @@
                                 @endforeach
                             </td>
                             <td>
-                                <div class="text-success" title="Net Price">{{ $product->formattedNetPrice() }}</div>
-                                <div class="text-dark" title="Sell Price">{{ $product->formattedSellPrice() }}</div>
+                                <div class="text-success small" title="Net Price">
+                                    <b>Net: </b>{{ $product->formattedNetPrice() }}
+                                </div>
+                                <div class="text-dark fs-12" title="Sell Price">
+                                    <b>Sell: </b>{{ $product->formattedSellPrice() }}
+                                </div>
+                                @if ($product->deal_price)
+                                    <div class="text-dark text-nowrap" title="Deal Price">
+                                        <b>Deal: </b>{{ $product->formattedDealPrice() }}
+                                    </div>
+                                @endif
                             </td>
                             <td>
                                 <div
@@ -176,11 +198,19 @@
                                     {{ $product->featured ? 'Featured' : 'Not-Featured' }}
                                 </span>
                             </td>
-                            <td>
+                            <td class="">
                                 <a href="{{ route('admin.shop.products.copy', [$product]) }}"
-                                    class="btn btn-sm btn-success load-circle"><i class="fas fa-copy"></i></a>
+                                    class="btn btn-sm btn-info load-circle"><i class="fas fa-copy"></i></a>
                                 <a href="{{ route('admin.shop.products.edit', [$product]) }}"
                                     class="btn btn-sm btn-success load-circle"><i class="fas fa-edit"></i></a>
+
+                                <a href="{{ route('admin.shop.products.delete', [$product]) }}"
+                                    class="btn btn-sm btn-danger load-circle">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                                <div class="small text-nowrap">
+                                    {{ $product->created_at->format('d-M-Y h:i a') }}
+                                </div>
                             </td>
                         </tr>
                     @endforeach
@@ -214,7 +244,7 @@
                     if ($(this).val() !== '') {
                         if (confirm(
                                 'Are you to perform the action on selected items. This process is Irreversible'
-                                )) {
+                            )) {
                             $("#products-form").attr('action', $(this).val());
                             $("#products-form").submit();
                         }

@@ -13,12 +13,17 @@ use Takshak\Ashop\Models\Shop\Category;
 use Takshak\Ashop\Models\Shop\Product;
 use Takshak\Ashop\Models\Shop\ProductImage;
 use Takshak\Ashop\Models\Shop\ShopMeta;
+use Maatwebsite\Excel\Facades\Excel;
+use Takshak\Ashop\Exports\ProductsExport;
 
 class ProductController extends Controller
 {
     public function index(Request $request, ProductAction $action)
     {
-        $products = $action->filteredProducts();
+        $products = $action->filteredProducts(with: [
+            'productParent:id,product_id,name',
+            'productChildren:id,product_id,name',
+        ]);
         $categories = Category::with('parentCategory')->orderBy('name')->get();
         $brands     = Brand::orderBy('name')->get();
         $users      = User::orderBy('name')->get();
@@ -199,9 +204,9 @@ class ProductController extends Controller
         ]);
 
         Product::whereIn('id', $request->post('products'))
-                ->update([
-                    'featured' => $value ? true : false
-                ]);
+            ->update([
+                'featured' => $value ? true : false
+            ]);
         return back()->withSuccess('SUCCESS !! Featured product list is updated');
     }
 
@@ -234,11 +239,11 @@ class ProductController extends Controller
     public function copy(Product $product)
     {
         $newProduct = $product->replicate()->fill([
-            'name'  =>  $product->name.' - copy',
-            'slug'  =>  str()->of($product->name)->slug('-')->append('-'.time()),
-            'image_sm'  =>  str()->of($product->name)->slug('-')->prepend('products/sm/')->append('-'.time().'.jpg'),
-            'image_md'  =>  str()->of($product->name)->slug('-')->prepend('products/md/')->append('-'.time().'.jpg'),
-            'image_lg'  =>  str()->of($product->name)->slug('-')->prepend('products/')->append('-'.time().'.jpg'),
+            'name'  =>  $product->name . ' - copy',
+            'slug'  =>  str()->of($product->name)->slug('-')->append('-' . time()),
+            'image_sm'  =>  str()->of($product->name)->slug('-')->prepend('products/sm/')->append('-' . time() . '.jpg'),
+            'image_md'  =>  str()->of($product->name)->slug('-')->prepend('products/md/')->append('-' . time() . '.jpg'),
+            'image_lg'  =>  str()->of($product->name)->slug('-')->prepend('products/')->append('-' . time() . '.jpg'),
         ]);
         $newProduct->save();
 
@@ -260,9 +265,9 @@ class ProductController extends Controller
         foreach ($product->images as $key => $image) {
             $newImage = $image->replicate()->fill([
                 'product_id' => $newProduct->id,
-                'image_sm'  =>  str()->of($newProduct->slug.'-'.$key)->prepend('products/sm/')->append('.jpg'),
-                'image_md'  =>  str()->of($newProduct->slug.'-'.$key)->prepend('products/md/')->append('.jpg'),
-                'image_lg'  =>  str()->of($newProduct->slug.'-'.$key)->prepend('products/')->append('.jpg'),
+                'image_sm'  =>  str()->of($newProduct->slug . '-' . $key)->prepend('products/sm/')->append('.jpg'),
+                'image_md'  =>  str()->of($newProduct->slug . '-' . $key)->prepend('products/md/')->append('.jpg'),
+                'image_lg'  =>  str()->of($newProduct->slug . '-' . $key)->prepend('products/')->append('.jpg'),
             ]);
             $newImage->save();
 
@@ -274,4 +279,27 @@ class ProductController extends Controller
         return redirect()->route('admin.shop.products.edit', [$newProduct])->withSuccess('SUCCESS !! New product has been created');
     }
 
+    public function exportExcel(Request $request)
+    {
+        $fileName = str()->of('products-' . now())->slug('-')->prepend('exports/')->append('.xlsx');
+        Excel::store(new ProductsExport(), $fileName, 'public');
+        return Storage::disk('public')->download($fileName);
+    }
+
+    public function delete(Product $product)
+    {
+        Storage::disk('public')->delete($product->image_sm);
+        Storage::disk('public')->delete($product->image_md);
+        Storage::disk('public')->delete($product->image_lg);
+
+        foreach ($product->images as $image) {
+            Storage::disk('public')->delete($image->image_sm);
+            Storage::disk('public')->delete($image->image_md);
+            Storage::disk('public')->delete($image->image_lg);
+        }
+
+        $product->delete();
+
+        return back()->withSuccess('SUCCESS !! Product has been successfully deleted');
+    }
 }

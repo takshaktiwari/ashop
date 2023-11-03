@@ -23,6 +23,8 @@
 
         ['text' => 'Details', 'url' => route('admin.shop.categories.details', [$category])],
 
+        ['text' => 'Brands', 'url' => route('admin.shop.categories.brands', [$category])],
+
         ['text' => 'Attributes', 'url' => route('admin.shop.categories.attributes', [$category])],
 
         ['text' => 'Vatiations', 'url' => route('admin.shop.categories.variations', [$category])],

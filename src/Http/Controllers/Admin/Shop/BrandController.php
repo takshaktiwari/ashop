@@ -14,7 +14,10 @@ class BrandController extends Controller
 {
     public function index(Request $request)
     {
-        $brands= Brand::with('user')->paginate(50);
+        $brands = Brand::query()
+            ->with('categories:id,name')
+            ->with('user:id,name')
+            ->paginate(50);
         return View::first(['admin.shop.brands.index', 'ashop::admin.shop.brands.index'])
             ->with([
                 'brands'   =>  $brands
@@ -29,11 +32,11 @@ class BrandController extends Controller
     public function store(Request $request, BrandAction $action)
     {
         $request->validate([
-            'image' =>'nullable|image',
-            'brand' =>'required|unique:brands,name'
+            'image' => 'nullable|image',
+            'brand' => 'required|unique:brands,name'
         ]);
 
-        $action->save($request, new Brand);
+        $action->save($request, new Brand());
         return redirect()->route('admin.shop.brands.index')->withSuccess('SUCCESS !! New Model is successfully generated.');
     }
 
