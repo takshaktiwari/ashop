@@ -1,14 +1,16 @@
 <x-app-layout>
-    <x-breadcrumb title="Categories" :links="[['text' => 'Categories']]" />
+    <x-breadcrumb title="Brands" :links="[['text' => 'Brands']]" />
     <section class="py-5">
         <div class="container">
-            <div class="row g-4" data-masonry='{"percentPosition": true }'>
-                @foreach ($categories as $category)
+            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-2"
+                data-masonry='{"percentPosition": true }'>
+                @foreach ($brands as $brand)
                     <div class="col">
                         <div class="card brand_card">
                             <img class="card-img-top" src="{{ $brand->image() }}" alt="Card image">
                             <div class="card-body">
-                                <a href="{{ route('shop.products.index', ['brand_id' => $brand->id]) }}" class="card-text">{{ $brand->name }}</a>
+                                <a href="{{ route('shop.products.index', ['brand_id' => $brand->id]) }}"
+                                    class="card-text">{{ $brand->name }}</a>
                             </div>
                         </div>
                     </div>
@@ -16,7 +18,7 @@
             </div>
 
             <div class="mt-5">
-                {{ $categories->links() }}
+                {{ $brands->links() }}
             </div>
         </div>
     </section>

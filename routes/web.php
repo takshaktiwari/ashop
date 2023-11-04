@@ -8,6 +8,7 @@ use Takshak\Ashop\Http\Controllers\Admin\Shop\CategoryController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductImageController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\VariationController;
+use Takshak\Ashop\Http\Controllers\Shop\BrandController as ShopBrandController;
 use Takshak\Ashop\Http\Controllers\Shop\CategoryController as ShopCategoryController;
 use Takshak\Ashop\Http\Controllers\Shop\ProductController as ShopProductController;
 use Takshak\Ashop\Http\Controllers\Shop\ShopController;
@@ -80,6 +81,8 @@ Route::middleware('web')->group(function () {
 
         Route::get('categories', [ShopCategoryController::class, 'index'])->name('categories.index');
         Route::get('categories/list', [ShopCategoryController::class, 'list'])->name('categories.list');
+
+        Route::get('brands', [ShopBrandController::class, 'index'])->name('brands.index');
 
         Route::get('products', [ShopProductController::class, 'index'])->name('products.index');
         Route::get('products/{product:slug}', [ShopProductController::class, 'show'])->name('products.show');
