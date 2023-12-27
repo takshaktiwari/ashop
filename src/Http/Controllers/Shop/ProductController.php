@@ -75,49 +75,16 @@ class ProductController extends Controller
         if (!$product->status) {
             return redirect()->route('shop.products.index');
         }
-        if (
-            $request->get('variants') &&
-            is_array($request->get('variants')) &&
-            count($request->get('variants'))
-        ) {
-            Product::query()
-            #->select('products.id', 'products.product_id', 'products.name')
-            ->where('product_id', $product->product_id ? $product->product_id : $product->id)
-            ->get();
-            return $request->get('variants');
-        }
 
         $product
             ->load('categories:id,name,slug,display_name,category_id')
             ->load('brand:id,name,slug')
             ->load('images')
-            ->load(['variationProperties' => function ($query) {
-                $query->with('variation:id,name,display_name');
-                $query->with('variant:id,name');
-            }])
             ->load('metas');
-
-        if ($product->product_id) {
-            $product->load(['productParent' => function ($query) {
-                $query->select('id', 'name');
-                $query->with(['productVariations' => function ($query) {
-                    $query->with('variation:id,name,display_name');
-                    $query->with('variant:id,name');
-                }]);
-            }]);
-        } else {
-            $product->load(['variationProperties' => function ($query) {
-                $query->with('variation:id,name,display_name');
-                $query->with('variant:id,name');
-            }]);
-        }
-
-        $variations = $this->getVariations($product);
 
         return View::first(['shop.products.show', 'ashop::shop.products.show'])
             ->with([
                 'product'    =>  $product,
-                'variations'    =>  $variations,
             ]);
     }
 }

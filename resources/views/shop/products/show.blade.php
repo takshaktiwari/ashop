@@ -49,23 +49,6 @@
                         (1024 reviews)
                     </div>
                     <form action="" class="mt-3" id="add_to_cart_form">
-                        <div class="variations mb-3 row g-3">
-                            @foreach ($variations as $variation)
-                                <div class=" col-xl-4 col-sm-6">
-                                    <select name="variants[]" class="form-control variants">
-                                        <option value="">
-                                            -- Select {{ $variation['display_name'] }} --
-                                        </option>
-                                        @foreach ($variation['variants'] as $variant)
-                                            <option value="{{ $variant['id'] }}" @selected(collect(request('variants'))->contains($variant['id']))>
-                                                {{ $variant['name'] }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            @endforeach
-                        </div>
-
                         <div class="d-flex gap-3">
                             <b class="my-auto">
                                 Quantity:
@@ -75,12 +58,24 @@
                         </div>
 
                         <div class="d-flex gap-2 mt-3">
-                            <button type="submit" id="add_to_cart_btn" class="btn btn-primary px-3 rounded-pill">
-                                <i class="fas fa-shopping-cart"></i> Add cart
-                            </button>
-                            <button type="submit" id="buy_now_btn" class="btn btn-primary px-3 rounded-pill">
-                                <i class="fas fa-external-link-alt"></i> Buy Now
-                            </button>
+                            @if ($product->checkout_type == 'checkout')
+                                <button type="submit" id="add_to_cart_btn" class="btn btn-primary px-3 rounded-pill">
+                                    <i class="fas fa-shopping-cart"></i> Add cart
+                                </button>
+                                <button type="submit" id="buy_now_btn" class="btn btn-primary px-3 rounded-pill">
+                                    <i class="fas fa-external-link-alt"></i> Buy Now
+                                </button>
+                            @elseif ($product->checkout_type == 'external_url')
+                                <a href="{{ $product->external_url }}" target="_blank"
+                                    class="btn btn-primary px-3 rounded-pill">
+                                    <i class="fas fa-external-link-alt"></i> Buy Now
+                                </a>
+                            @elseif ($product->checkout_type == 'query')
+                                <button type="button" class="btn btn-primary px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#product_query_modal">
+                                    <i class="far fa-question-circle"></i> Buy Now
+                                </button>
+                            @endif
+
                             @if ($product->wishlistAuthUser->count())
                                 <a href="{{ route('shop.wishlist.items.toggle', [$product]) }}" id="add_to_cart_btn"
                                     class="btn btn-danger px-3 rounded-pill">
@@ -131,8 +126,69 @@
             </div>
         </div>
         <hr />
-        <x-ashop-ashop:products-group title="Related Products" subtitle="Browse other products related to this category" :categories="$product->categories->pluck('id')->toArray()" limit="10" />
+        <x-ashop-ashop:products-group title="Related Products" subtitle="Browse other products related to this category"
+            :categories="$product->categories->pluck('id')->toArray()" limit="10" />
     </section>
+
+    @if ($product->checkout_type == 'query')
+        <div class="modal" id="product_query_modal">
+            <div class="modal-dialog">
+                <form action="{{ route('queries.store') }}" method="POST" class="modal-content">
+                    @csrf
+                    <div class="modal-header">
+                        <h4 class="modal-title">Query Now</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row g-2">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="">Your Name:</label>
+                                    <input type="text" name="name" class="form-control" placeholder="Your full name" value="{{ old('name') }}" />
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="">Your Email:</label>
+                                    <input type="email" name="email" class="form-control" placeholder="Your  email" value="{{ old('email') }}" />
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="">Your Mobile:</label>
+                                    <input type="text" name="mobile" class="form-control" placeholder="Your mobile no." value="{{ old('mobile no.') }}" />
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="">Product:</label>
+                                    <input type="text" name="title" class="form-control" value="{{ $product->name }}" />
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="">Write Your Query:</label>
+                                    <textarea name="content" id="content" rows="3" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <input type="hidden" name="submit" value="Product Query">
+                        <button type="submit" class="btn btn-primary px-4">
+                            Submit
+                        </button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    @endif
 
     @push('scripts')
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"
@@ -148,20 +204,23 @@
         <script>
             $(document).ready(function() {
 
-                $("select.variants").change(function (e) {
+                $("select.variants").change(function(e) {
                     e.preventDefault();
 
                     var variants = [];
                     document.querySelectorAll("select.variants").forEach(elem => {
-                        if(elem.value){
+                        if (elem.value) {
                             variants.push(eval(elem.value));
                         }
                     });
 
-                    var currentUrl = "{{ route('shop.products.show', [$product] + request()->except('variants')) }}";
+                    var currentUrl =
+                        "{{ route('shop.products.show', [$product] + request()->except('variants')) }}";
 
                     currentUrl += currentUrl.includes("?") ? '&' : '?';
-                    currentUrl += $.param({variants: variants});
+                    currentUrl += $.param({
+                        variants: variants
+                    });
 
                     window.location.href = currentUrl;
                 });

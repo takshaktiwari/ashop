@@ -68,6 +68,8 @@ class ProductController extends Controller
             'status'        =>  'required|boolean',
             'featured'      =>  'required|boolean',
             'categories'    =>  'required|array|min:1',
+            'checkout_type'    =>  'required',
+            'external_url'    =>  'nullable|required_if:checkout_type,external_url',
         ]);
 
         $product = $action->save($request, new Product());
@@ -105,6 +107,8 @@ class ProductController extends Controller
             'status'        =>  'required|boolean',
             'featured'      =>  'required|boolean',
             'categories'    =>  'required|array|min:1',
+            'checkout_type'    =>  'required',
+            'external_url'    =>  'nullable|required_if:checkout_type,external_url',
         ]);
 
         $product = $action->save($request, $product);

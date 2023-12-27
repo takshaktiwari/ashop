@@ -22,6 +22,8 @@ class ProductAction
         $product->status        =  $request->post('status');
         $product->featured      =  $request->post('featured');
         $product->info          =  $request->post('info');
+        $product->checkout_type =  $request->post('checkout_type');
+        $product->external_url  =  $request->post('external_url');
         $product->user_id       =  auth()->id();
 
         $product->slug          = $product->slug

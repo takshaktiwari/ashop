@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\View;
 use Takshak\Ashop\Actions\CategoryAction;
 use Takshak\Ashop\Models\Shop\Attribute;
 use Takshak\Ashop\Models\Shop\Brand;
-use Takshak\Ashop\Models\Shop\Variation;
 
 class CategoryController extends Controller
 {
@@ -180,30 +179,8 @@ class CategoryController extends Controller
 
         $category->attributes()->sync($request->post('attributes'));
 
-        return redirect()->route('admin.shop.categories.variations', [$category])
+        return redirect()->route('admin.shop.categories.edit', [$category])
             ->withSuccess('SUCCESS !! Category attributes is successfully updated');
-    }
-
-    public function variations(Category $category)
-    {
-        $variations = Variation::with('variants')->orderBy('name', 'ASC')->get();
-        return View::first(['admin.shop.categories.variations', 'ashop::admin.shop.categories.variations'])
-            ->with([
-                'category'   =>  $category,
-                'variations'   =>  $variations,
-            ]);
-    }
-
-    public function variationsUpdate(Request $request, Category $category)
-    {
-        $request->validate([
-            'variations'    =>  'nullable|array'
-        ]);
-
-        $category->variations()->sync($request->post('variations'));
-
-        return redirect()->route('admin.shop.categories.index')
-            ->withSuccess('SUCCESS !! Category variations is successfully updated');
     }
 
     public function statusToggle(Category $category)

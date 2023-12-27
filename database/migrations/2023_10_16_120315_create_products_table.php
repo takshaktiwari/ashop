@@ -33,6 +33,10 @@ return new class () extends Migration {
             $table->boolean('status')->default(true)->nullable();
             $table->text('info')->nullable()->comment('short description');
             $table->text('search_tags')->nullable()->comment('search tags');
+            $table->string('checkout_type')
+                ->default('checkout')
+                ->comment('checkout, query, external_url');
+            $table->string('external_url', 535)->nullable()->default(null);
             $table->integer('user_id');
             $table->timestamps();
         });

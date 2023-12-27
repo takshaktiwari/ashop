@@ -35,7 +35,7 @@
                         <div class="small text-info">
                             <div><b>*</b> Image format should be 'jpg' or 'png'</div>
                             <div><b>*</b> Image should be in
-                                {{ config('shopze.products.images.width') . ' x ' . config('shopze.products.images.height') }}
+                                {{ config('ashop.products.images.width', 800) . ' x ' . config('ashop.products.images.height', 900) }}
                             </div>
                         </div>
                     </div>
@@ -141,6 +141,20 @@
                         </select>
                     </div>
                 </div>
+                <div class="col-md-6 col-6">
+                    <div class="form-group">
+                        <label for="">Checkout Type <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <select name="checkout_type" class="input-group-text" required>
+                                <option value="checkout" @selected($product->checkout_type == 'checkout')>Checkout</option>
+                                <option value="query" @selected($product->checkout_type == 'query')>Query</option>
+                                <option value="external_url" @selected($product->checkout_type == 'external_url')>External url</option>
+                            </select>
+                            <input type="url" name="external_url" id="external_url" class="form-control"
+                                value="{{ $product->external_url }}" placeholder="External url">
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label for="">Categories <span class="text-danger">*</span> </label>
@@ -170,15 +184,33 @@
         </div>
     </form>
 
-    <x-slot name="script">
+    @push('scripts')
         <script>
-            var imageRatio = {{ config('shopze.images.products.width') . '/' . config('shopze.images.products.height') }};
+            var imageRatio =
+                {{ config('ashop.products.images.width', 800) . '/' . config('ashop.products.images.height', 900) }};
             var previewImg = {
                 targetId: 'preview-img',
                 width: '50px',
                 rounded: '4px'
             };
             imageCropper('crop-image', imageRatio, previewImg);
+
+            $(document).ready(function() {
+
+                externalUrlInput();
+                function externalUrlInput() {
+                    var checkoutType = $("select[name=checkout_type]").val();
+                    if (checkoutType == 'external_url') {
+                        $("#external_url").css('display', 'block');
+                    } else {
+                        $("#external_url").css('display', 'none');
+                    }
+                }
+
+                $("select[name=checkout_type]").change(function (e) {
+                    externalUrlInput();
+                });
+            });
         </script>
-    </x-slot>
+    @endpush
 </x-admin.layout>

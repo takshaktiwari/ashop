@@ -111,26 +111,6 @@ class Product extends Model
         return $this->products();
     }
 
-    /**
-     * Get all of the productVariations for the Product
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function productVariations(): HasMany
-    {
-        return $this->hasMany(ProductVariation::class);
-    }
-
-    /**
-     * Get all of the productVariations for the Product
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function variationProperties(): HasMany
-    {
-        return $this->hasMany(ProductVariation::class, 'variant_product_id');
-    }
-
     public function metas(): MorphMany
     {
         return $this->morphMany(ShopMeta::class, 'metable');

@@ -10,9 +10,7 @@ use Takshak\Ashop\Models\Shop\Brand;
 use Takshak\Ashop\Models\Shop\Category;
 use Takshak\Ashop\Models\Shop\Product;
 use Takshak\Ashop\Models\Shop\ProductImage;
-use Takshak\Ashop\Models\Shop\ProductVariation;
 use Takshak\Ashop\Models\Shop\Variant;
-use Takshak\Ashop\Models\Shop\Variation;
 use Takshak\Imager\Facades\Picsum;
 
 class ProductSeeder extends Seeder
@@ -23,63 +21,7 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         for ($b = 0; $b < 5; $b++) {
-            $product = $this->product();
-
-            $product->load('categories.variations');
-
-            $variationIds = $product->categories
-                ->pluck('variations')
-                ->collapse()
-                ->pluck('id')
-                ->unique()
-                ->shuffle()
-                ->take(3);
-
-            $productVariations = [];
-            foreach ($variationIds as $variationId) {
-                $variants = Variant::query()
-                    ->where('variation_id', $variationId)
-                    ->inRandomOrder()
-                    ->take(rand(3, 10))
-                    ->pluck('id');
-                foreach ($variants as $variant) {
-                    $productVariations[] = [
-                        'variation_id' => $variationId,
-                        'variant_id' => $variant,
-                    ];
-                }
-            }
-            $productVariations = collect($productVariations);
-
-            for ($i = 0; $i < rand(6, 15); $i++) {
-                $pVariations = [];
-                $nVariants = [];
-
-                foreach ($variationIds as $variationId) {
-                    $variant = $productVariations->where('variation_id', $variationId)
-                        ->shuffle()
-                        ->first();
-
-                    $nVariants[] = $variant['variant_id'];
-
-                    $pVariations[] = ProductVariation::create([
-                        'product_id'    =>  $product->id,
-                        'variation_id'    =>  $variationId,
-                        'variant_id'    =>  $variant['variant_id'],
-                    ]);
-                }
-
-                $variants = Variant::whereIn('id', $nVariants)->pluck('name')->toArray();
-                $variantProduct = $this->cloneProduct(
-                    product: $product,
-                    variants: $variants,
-                );
-
-                foreach ($pVariations as $pVariation) {
-                    $pVariation->variant_product_id = $variantProduct->id;
-                    $pVariation->save();
-                }
-            }
+            $this->product();
         }
     }
 

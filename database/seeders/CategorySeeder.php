@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Storage;
 use Takshak\Ashop\Models\Shop\Attribute;
 use Takshak\Ashop\Models\Shop\Brand;
 use Takshak\Ashop\Models\Shop\Category;
-use Takshak\Ashop\Models\Shop\Variation;
 use Takshak\Imager\Facades\Picsum;
 
 class CategorySeeder extends Seeder
@@ -53,9 +52,6 @@ class CategorySeeder extends Seeder
 
         $attributes = Attribute::inRandomOrder()->limit(rand(0, 6))->pluck('id');
         $category->attributes()->sync($attributes);
-
-        $variations = Variation::inRandomOrder()->limit(rand(0, 6))->pluck('id');
-        $category->variations()->sync($variations);
 
         $category->brands()->sync(Brand::inRandomOrder()->limit(rand(2, 8))->pluck('id'));
 

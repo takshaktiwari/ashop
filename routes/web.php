@@ -7,7 +7,6 @@ use Takshak\Ashop\Http\Controllers\Admin\Shop\BrandController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\CategoryController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductImageController;
-use Takshak\Ashop\Http\Controllers\Admin\Shop\VariationController;
 use Takshak\Ashop\Http\Controllers\Shop\BrandController as ShopBrandController;
 use Takshak\Ashop\Http\Controllers\Shop\CategoryController as ShopCategoryController;
 use Takshak\Ashop\Http\Controllers\Shop\ProductController as ShopProductController;
@@ -20,8 +19,6 @@ Route::middleware('web')->group(function () {
         ->name('admin.shop.')
         ->group(function () {
             Route::resource('attributes', AttributeController::class);
-            Route::resource('variations', VariationController::class);
-            Route::get('variants/delete/{variant}', [VariationController::class, 'variantsDelete'])->name('variants.delete');
 
             Route::resource('categories', CategoryController::class);
             Route::prefix('categories')
@@ -37,8 +34,6 @@ Route::middleware('web')->group(function () {
                     Route::get('is_top/{category}', 'isTopToggle')->name('is_top');
                     Route::get('attributes/{category}', 'attributes')->name('attributes');
                     Route::post('attributes/{category}/update', 'attributesUpdate')->name('attributes.update');
-                    Route::get('variations/{category}', 'variations')->name('variations');
-                    Route::post('variations/{category}/update', 'variationsUpdate')->name('variations.update');
                     Route::get('delete/{category}', 'destroy')->name('destroy');
                 });
 

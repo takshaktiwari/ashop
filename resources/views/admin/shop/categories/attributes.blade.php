@@ -23,8 +23,6 @@
             ['text' => 'Brands', 'url' => route('admin.shop.categories.brands', [$category])],
 
             ['text' =>  'Attributes', 'url' => route('admin.shop.categories.attributes', [$category])],
-
-            ['text' =>  'Vatiations', 'url' => route('admin.shop.categories.variations', [$category])],
         ]"
         />
     <form action="{{ route('admin.shop.categories.attributes.update', [$category]) }}" method="POST" enctype="multipart/form-data" class="card shadow-sm">
