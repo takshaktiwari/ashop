@@ -8,6 +8,7 @@ use Takshak\Ashop\Http\Controllers\Admin\Shop\CategoryController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductImageController;
 use Takshak\Ashop\Http\Controllers\Shop\BrandController as ShopBrandController;
+use Takshak\Ashop\Http\Controllers\Shop\CartController;
 use Takshak\Ashop\Http\Controllers\Shop\CategoryController as ShopCategoryController;
 use Takshak\Ashop\Http\Controllers\Shop\ProductController as ShopProductController;
 use Takshak\Ashop\Http\Controllers\Shop\ShopController;
@@ -82,7 +83,14 @@ Route::middleware('web')->group(function () {
         Route::get('products', [ShopProductController::class, 'index'])->name('products.index');
         Route::get('products/{product:slug}', [ShopProductController::class, 'show'])->name('products.show');
 
+        Route::prefix('carts')->name('carts.')->group(function () {
+            Route::get('/', [CartController::class, 'index'])->name('index');
+            Route::get('store/{product}', [CartController::class, 'store'])->name('store');
+            Route::get('delete/{cart}', [CartController::class, 'delete'])->name('delete');
+        });
+
         Route::middleware(['auth'])->group(function () {
+            Route::get('wishlist/items', [ShopWishlistController::class, 'items'])->name('wishlist.items.index');
             Route::get('wishlist/items/toggle/{product}', [ShopWishlistController::class, 'itemToggle'])->name('wishlist.items.toggle');
         });
     });

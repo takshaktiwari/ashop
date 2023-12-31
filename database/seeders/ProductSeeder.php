@@ -10,7 +10,6 @@ use Takshak\Ashop\Models\Shop\Brand;
 use Takshak\Ashop\Models\Shop\Category;
 use Takshak\Ashop\Models\Shop\Product;
 use Takshak\Ashop\Models\Shop\ProductImage;
-use Takshak\Ashop\Models\Shop\Variant;
 use Takshak\Imager\Facades\Picsum;
 
 class ProductSeeder extends Seeder
@@ -20,7 +19,7 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($b = 0; $b < 5; $b++) {
+        for ($b = 0; $b < 500; $b++) {
             $this->product();
         }
     }
@@ -32,7 +31,7 @@ class ProductSeeder extends Seeder
         $deal_price = $sell_price - $sell_price * (rand(5, 30) / 100);
 
         $product = new Product();
-        $product->name          =  fake()->realText(rand(20, 150)) . microtime();
+        $product->name          =  fake()->realText(rand(20, 150));
         $product->subtitle      =  fake()->realText(rand(20, 250));
         $product->brand_id      =  Brand::inRandomOrder()->first()->id;
         $product->sku           =  'ASI' . rand();
@@ -64,18 +63,22 @@ class ProductSeeder extends Seeder
 
         $product->metas()->create([
             'name' => 'm_title',
+            'key' => 'product_details',
             'value' => fake()->realText(rand(50, 150)),
         ]);
         $product->metas()->create([
             'name' => 'm_keywords',
+            'key' => 'product_details',
             'value' => fake()->realText(rand(50, 150)),
         ]);
         $product->metas()->create([
             'name' => 'm_description',
+            'key' => 'product_details',
             'value' => fake()->realText(rand(50, 150)),
         ]);
         $product->metas()->create([
             'name' => 'description',
+            'key' => 'product_details',
             'value' => fake()->realText(rand(500, 3000)),
         ]);
 
@@ -84,7 +87,7 @@ class ProductSeeder extends Seeder
 
         foreach ($categories->pluck('attributes')->collapse() as $attribute) {
             $product->metas()->create([
-                'key' => 'attributes',
+                'key' => 'product_attributes',
                 'name' => $attribute->name,
                 'value' => collect($attribute->options)
                     ->shuffle()

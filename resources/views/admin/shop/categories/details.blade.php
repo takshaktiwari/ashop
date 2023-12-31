@@ -49,15 +49,15 @@
                     <div class="form-group">
                         <label for="">Min Order Qty. </label>
                         <input type="number" name="metas[min_order_qty]" class="form-control" required=""
-                            value="{{ $category?->detail?->min_order_qty ? $category?->detail?->min_order_qty : 1 }}">
+                            value="{{ $category?->getMeta('min_order_qty') ? $category?->getMeta('min_order_qty') : 1 }}">
                     </div>
                 </div>
                 <div class="col-md-3 col-6">
                     <div class="form-group">
                         <label for="">COD Available </label>
                         <select name="metas[cod]" class="form-control" required="">
-                            <option value="1" {{ $category?->detail?->cod == 1 ? 'selected' : '' }}>Yes</option>
-                            <option value="0" {{ $category?->detail?->cod == 0 ? 'selected' : '' }}>No</option>
+                            <option value="1" {{ $category?->getMeta('cod') == 1 ? 'selected' : '' }}>Yes</option>
+                            <option value="0" {{ $category?->getMeta('cod') == 0 ? 'selected' : '' }}>No</option>
                         </select>
                     </div>
                 </div>
@@ -65,9 +65,9 @@
                     <div class="form-group">
                         <label for="">Cancellable </label>
                         <select name="metas[cancellable]" class="form-control" required="">
-                            <option value="1" {{ $category?->detail?->cancellable == 1 ? 'selected' : '' }}>Yes
+                            <option value="1" {{ $category?->getMeta('cancellable') == 1 ? 'selected' : '' }}>Yes
                             </option>
-                            <option value="0" {{ $category?->detail?->cancellable == 0 ? 'selected' : '' }}>No
+                            <option value="0" {{ $category?->getMeta('cancellable') == 0 ? 'selected' : '' }}>No
                             </option>
                         </select>
                     </div>
@@ -77,7 +77,7 @@
                         <label for="">Cancel In </label>
                         <div class="input-group">
                             <input type="number" name="metas[cancel_within]" class="form-control" placeholder="eg ."
-                                value="{{ $category?->detail?->cancel_within }}" required max="15">
+                                value="{{ $category?->getMeta('cancel_within') }}" required max="15">
                             <span class="input-group-append">
                                 <span class="input-group-text">Days</span>
                             </span>
@@ -88,9 +88,9 @@
                     <div class="form-group">
                         <label for="">Returnable </label>
                         <select name="metas[returnable]" class="form-control bg-light rounded-0">
-                            <option value="1" {{ $category?->detail?->returnable == 1 ? 'selected' : '' }}>Yes
+                            <option value="1" {{ $category?->getMeta('returnable') == 1 ? 'selected' : '' }}>Yes
                             </option>
-                            <option value="0" {{ $category?->detail?->returnable == 0 ? 'selected' : '' }}>No
+                            <option value="0" {{ $category?->getMeta('returnable') == 0 ? 'selected' : '' }}>No
                             </option>
                         </select>
                     </div>
@@ -100,7 +100,7 @@
                         <label for="">Return In </label>
                         <div class="input-group">
                             <input type="number" name="metas[return_within]" class="form-control" placeholder="eg ."
-                                value="{{ $category?->detail?->return_within }}" required max="15">
+                                value="{{ $category?->getMeta('return_within') }}" required max="15">
                             <span class="input-group-append">
                                 <span class="input-group-text">Days</span>
                             </span>
@@ -111,9 +111,9 @@
                     <div class="form-group">
                         <label for="">Replaceable </label>
                         <select name="metas[replaceable]" class="form-control bg-light rounded-0">
-                            <option value="1" {{ $category?->detail?->replaceable == 1 ? 'selected' : '' }}>Yes
+                            <option value="1" {{ $category?->getMeta('replaceable') == 1 ? 'selected' : '' }}>Yes
                             </option>
-                            <option value="0" {{ $category?->detail?->replaceable == 0 ? 'selected' : '' }}>No
+                            <option value="0" {{ $category?->getMeta('replaceable') == 0 ? 'selected' : '' }}>No
                             </option>
                         </select>
                     </div>
@@ -123,7 +123,7 @@
                         <label for="">Replace In </label>
                         <div class="input-group">
                             <input type="number" name="metas[replace_within]" class="form-control" placeholder="eg ."
-                                value="{{ $category?->detail?->replace_within }}" required max="15">
+                                value="{{ $category?->getMeta('replace_within') }}" required max="15">
                             <span class="input-group-append">
                                 <span class="input-group-text">Days</span>
                             </span>

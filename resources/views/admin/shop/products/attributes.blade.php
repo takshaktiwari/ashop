@@ -34,7 +34,9 @@
                 			<td>
                 				<select name="metas[{{ $attribute->name }}][]"  class="form-control" multiple="" >
                 					@foreach($attribute->options as $option)
-                						<option value="{{ $option }}" >{{ $option }}</option>
+                						<option value="{{ $option }}" {{ $product->attribute($attribute->name)?->contains($option)? 'selected' : '' }}>
+                                            {{ $option }}
+                                        </option>
                 					@endforeach
                 				</select>
                 			</td>

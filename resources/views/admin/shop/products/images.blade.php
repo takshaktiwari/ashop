@@ -38,7 +38,9 @@
                             <label for="">Title</label>
                             <input type="text" class="form-control" name="title" value="{{ $product->name }}">
                         </div>
-                        <input type="submit" class="btn btn-lg rounded-sm btn-dark px-5" value="Update">
+                        <button type="submit" class="btn rounded-sm btn-dark px-4" >
+                            <i class="fas fa-save"></i> Update
+                        </button>
                     </form>
                 </div>
             </div>

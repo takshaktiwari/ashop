@@ -1,4 +1,4 @@
-<div class="product_group py-5">
+<div class="product_group {{ $attributes['class'] ?? 'py-5' }}">
     <div class="container">
         <h2 class="fw-bold mb-0">
             {{ $title }}

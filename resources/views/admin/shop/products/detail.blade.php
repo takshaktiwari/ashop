@@ -27,7 +27,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="">GTIN </label>
-                        <input type="text" name="metas[gtin]" class="form-control" value="{{ $product->details('gtin') }}"
+                        <input type="text" name="metas[gtin]" class="form-control" value="{{ $product->getDetail('gtin') }}"
                             placeholder="eg. GTIN1012">
                     </div>
                 </div>
@@ -36,8 +36,8 @@
                     <div class="form-group">
                         <label for="">Cancellable </label>
                         <select name="metas[cancellable]" class="form-control" required="">
-                            <option value="1" {{ $product->details('cancellable') ? 'selected' : '' }} >Yes</option>
-                            <option value="0" {{ !$product->details('cancellable') ? 'selected' : '' }} >No</option>
+                            <option value="1" {{ $product->getDetail('cancellable') ? 'selected' : '' }} >Yes</option>
+                            <option value="0" {{ !$product->getDetail('cancellable') ? 'selected' : '' }} >No</option>
                         </select>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                     <div class="form-group">
                         <label for="">Cancel In </label>
                         <div class="input-group">
-                            <input type="number" name="metas[cancel_within]" class="form-control" placeholder="eg ." value="{{ $product->details('cancel_within') }}" required max="15">
+                            <input type="number" name="metas[cancel_within]" class="form-control" placeholder="eg ." value="{{ $product->getDetail('cancel_within') }}" required max="15">
                             <span class="input-group-append">
                                 <span class="input-group-text">Days</span>
                             </span>
@@ -56,9 +56,9 @@
                     <div class="form-group">
                         <label for="">Returnable </label>
                         <select name="metas[returnable]" class="form-control bg-light rounded-0">
-                            <option value="1" {{ $product->details('returnable') ? 'selected' : '' }}>Yes
+                            <option value="1" {{ $product->getDetail('returnable') ? 'selected' : '' }}>Yes
                             </option>
-                            <option value="0" {{ !$product->details('returnable') ? 'selected' : '' }}>No
+                            <option value="0" {{ !$product->getDetail('returnable') ? 'selected' : '' }}>No
                             </option>
                         </select>
                     </div>
@@ -68,7 +68,7 @@
                         <label for="">Return In </label>
                         <div class="input-group">
                             <input type="number" name="metas[return_within]" class="form-control" placeholder="eg ."
-                                value="{{ $product->details('return_within') }}"
+                                value="{{ $product->getDetail('return_within') }}"
                                 required max="15">
                             <span class="input-group-append">
                                 <span class="input-group-text">Days</span>
@@ -80,9 +80,9 @@
                     <div class="form-group">
                         <label for="">Replaceable </label>
                         <select name="metas[replaceable]" class="form-control bg-light rounded-0">
-                            <option value="1" {{ $product->details('replaceable') ? 'selected' : '' }}>Yes
+                            <option value="1" {{ $product->getDetail('replaceable') ? 'selected' : '' }}>Yes
                             </option>
-                            <option value="0" {{ $product->details('replaceable') ? 'selected' : '' }}>No
+                            <option value="0" {{ $product->getDetail('replaceable') ? 'selected' : '' }}>No
                             </option>
                         </select>
                     </div>
@@ -92,7 +92,7 @@
                         <label for="">Replace In </label>
                         <div class="input-group">
                             <input type="number" name="metas[replace_within]" class="form-control" placeholder="eg ."
-                                value="{{ $product->details('replace_within') }}"
+                                value="{{ $product->getDetail('replace_within') }}"
                                 required max="15">
                             <span class="input-group-append">
                                 <span class="input-group-text">Days</span>
@@ -103,19 +103,19 @@
             </div>
             <div class="form-group">
                 <label for="">Product Description</label>
-                <textarea name="metas[description]" rows="6" class="form-control text-editor">{{ $product->details('description') }}</textarea>
+                <textarea name="metas[description]" rows="6" class="form-control text-editor">{{ $product->getDetail('description') }}</textarea>
             </div>
             <div class="form-group">
                 <label for="">Meta Tile</label>
-                <textarea name="metas[m_title]" rows="2" class="form-control" maxlength="250">{{ $product->details('m_title') }}</textarea>
+                <textarea name="metas[m_title]" rows="2" class="form-control" maxlength="250">{{ $product->getDetail('m_title') }}</textarea>
             </div>
             <div class="form-group">
                 <label for="">Meta Keywords</label>
-                <textarea name="metas[m_keywords]" rows="2" class="form-control" maxlength="250">{{ $product->details('m_keywords') }}</textarea>
+                <textarea name="metas[m_keywords]" rows="2" class="form-control" maxlength="250">{{ $product->getDetail('m_keywords') }}</textarea>
             </div>
             <div class="form-group">
                 <label for="">Meta Description</label>
-                <textarea name="metas[m_description]" rows="2" class="form-control" maxlength="250">{{ $product->details('m_description') }}</textarea>
+                <textarea name="metas[m_description]" rows="2" class="form-control" maxlength="250">{{ $product->getDetail('m_description') }}</textarea>
             </div>
         </div>
         <div class="card-footer">

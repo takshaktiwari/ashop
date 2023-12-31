@@ -6,12 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\View;
 use Takshak\Ashop\Models\Shop\Product;
-use Takshak\Ashop\Traits\ProductTrait;
 
 class ProductController extends Controller
 {
-    use ProductTrait;
-
     public function index(Request $request)
     {
         $products = Product::query()
@@ -81,6 +78,7 @@ class ProductController extends Controller
             ->load('brand:id,name,slug')
             ->load('images')
             ->load('metas');
+
 
         return View::first(['shop.products.show', 'ashop::shop.products.show'])
             ->with([

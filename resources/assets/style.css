@@ -10,6 +10,14 @@
 
 .card.product .product_image {
 	position: relative;
+    overflow: hidden;
+}
+.card.product .product_image img{
+    transition: all 0.25s ease;
+}
+.card.product .product_image:hover img {
+	scale: 1.25;
+    transition: all 0.5s ease;
 }
 
 .card.product .overlay {
@@ -19,27 +27,13 @@
 	top: 0;
 }
 
-.card.product .overlay:hover .add_to_cart {
-	opacity: 1;
-	transition: all 0.3s ease;
-}
-
-.card.product .overlay .add_to_cart {
-	margin: auto;
-	opacity: 0.1;
-	transition: all 0.3s ease;
-}
-
-.card.product .overlay .wishlist_btn {
-	margin-top: 5%;
-	margin-bottom: auto;
-	margin-left: 5%;
-	margin-right: auto;
-	position: absolute;
-}
-
 .card.product .rating {
 	font-size: 11px;
+}
+.card.product .wishlist_btn{
+    position: absolute;
+    left: 0.5rem;
+    top: 0.5rem;
 }
 
 .products_page .shop_sidebar {

@@ -31,7 +31,9 @@
                     </div>
                 </div>
                 <div class="col-lg-8 col-md-7">
-                    <h3 class="fw-bold">{{ $product->name }}</h3>
+                    <h3 class="fw-bold">
+                        {{ $product->name }}
+                    </h3>
                     @if ($product->subtitle)
                         <p class="mb-2">{{ $product->subtitle }}</p>
                     @endif
@@ -48,7 +50,7 @@
                         <i class="fas fa-star"></i>
                         (1024 reviews)
                     </div>
-                    <form action="" class="mt-3" id="add_to_cart_form">
+                    <form action="{{ route('shop.carts.store', [$product]) }}" class="mt-3" id="add_to_cart_form">
                         <div class="d-flex gap-3">
                             <b class="my-auto">
                                 Quantity:
@@ -71,7 +73,8 @@
                                     <i class="fas fa-external-link-alt"></i> Buy Now
                                 </a>
                             @elseif ($product->checkout_type == 'query')
-                                <button type="button" class="btn btn-primary px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#product_query_modal">
+                                <button type="button" class="btn btn-primary px-3 rounded-pill" data-bs-toggle="modal"
+                                    data-bs-target="#product_query_modal">
                                     <i class="far fa-question-circle"></i> Buy Now
                                 </button>
                             @endif
@@ -109,6 +112,11 @@
                             @endif
                         @endforeach
                     </div>
+                    @if ($product->info)
+                        <div class="product_info mb-2">
+                            {{ $product->info }}
+                        </div>
+                    @endif
                     @if ($product->metas->where('key', 'attributes')->count())
                         <ul class="list-group mb-4 mt-3">
                             @foreach ($product->metas->where('key', 'attributes') as $attribute)
@@ -121,7 +129,7 @@
                     @else
                         <hr />
                     @endif
-                    {!! $product->details('description') !!}
+                    {!! $product->getDetail('description') !!}
                 </div>
             </div>
         </div>
@@ -145,25 +153,29 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Your Name:</label>
-                                    <input type="text" name="name" class="form-control" placeholder="Your full name" value="{{ old('name') }}" />
+                                    <input type="text" name="name" class="form-control"
+                                        placeholder="Your full name" value="{{ old('name') }}" />
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Your Email:</label>
-                                    <input type="email" name="email" class="form-control" placeholder="Your  email" value="{{ old('email') }}" />
+                                    <input type="email" name="email" class="form-control"
+                                        placeholder="Your  email" value="{{ old('email') }}" />
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="">Your Mobile:</label>
-                                    <input type="text" name="mobile" class="form-control" placeholder="Your mobile no." value="{{ old('mobile no.') }}" />
+                                    <input type="text" name="mobile" class="form-control"
+                                        placeholder="Your mobile no." value="{{ old('mobile no.') }}" />
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="">Product:</label>
-                                    <input type="text" name="title" class="form-control" value="{{ $product->name }}" />
+                                    <input type="text" name="title" class="form-control"
+                                        value="{{ $product->name }}" />
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -203,28 +215,6 @@
         <script src="{{ asset('assets/ashop/jquery.zoom.min.js') }}"></script>
         <script>
             $(document).ready(function() {
-
-                $("select.variants").change(function(e) {
-                    e.preventDefault();
-
-                    var variants = [];
-                    document.querySelectorAll("select.variants").forEach(elem => {
-                        if (elem.value) {
-                            variants.push(eval(elem.value));
-                        }
-                    });
-
-                    var currentUrl =
-                        "{{ route('shop.products.show', [$product] + request()->except('variants')) }}";
-
-                    currentUrl += currentUrl.includes("?") ? '&' : '?';
-                    currentUrl += $.param({
-                        variants: variants
-                    });
-
-                    window.location.href = currentUrl;
-                });
-
 
                 $('a.zoomImage').zoom({
                     magnify: 1.75,

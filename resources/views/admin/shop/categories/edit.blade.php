@@ -71,11 +71,11 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="">Parent Category </label>
-                        <select name="parent" class="form-control select2">
+                        <select name="category_id" class="form-control select2">
                             <option value="">-- Select --</option>
                             @foreach ($categories as $cat)
                                 <option value="{{ $cat->id }}"
-                                    {{ $cat->id == $category->parent ? 'selected' : '' }}>
+                                    {{ $cat->id == $category->parent_category?->id ? 'selected' : '' }}>
                                     {{ $cat->name }}
 
                                     @if ($cat->parent_category)
@@ -121,7 +121,9 @@
             </div>
         </div>
         <div class="card-footer">
-            <input type="submit" class="btn btn-dark px-4">
+            <button type="submit" class="btn btn-dark px-4">
+                <i class="fas fa-save"></i> Submit
+            </button>
         </div>
     </form>
 

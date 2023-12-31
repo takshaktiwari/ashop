@@ -5,12 +5,16 @@ namespace Takshak\Ashop;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Takshak\Ashop\Console\Commands\ProductsSearchTagsOptimizeCommand;
+use Takshak\Ashop\Console\Commands\SeedCommand;
 
 class AshopServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        $this->commands([ProductsSearchTagsOptimizeCommand::class]);
+        $this->commands([
+            ProductsSearchTagsOptimizeCommand::class,
+            SeedCommand::class
+        ]);
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'ashop');
         $this->loadViewComponentsAs('ashop', [
             View\Components\Ashop\AdminSidebarLinks::class,

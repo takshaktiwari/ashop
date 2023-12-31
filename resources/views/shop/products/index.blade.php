@@ -14,15 +14,15 @@
                     @if (request('display') == 'list')
                         <div class="row g-2">
                             @foreach ($products as $product)
-                                <div class="col-sm-12 col-6">
+                                <div class="col-12">
                                     <x-ashop-ashop:product-list-item :product="$product" />
                                 </div>
                             @endforeach
                         </div>
                     @else
-                        <div class="row g-2" data-masonry='{"percentPosition": true }'>
+                        <div class="row g-2 row-cols-2 row-cols-lg-4 " data-masonry='{"percentPosition": true }'>
                             @foreach ($products as $product)
-                                <div class="col-lg-4 col-6">
+                                <div class="col">
                                     <x-ashop-ashop:product-card :product="$product" />
                                 </div>
                             @endforeach

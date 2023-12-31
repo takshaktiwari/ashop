@@ -10,7 +10,7 @@ class WishlistController extends Controller
 {
     public function itemToggle(Product $product)
     {
-        if (auth()->user()->wishlistItems->pluck('id')->contains($product->id)) {
+        if (auth()->user()->wishlistItems?->pluck('id')->contains($product->id)) {
             auth()->user()->wishlistItems()->detach($product->id);
             return back()->withSuccess('SUCCESS !! Item is removed from your wish list.');
         } else {

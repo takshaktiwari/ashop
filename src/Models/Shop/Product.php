@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
 use Takshak\Imager\Facades\Placeholder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Product extends Model
 {
@@ -22,6 +23,17 @@ class Product extends Model
         'sell_price'   =>  'decimal:2',
         'net_price'   =>  'decimal:2',
     ];
+
+    protected function price(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return ($this->deal_price && $this->deal_expiry > now())
+                    ? $this->deal_price
+                    : $this->sell_price;
+            }
+        );
+    }
 
     /**
      * The categories that belong to the Product
@@ -131,16 +143,41 @@ class Product extends Model
         return $query->where('featured', true);
     }
 
+    public function details()
+    {
+        return $this->metas()->where('key', 'product_details');
+    }
 
-    public function details($name = null, $value = true)
+    public function attributes()
+    {
+        return $this->metas()->where('key', 'product_attributes');
+    }
+
+
+    public function getDetail($name = null, $value = true)
     {
         if (!$name) {
             return $this->metas;
         }
 
-        $meta = $this->metas->where('name', $name)->first();
+        $meta = $this->metas->where('key', 'product_details')->where('name', $name)->first();
         return $value ? $meta?->value : $meta;
     }
+
+    public function attribute($name = null, $value = true)
+    {
+        if (!$name) {
+            return $this->metas;
+        }
+
+        $meta = $this->metas->where('key', 'product_attributes')
+            ->where('name', $name)
+            ->first();
+
+        return $value ? $meta?->getValue() : $meta;
+    }
+
+
 
     public function formattedSellPrice($value = '')
     {
@@ -154,18 +191,14 @@ class Product extends Model
 
     public function formattedDealPrice($value = '')
     {
-        if($this->deal_price && $this->deal_expiry > now()) {
+        if ($this->deal_price && $this->deal_expiry > now()) {
             return config('ashop.currency.sign', '₹') . number_format($this->deal_price, 2);
         }
     }
 
     public function formattedPrice($value = '')
     {
-        if($this->deal_price && $this->deal_expiry > now()) {
-            return config('ashop.currency.sign', '₹') . number_format($this->deal_price, 2);
-        } else {
-            return $this->formattedSellPrice();
-        }
+        return config('ashop.currency.sign', '₹') . number_format($this->price, 2);
     }
 
     public function image_lg()

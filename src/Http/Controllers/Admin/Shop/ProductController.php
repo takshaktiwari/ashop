@@ -127,25 +127,32 @@ class ProductController extends Controller
 
     public function detailUpdate(Request $request, Product $product)
     {
+
         $request->validate([
             'metas.cancellable'   =>  'nullable|boolean',
-            'metas.cancel_within'   =>  'nullable|boolean',
+            'metas.cancel_within'   =>  'nullable|numeric',
             'metas.returnable'    =>  'nullable|boolean',
-            'metas.return_within'    =>  'nullable|boolean',
+            'metas.return_within'    =>  'nullable|numeric',
             'metas.replaceable'   =>  'nullable|boolean',
-            'metas.replace_within'   =>  'nullable|boolean',
+            'metas.replace_within'   =>  'nullable|numeric',
             'metas.description'       =>  'nullable|string',
             'metas.m_title'       =>  'nullable|string|max:254',
             'metas.m_keywords'    =>  'nullable|string|max:254',
             'metas.m_description' =>  'nullable|string|max:254',
         ]);
 
+        $product->details()->delete();
+
         foreach ($request->post('metas') as $name => $meta) {
-            $product->metas()->create([
-                'name' => $name,
-                'value' => $meta,
-            ]);
+            $product->details()->updateOrCreate(
+                [
+                    'key' => 'product_details',
+                    'name' => $name
+                ],
+                ['value' => $meta]
+            );
         }
+        return $product->details()->get();
 
         if ($request->file('metas')) {
             foreach ($request->file('metas') as $name => $meta) {
@@ -155,10 +162,13 @@ class ProductController extends Controller
                     time() . rand() . '.' . $fileImage->extension(),
                     'public'
                 );
-                $product->metas()->create([
-                    'name' => $name,
-                    'value' => storage($filePath),
-                ]);
+                $product->metas()->updateOrCreate(
+                    [
+                        'key' => 'product_details',
+                        'name' => $name
+                    ],
+                    ['value' => storage($filePath)]
+                );
             }
         }
 
@@ -190,12 +200,17 @@ class ProductController extends Controller
             'metas.*'    =>  'nullable|array'
         ]);
 
+        $product->attributes()->delete();
         foreach ($request->post('metas') as $name => $meta) {
-            $product->metas()->create([
-                'key' => 'attributes',
-                'name' => $name,
-                'value' => is_array($meta) ? json_encode($meta) : $meta,
-            ]);
+            $product->metas()->updateOrCreate(
+                [
+                    'key' => 'product_attributes',
+                    'name' => $name
+                ],
+                [
+                    'value' => is_array($meta) ? json_encode($meta) : $meta
+                ]
+            );
         }
 
         return redirect()->route('admin.shop.products.images', [$product])->withSuccess('Product attributes are updated');

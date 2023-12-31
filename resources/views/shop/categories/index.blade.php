@@ -2,13 +2,13 @@
     <x-breadcrumb title="Categories" :links="[['text' => 'Categories']]" />
     <section class="py-5">
         <div class="container">
-            <div class="row g-4" data-masonry='{"percentPosition": true }'>
+            <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5" data-masonry='{"percentPosition": true }'>
                 @foreach ($categories as $category)
                     <div class="col">
                         <div class="card brand_card">
-                            <img class="card-img-top" src="{{ $brand->image() }}" alt="Card image">
+                            <img class="card-img-top" src="{{ $category->image() }}" alt="Card image">
                             <div class="card-body">
-                                <a href="{{ route('shop.products.index', ['brand_id' => $brand->id]) }}" class="card-text">{{ $brand->name }}</a>
+                                <a href="{{ route('shop.products.index', ['category_id' => $category->id]) }}" class="card-text">{{ $category->name }}</a>
                             </div>
                         </div>
                     </div>

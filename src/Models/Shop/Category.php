@@ -89,6 +89,11 @@ class Category extends Model
         return $query->where('is_top', true);
     }
 
+    public function getMeta($key)
+    {
+        return $this->metas->where('key', $key)->first()?->value;
+    }
+
     public function image_lg()
     {
         return ($this->image_lg && Storage::disk('public')->exists($this->image_lg))
@@ -111,7 +116,7 @@ class Category extends Model
     {
         return Placeholder::width(config('ashop.categories.images.width', 800))
             ->height(config('ashop.categories.images.height', 900))
-            ->text($this->display_name)
+            ->text($this->display_name, ['size'  =>  60, 'angle'     =>  45])
             ->url();
     }
 

@@ -116,6 +116,7 @@ class CategoryController extends Controller
 
         foreach ($request->post('metas') as $name => $meta) {
             $category->metas()->create([
+                'key' => $name,
                 'name' => $name,
                 'value' => $meta,
             ]);
@@ -131,6 +132,7 @@ class CategoryController extends Controller
                 );
                 $category->metas()->create([
                     'name' => $name,
+                    'key' => $name,
                     'value' => storage($filePath),
                 ]);
             }
