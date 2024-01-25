@@ -85,6 +85,7 @@ Route::middleware('web')->group(function () {
 
         Route::prefix('carts')->name('carts.')->group(function () {
             Route::get('/', [CartController::class, 'index'])->name('index');
+            Route::put('update/{cart}', [CartController::class, 'update'])->name('update');
             Route::get('store/{product}', [CartController::class, 'store'])->name('store');
             Route::get('delete/{cart}', [CartController::class, 'delete'])->name('delete');
         });

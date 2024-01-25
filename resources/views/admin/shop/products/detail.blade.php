@@ -26,6 +26,30 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
+                        <label for="">Min Purchase </label>
+                        <input type="number" name="metas[min_purchase]" class="form-control" value="{{ $product->getDetail('min_purchase') ?? 1 }}"
+                            min="1">
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="">Max Purchase </label>
+                        <input type="number" name="metas[max_purchase]" class="form-control" value="{{ $product->getDetail('max_purchase') ?? 10 }}"
+                            min="1">
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="">GTIN </label>
+                        <input type="text" name="metas[gtin]" class="form-control" value="{{ $product->getDetail('gtin') }}"
+                            placeholder="eg. GTIN1012">
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
                         <label for="">GTIN </label>
                         <input type="text" name="metas[gtin]" class="form-control" value="{{ $product->getDetail('gtin') }}"
                             placeholder="eg. GTIN1012">
@@ -45,7 +69,7 @@
                     <div class="form-group">
                         <label for="">Cancel In </label>
                         <div class="input-group">
-                            <input type="number" name="metas[cancel_within]" class="form-control" placeholder="eg ." value="{{ $product->getDetail('cancel_within') }}" required max="15">
+                            <input type="number" name="metas[cancel_within]" class="form-control" placeholder="eg ." value="{{ $product->getDetail('cancel_within') ?? 0 }}" required max="15">
                             <span class="input-group-append">
                                 <span class="input-group-text">Days</span>
                             </span>
@@ -68,7 +92,7 @@
                         <label for="">Return In </label>
                         <div class="input-group">
                             <input type="number" name="metas[return_within]" class="form-control" placeholder="eg ."
-                                value="{{ $product->getDetail('return_within') }}"
+                                value="{{ $product->getDetail('return_within') ?? 0 }}"
                                 required max="15">
                             <span class="input-group-append">
                                 <span class="input-group-text">Days</span>
@@ -92,7 +116,7 @@
                         <label for="">Replace In </label>
                         <div class="input-group">
                             <input type="number" name="metas[replace_within]" class="form-control" placeholder="eg ."
-                                value="{{ $product->getDetail('replace_within') }}"
+                                value="{{ $product->getDetail('replace_within') ?? 0 }}"
                                 required max="15">
                             <span class="input-group-append">
                                 <span class="input-group-text">Days</span>

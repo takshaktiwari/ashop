@@ -152,7 +152,6 @@ class ProductController extends Controller
                 ['value' => $meta]
             );
         }
-        return $product->details()->get();
 
         if ($request->file('metas')) {
             foreach ($request->file('metas') as $name => $meta) {

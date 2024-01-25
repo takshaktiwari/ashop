@@ -35,7 +35,7 @@
                         <div class="checkout_action d-flex flex-wrap justify-content-between gap-2 mb-3">
                             <h4 class="my-auto fw-normal">
                                 <span class="fs-6">Subtotal: </span>
-                                <b>{{ config('ashop.currency.sign', '₹') . $carts->pluck('product')->sum('price') }}</b>
+                                <b>{{ config('ashop.currency.sign', '₹') . $carts->sum('subtotal') }}</b>
                             </h4>
 
                             <a href="" class="btn btn-dark px-3">
@@ -64,24 +64,20 @@
                                             @endif
                                             <h4>
                                                 {{ $cart->product->formattedPrice() }}
-                                                <del class="fs-6 fw-normal">{{ $cart->product->formattedNetPrice() }}</del>
+                                                <del
+                                                    class="fs-6 fw-normal">{{ $cart->product->formattedNetPrice() }}</del>
                                             </h4>
                                         </div>
                                     </div>
                                     <div class="cart_actions d-flex gap-3">
-                                        <div class="d-flex quantity_counter">
-                                            <button type="button"
-                                                class="btn btn-sm border btn-light px-2 py-0 rounded-0 minus">
-                                                <i class="fas fa-minus"></i>
-                                            </button>
-                                            <input type="number" name="quantity[{{ $cart->id }}]"
-                                                class="form-control px-1 py-0 rounded-0" min="1"
-                                                style="width: 50px" value="{{ old('quantity')[$cart->id] ?? '1' }}">
-                                            <button type="button"
-                                                class="btn btn-sm border btn-light px-2 py-0 rounded-0 plus">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                        </div>
+                                        <form action="{{ route('shop.carts.update', [$cart]) }}" method="POST" class="d-flex gap-2">
+                                            @csrf
+                                            @method('PUT')
+                                            <span>Quantity:</span>
+                                            <input type="number" name="quantity"
+                                                class="form-control px-1 py-0 rounded-0 cart_quantity" min="{{ $cart->product->getDetail('min_purchase') ?? 1 }}" max="{{ $cart->product->getDetail('max_purchase') ?? 10 }}"
+                                                style="width: 50px" value="{{ $cart->quantity }}">
+                                        </form>
                                         <div class="action_btns d-flex gap-1">
                                             <a href="{{ route('shop.carts.delete', [$cart]) }}"
                                                 class="btn btn-sm border-danger text-danger px-3 pt-1 pb-0 lh-sm">
@@ -100,7 +96,6 @@
                                                 </a>
                                             @endif
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -109,7 +104,7 @@
                         <div class="checkout_action d-flex flex-wrap justify-content-between gap-2 mt-3">
                             <h4 class="my-auto fw-normal">
                                 <span class="fs-6">Subtotal: </span>
-                                <b>{{ config('ashop.currency.sign', '₹') . $carts->pluck('product')->sum('price') }}</b>
+                                <b>{{ config('ashop.currency.sign', '₹') . $carts->sum('subtotal') }}</b>
                             </h4>
 
                             <a href="" class="btn btn-dark px-3">
@@ -136,5 +131,12 @@
 
     @push('scripts')
         <script src="{{ asset('assets/ashop/script.js') }}"></script>
+        <script>
+            $(document).ready(function () {
+                $(".cart_quantity").change(function(){
+                    $(this).parent('form').submit();
+                });
+            });
+        </script>
     @endpush
 </x-app-layout>
