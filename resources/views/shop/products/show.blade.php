@@ -80,12 +80,12 @@
                             @endif
 
                             @if ($product->wishlistAuthUser->count())
-                                <a href="{{ route('shop.wishlist.items.toggle', [$product]) }}" id="add_to_cart_btn"
+                                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}" id="add_to_cart_btn"
                                     class="btn btn-danger px-3 rounded-pill">
                                     <i class="fas fa-heart"></i> Wishlist
                                 </a>
                             @else
-                                <a href="{{ route('shop.wishlist.items.toggle', [$product]) }}" id="add_to_cart_btn"
+                                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}" id="add_to_cart_btn"
                                     class="btn btn-primary px-3 rounded-pill">
                                     <i class="far fa-heart"></i> Wishlist
                                 </a>

@@ -213,19 +213,22 @@ class Product extends Model
             ? storage($this->image_md)
             : $this->placeholderImage();
     }
+
     public function image_sm()
     {
         return ($this->image_sm && Storage::disk('public')->exists($this->image_sm))
             ? storage($this->image_sm)
             : $this->placeholderImage();
     }
+
     public function placeholderImage()
     {
         return Placeholder::width(config('ashop.products.images.width', 800))
             ->height(config('ashop.products.images.height', 900))
-            ->text($this->display_name)
+            ->text($this->name)
             ->url();
     }
+
     public function image($size = null)
     {
         if ($size == 'sm') {

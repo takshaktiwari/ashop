@@ -7,22 +7,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\View;
 use Takshak\Ashop\Models\Shop\Cart;
 use Takshak\Ashop\Models\Shop\Product;
+use Takshak\Ashop\Services\CartService;
 
 class CartController extends Controller
 {
     public function index()
     {
-        $carts = Cart::query()
-            ->with(['product' => function ($query) {
-                $query->with('metas');
-                $query->with('wishlistAuthUser');
-                $query->with('categories:id');
-            }])
-            ->has('product')
-            ->where('user_id', auth()->id())
-            ->orWhere('user_ip', request()->ip())
-            ->get();
-
+        $carts = (new CartService)->items();
         return View::first(['shop.carts.index', 'ashop::shop.carts.index'])
             ->with([
                 'carts'    =>  $carts

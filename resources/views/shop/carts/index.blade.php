@@ -38,7 +38,7 @@
                                 <b>{{ config('ashop.currency.sign', '₹') . $carts->sum('subtotal') }}</b>
                             </h4>
 
-                            <a href="" class="btn btn-dark px-3">
+                            <a href="{{ route('shop.checkout.index') }}" class="btn btn-dark px-3">
                                 Proceed to buy ({{ $carts->count() }})
                             </a>
                         </div>
@@ -85,12 +85,12 @@
                                             </a>
 
                                             @if ($cart->product->wishlistAuthUser->count())
-                                                <a href="{{ route('shop.wishlist.items.toggle', [$cart->product]) }}"
+                                                <a href="{{ route('shop.user.wishlist.items.toggle', [$cart->product]) }}"
                                                     class="btn btn-sm border-danger text-danger px-2 pt-1 pb-0 lh-sm text-danger">
                                                     <i class="fas fa-heart"></i>
                                                 </a>
                                             @else
-                                                <a href="{{ route('shop.wishlist.items.toggle', [$cart->product]) }}"
+                                                <a href="{{ route('shop.user.wishlist.items.toggle', [$cart->product]) }}"
                                                     class="btn btn-sm border-primary text-primary px-2 pt-1 pb-0 lh-sm">
                                                     <i class="far fa-heart"></i>
                                                 </a>
@@ -107,7 +107,7 @@
                                 <b>{{ config('ashop.currency.sign', '₹') . $carts->sum('subtotal') }}</b>
                             </h4>
 
-                            <a href="" class="btn btn-dark px-3">
+                            <a href="{{ route('shop.checkout.index') }}" class="btn btn-dark px-3">
                                 Proceed to buy ({{ $carts->count() }})
                             </a>
                         </div>
@@ -117,7 +117,7 @@
 
             <hr />
 
-            <x-ashop-ashop:products-group title="Browse products"
+            <x-ashop-ashop:products-group title="Similar products"
                 subtitle="Browse other products similar to these in your cart." :categories="$carts
                     ->pluck('product')
                     ->pluck('categories')

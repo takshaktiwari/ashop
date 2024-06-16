@@ -25,12 +25,12 @@
                 <i class="fas fa-shopping-cart"></i> Add to cart
             </a>
             @if ($product->wishlistAuthUser->count())
-                <a href="{{ route('shop.wishlist.items.toggle', [$product]) }}"
+                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
                     class="btn btn-sm rounded-pill wishlist_btn fs-5 text-danger">
                     <i class="fas fa-heart"></i>
                 </a>
             @else
-                <a href="{{ route('shop.wishlist.items.toggle', [$product]) }}"
+                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
                     class="btn btn-sm rounded-pill wishlist_btn fs-5 ">
                     <i class="far fa-heart"></i>
                 </a>

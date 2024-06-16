@@ -4,12 +4,12 @@
         <img class="card-img-top" src="{{ $product->image() }}" alt="Card image">
         <div class="d-flex overlay">
             @if ($product->wishlistAuthUser->count())
-                <a href="{{ route('shop.wishlist.items.toggle', [$product]) }}"
+                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
                     class="btn btn-sm rounded-pill wishlist_btn fs-5 text-danger">
                     <i class="fas fa-heart"></i>
                 </a>
             @else
-                <a href="{{ route('shop.wishlist.items.toggle', [$product]) }}"
+                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
                     class="btn btn-sm rounded-pill wishlist_btn fs-5">
                     <i class="far fa-heart"></i>
                 </a>
@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="card-body">
-        <a href="{{ route('shop.products.show', [$product]) }}" class="card-text lc-3">{{ $product->name }}</a>
+        <a href="{{ route('shop.products.show', [$product]) }}" class="card-text lc-2">{{ $product->name }}</a>
         <div class="mt-2">
             <b class="me-1">{{ $product->formattedPrice() }}</b>
             <del class="small">{{ $product->formattedNetPrice() }}</del>

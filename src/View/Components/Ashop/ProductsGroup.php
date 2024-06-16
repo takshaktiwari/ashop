@@ -15,8 +15,9 @@ class ProductsGroup extends Component
      * @return void
      */
     public function __construct(
-        public $title,
+        public $title = null,
         public $subtitle = null,
+        public $heading = null,
         public $buttons = [],
         public $parent = true,
         public $type = null, //featured
@@ -24,6 +25,7 @@ class ProductsGroup extends Component
         public $ids = [],
         public $categories = [],
         public $limit = 10,
+        public $container = true,
         public $columns = 'row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5'
     ) {
 

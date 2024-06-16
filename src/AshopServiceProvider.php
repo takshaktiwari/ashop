@@ -27,13 +27,15 @@ class AshopServiceProvider extends ServiceProvider
             View\Components\Ashop\ProductsGroup::class,
             View\Components\Ashop\CategoriesGroup::class,
             View\Components\Ashop\BrandsGroup::class,
+            View\Components\Ashop\UserAccount::class,
+            View\Components\Ashop\UserBottomNav::class,
         ]);
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
 
         $this->publishes([
-            __DIR__ . '/../routes/ashop.php' => config_path('ashop.php'),
+            __DIR__ . '/../config/ashop.php' => config_path('ashop.php'),
         ], 'ashop-config');
 
         $this->publishes([

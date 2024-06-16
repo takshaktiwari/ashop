@@ -27,3 +27,9 @@
         <li><a href="{{ route('admin.shop.products.import.sheets') }}">Import Products</a></li>
     </ul>
 </li>
+<li>
+    <a href="{{ route('admin.shop.coupons.index') }}" class="waves-effect">
+        <i class="fas fa-percent"></i>
+        <span>Coupons</span>
+    </a>
+</li>

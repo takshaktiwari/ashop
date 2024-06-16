@@ -2,16 +2,22 @@
 
 use Takshak\Adash\Http\Middleware\GatesMiddleware;
 use Illuminate\Support\Facades\Route;
+use Takshak\Adash\Http\Middleware\ReferrerMiddleware;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\AttributeController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\BrandController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\CategoryController;
+use Takshak\Ashop\Http\Controllers\Admin\Shop\CouponController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductImageController;
+use Takshak\Ashop\Http\Controllers\Shop\AddressController as ShopAddressController;
 use Takshak\Ashop\Http\Controllers\Shop\BrandController as ShopBrandController;
 use Takshak\Ashop\Http\Controllers\Shop\CartController;
 use Takshak\Ashop\Http\Controllers\Shop\CategoryController as ShopCategoryController;
+use Takshak\Ashop\Http\Controllers\Shop\CheckoutController;
+use Takshak\Ashop\Http\Controllers\Shop\OrderController as ShopOrderController;
 use Takshak\Ashop\Http\Controllers\Shop\ProductController as ShopProductController;
 use Takshak\Ashop\Http\Controllers\Shop\ShopController;
+use Takshak\Ashop\Http\Controllers\Shop\UserController as ShopUserController;
 use Takshak\Ashop\Http\Controllers\Shop\WishlistController as ShopWishlistController;
 
 Route::middleware('web')->group(function () {
@@ -70,9 +76,11 @@ Route::middleware('web')->group(function () {
                     Route::post('images/bulk/delete', 'bulkDelete')->name('images.bulk.destroy');
                 });
             });
+
+            Route::resource('coupons', CouponController::class);
         });
 
-    Route::prefix('shop')->name('shop.')->group(function () {
+    Route::middleware(ReferrerMiddleware::class)->prefix('shop')->name('shop.')->group(function () {
         Route::get('/', [ShopController::class, 'index'])->name('index');
 
         Route::get('categories', [ShopCategoryController::class, 'index'])->name('categories.index');
@@ -90,9 +98,35 @@ Route::middleware('web')->group(function () {
             Route::get('delete/{cart}', [CartController::class, 'delete'])->name('delete');
         });
 
+        Route::prefix('checkout')->name('checkout.')->group(function () {
+            Route::get('/', [CheckoutController::class, 'index'])->name('index');
+            Route::post('address', [CheckoutController::class, 'address'])->name('address');
+            Route::get('summary', [CheckoutController::class, 'summary'])->name('summary');
+            Route::post('coupon', [CheckoutController::class, 'coupon'])->name('coupon');
+            Route::get('coupon/remove', [CheckoutController::class, 'couponRemove'])->name('coupon.remove');
+            Route::post('payment', [CheckoutController::class, 'payment'])->name('payment');
+            Route::get('place-order', [CheckoutController::class, 'placeOrder'])->name('place.order');
+            Route::get('confirmation/{orderId?}', [CheckoutController::class, 'confirmation'])->name('confirmation');
+        });
+
         Route::middleware(['auth'])->group(function () {
-            Route::get('wishlist/items', [ShopWishlistController::class, 'items'])->name('wishlist.items.index');
-            Route::get('wishlist/items/toggle/{product}', [ShopWishlistController::class, 'itemToggle'])->name('wishlist.items.toggle');
+            Route::prefix('user')->name('user.')->group(function () {
+                Route::get('dashboard', [ShopUserController::class, 'dashboard'])->name('dashboard');
+                Route::get('profile', [ShopUserController::class, 'profile'])->name('profile');
+                Route::post('profile', [ShopUserController::class, 'profileUpdate'])->name('profile.update');
+
+                Route::get('orders', [ShopOrderController::class, 'index'])->name('orders.index');
+                Route::get('orders/{order}', [ShopOrderController::class, 'show'])->name('orders.show');
+
+                Route::resource('addresses', ShopAddressController::class);
+                Route::get('addresses/{address}/make-default', [ShopAddressController::class, 'makeDefault'])
+                    ->name('addresses.make-default');
+
+                Route::prefix('wishlist')->name('wishlist.')->group(function () {
+                    Route::get('items', [ShopWishlistController::class, 'items'])->name('items.index');
+                    Route::get('items/toggle/{product}', [ShopWishlistController::class, 'itemToggle'])->name('items.toggle');
+                });
+            });
         });
     });
 });
