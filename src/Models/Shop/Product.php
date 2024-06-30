@@ -82,7 +82,7 @@ class Product extends Model
      */
     public function wishlistUsers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'wishlist_items');
+        return $this->belongsToMany(User::class, 'wishlist_items')->withTimestamps();
     }
 
     /**

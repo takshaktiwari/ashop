@@ -28,7 +28,7 @@ class Order extends Model
     {
         return Attribute::make(
             get: function () {
-                return $this->subtotal + $this->shipping_charge - $this->discount;
+                return round($this->subtotal + $this->shipping_charge - $this->discount, 2);
             }
         );
     }
@@ -56,6 +56,11 @@ class Order extends Model
     public function paymentStatus()
     {
         return $this->payment_status ? 'Paid' : 'Not Paid';
+    }
+
+    public function paymentMode()
+    {
+        return $this->payment_mode == 'cod' ? 'COD' : str($this->payment_mode)->title();
     }
 
     public function orderStatus()

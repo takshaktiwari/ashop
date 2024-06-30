@@ -28,8 +28,20 @@
     </ul>
 </li>
 <li>
-    <a href="{{ route('admin.shop.coupons.index') }}" class="waves-effect">
-        <i class="fas fa-percent"></i>
-        <span>Coupons</span>
+    <a href="{{ route('admin.shop.carts.index') }}" class="waves-effect">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Carts</span>
+    </a>
+</li>
+<li>
+    <a href="{{ route('admin.shop.carts.index') }}" class="waves-effect">
+        <i class="fas fa-heart"></i>
+        <span>Wishlist</span>
+    </a>
+</li>
+<li>
+    <a href="{{ route('admin.shop.orders.index') }}" class="waves-effect">
+        <i class="fas fa-box"></i>
+        <span>Orders</span>
     </a>
 </li>

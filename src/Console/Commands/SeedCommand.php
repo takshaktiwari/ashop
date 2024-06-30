@@ -9,6 +9,7 @@ use Takshak\Ashop\Models\Shop\Attribute;
 use Takshak\Ashop\Models\Shop\Brand;
 use Takshak\Ashop\Models\Shop\Category;
 use Takshak\Ashop\Models\Shop\Product;
+use Takshak\Ashop\Models\Shop\WishlistItem;
 
 class SeedCommand extends Command
 {
@@ -45,6 +46,7 @@ class SeedCommand extends Command
             Attribute::truncate();
             Category::truncate();
             Product::truncate();
+            WishlistItem::truncate();
         }
 
         $this->line('Seeding brands to the database');
@@ -58,6 +60,9 @@ class SeedCommand extends Command
 
         $this->line('Seeding products to the database');
         Artisan::call('db:seed', ['--class' => 'ProductSeeder']);
+
+        $this->line('Seeding carts to the database');
+        Artisan::call('db:seed', ['--class' => 'CartSeeder']);
 
         $this->newLine();
         $this->info('Database successfully seeded.');

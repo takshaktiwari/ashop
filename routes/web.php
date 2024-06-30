@@ -9,16 +9,19 @@ use Takshak\Ashop\Http\Controllers\Admin\Shop\CategoryController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\CouponController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductImageController;
+use Takshak\Ashop\Http\Controllers\Admin\Shop\CartController;
+use Takshak\Ashop\Http\Controllers\Admin\Shop\WishlistController;
+use Takshak\Ashop\Http\Controllers\Admin\Shop\OrderController;
 use Takshak\Ashop\Http\Controllers\Shop\AddressController as ShopAddressController;
 use Takshak\Ashop\Http\Controllers\Shop\BrandController as ShopBrandController;
-use Takshak\Ashop\Http\Controllers\Shop\CartController;
+use Takshak\Ashop\Http\Controllers\Shop\CartController as ShopCartController;
 use Takshak\Ashop\Http\Controllers\Shop\CategoryController as ShopCategoryController;
-use Takshak\Ashop\Http\Controllers\Shop\CheckoutController;
 use Takshak\Ashop\Http\Controllers\Shop\OrderController as ShopOrderController;
 use Takshak\Ashop\Http\Controllers\Shop\ProductController as ShopProductController;
-use Takshak\Ashop\Http\Controllers\Shop\ShopController;
 use Takshak\Ashop\Http\Controllers\Shop\UserController as ShopUserController;
 use Takshak\Ashop\Http\Controllers\Shop\WishlistController as ShopWishlistController;
+use Takshak\Ashop\Http\Controllers\Shop\ShopController;
+use Takshak\Ashop\Http\Controllers\Shop\CheckoutController;
 
 Route::middleware('web')->group(function () {
     Route::middleware(['auth', GatesMiddleware::class])
@@ -78,6 +81,17 @@ Route::middleware('web')->group(function () {
             });
 
             Route::resource('coupons', CouponController::class);
+
+            Route::get('carts', [CartController::class, 'index'])->name('carts.index');
+            Route::get('carts/delete', [CartController::class, 'destroyChecked'])->name('carts.destroy.checked');
+            Route::get('carts/{cart}/delete', [CartController::class, 'destroy'])->name('carts.destroy');
+
+            Route::get('wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+            Route::get('wishlist/delete', [WishlistController::class, 'destroyChecked'])->name('wishlist.destroy.checked');
+            Route::get('wishlist/{wishlist}/delete', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
+
+            Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+            Route::get('orders/{order}/delete', [OrderController::class, 'destroy'])->name('orders.destroy');
         });
 
     Route::middleware(ReferrerMiddleware::class)->prefix('shop')->name('shop.')->group(function () {
@@ -92,10 +106,10 @@ Route::middleware('web')->group(function () {
         Route::get('products/{product:slug}', [ShopProductController::class, 'show'])->name('products.show');
 
         Route::prefix('carts')->name('carts.')->group(function () {
-            Route::get('/', [CartController::class, 'index'])->name('index');
-            Route::put('update/{cart}', [CartController::class, 'update'])->name('update');
-            Route::get('store/{product}', [CartController::class, 'store'])->name('store');
-            Route::get('delete/{cart}', [CartController::class, 'delete'])->name('delete');
+            Route::get('/', [ShopCartController::class, 'index'])->name('index');
+            Route::put('update/{cart}', [ShopCartController::class, 'update'])->name('update');
+            Route::get('store/{product}', [ShopCartController::class, 'store'])->name('store');
+            Route::get('delete/{cart}', [ShopCartController::class, 'delete'])->name('delete');
         });
 
         Route::prefix('checkout')->name('checkout.')->group(function () {

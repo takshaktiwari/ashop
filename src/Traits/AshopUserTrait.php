@@ -16,7 +16,7 @@ trait AshopUserTrait
      */
     public function wishlistItems(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'wishlist_items');
+        return $this->belongsToMany(Product::class, 'wishlist_items')->withTimestamps();
     }
 
     /**
