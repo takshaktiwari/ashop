@@ -135,12 +135,12 @@ class Product extends Model
 
     public function scopeActive(Builder $query)
     {
-        return $query->where('status', true);
+        return $query->where('products.status', true);
     }
 
     public function scopeFeatured(Builder $query)
     {
-        return $query->where('featured', true);
+        return $query->where('products.featured', true);
     }
 
     public function details()

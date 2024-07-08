@@ -66,7 +66,6 @@ class Category extends Model
         return $this->belongsToMany(Product::class);
     }
 
-
     public function scopeActive(Builder $query)
     {
         return $query->where('status', true);

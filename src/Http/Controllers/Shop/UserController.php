@@ -34,7 +34,7 @@ class UserController extends Controller
         }
 
 
-        $wishlistItemsCount = auth()->user()->wishlistItems->count();
+        $wishlistItemsCount = auth()->user()->wishlistItems?->count();
         $pendingOrdersCount = Order::query()
             ->where('user_id', auth()->id())
             ->where('order_status', config('ashop.order.initial_status'))

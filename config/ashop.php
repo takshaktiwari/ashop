@@ -1,6 +1,13 @@
 <?php
 
 return [
+    'shop' => [
+        'name'  =>  config('app.name'),
+        'home'  =>  config('app.url'),
+        'email' =>  env('MAIL_PRIMARY', 'shop@example.com'),
+        'mobile' => env('SHOP_MOBILE', "+91 9876 987 987"),
+        'address' => env('SHOP_ADDRESS', 'Shop No. 12B, Shanti Apartments, Laxmi Nagar, Delhi - 110092')
+    ],
     'currency' => [
         'code'  =>  'INR',
         'sign'  =>  '₹'

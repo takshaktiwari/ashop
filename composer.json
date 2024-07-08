@@ -14,7 +14,8 @@
     "require": {
         "takshak/adash": "*",
         "maatwebsite/excel": "^3.1",
-        "yajra/laravel-datatables": "^10.1"
+        "yajra/laravel-datatables": "^10.1",
+        "mpyw/compoships-eager-limit": "^1.0"
     },
     "autoload": {
         "psr-4" : {
