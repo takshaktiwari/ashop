@@ -155,7 +155,7 @@ class ProductController extends Controller
 
         if ($request->file('metas')) {
             foreach ($request->file('metas') as $name => $meta) {
-                $fileImage = $request->file('metas')[$key];
+                $fileImage = $request->file('metas')[$name];
                 $filePath = $fileImage->storeAs(
                     'metas/products/',
                     time() . rand() . '.' . $fileImage->extension(),

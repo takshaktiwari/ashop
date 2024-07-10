@@ -13,10 +13,12 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
 use Takshak\Imager\Facades\Placeholder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Takshak\Areviews\Traits\Models\ReviewModelTrait;
 
 class Product extends Model
 {
     use HasFactory;
+    use ReviewModelTrait;
     protected $guarded = [];
     protected $casts = [
         'deal_expiry'   =>  'date',
@@ -121,6 +123,16 @@ class Product extends Model
     public function productChildren()
     {
         return $this->products();
+    }
+
+    /**
+     * Get all of the orderProduct for the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orderProduct(): HasMany
+    {
+        return $this->hasMany(OrderProduct::class);
     }
 
     public function metas(): MorphMany

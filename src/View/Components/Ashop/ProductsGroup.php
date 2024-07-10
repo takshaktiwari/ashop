@@ -31,6 +31,9 @@ class ProductsGroup extends Component
 
         $this->products = Product::query()
             ->active()
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->with('wishlistAuthUser:id,name')
             ->when(count($this->categories), function ($query) {
                 $query->whereHas('categories', function ($query) {
                     $query->whereIn('categories.id', $this->categories);

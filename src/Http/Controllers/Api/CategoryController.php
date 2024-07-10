@@ -60,8 +60,16 @@ class CategoryController extends Controller
         return CategoriesResource::collection($categories);
     }
 
-    public function show(Category $category)
+    public function show(Request $request, Category $category)
     {
+        $request->validate([
+            'count_products' => 'nullable|boolean',
+            'with_children' => 'nullable|boolean',
+            'with_products' => 'nullable|boolean',
+            'products_featured' => 'nullable|boolean',
+            'products_limit' => 'nullable|numeric',
+        ]);
+
         abort_if(!$category->status, 404, 'Category is not active');
 
         if (request('with_products')) {

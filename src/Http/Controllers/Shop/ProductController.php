@@ -12,6 +12,8 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $products = Product::query()
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
             ->with('wishlistAuthUser:id,name')
             ->when($request->get('category'), function ($query) use ($request) {
                 $query->whereHas('categories', function ($query) use ($request) {
@@ -77,7 +79,8 @@ class ProductController extends Controller
             ->load('categories:id,name,slug,display_name,category_id')
             ->load('brand:id,name,slug')
             ->load('images')
-            ->load('metas');
+            ->load('metas')
+            ->loadCount('reviews');
 
 
         return View::first(['shop.products.show', 'ashop::shop.products.show'])

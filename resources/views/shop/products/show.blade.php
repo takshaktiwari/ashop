@@ -37,18 +37,18 @@
                     @if ($product->subtitle)
                         <p class="mb-2">{{ $product->subtitle }}</p>
                     @endif
+
                     <div class="product_price d-flex gap-2">
                         <h3 class="mb-0 fw-bold">{{ $product->formattedPrice() }}</h3>
                         <div class="mt-auto">
                             <del>{{ $product->formattedNetPrice() }}</del>
                         </div>
                     </div>
-                    <div class="rating small">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        (1024 reviews)
+                    <div class="my-2 reviews_rating d-flex gap-2">
+                        <div class="badge bg-warning my-auto text-dark">
+                            {{ $product->rating }} <i class="fas fa-star"></i>
+                        </div>
+                        <a href="#reviews_listing" class="my-auto">{{ $product->reviews_count }} reviews</a>
                     </div>
                     <form action="{{ route('shop.carts.store', [$product]) }}" class="mt-3" id="add_to_cart_form">
                         <div class="d-flex gap-3">
@@ -80,13 +80,13 @@
                             @endif
 
                             @if ($product->wishlistAuthUser->count())
-                                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}" id="add_to_cart_btn"
-                                    class="btn btn-danger px-3 rounded-pill">
+                                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
+                                    id="add_to_cart_btn" class="btn btn-danger px-3 rounded-pill">
                                     <i class="fas fa-heart"></i> Wishlist
                                 </a>
                             @else
-                                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}" id="add_to_cart_btn"
-                                    class="btn btn-primary px-3 rounded-pill">
+                                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
+                                    id="add_to_cart_btn" class="btn btn-primary px-3 rounded-pill">
                                     <i class="far fa-heart"></i> Wishlist
                                 </a>
                             @endif
@@ -130,6 +130,12 @@
                         <hr />
                     @endif
                     {!! $product->getDetail('description') !!}
+
+                    <div class="reviews_listing mt-4" id="reviews_listing">
+                        <x-areviews-areviews:reviews :model="$product" column="col-12" />
+
+                        <x-areviews-areviews:review-form :model="$product" />
+                    </div>
                 </div>
             </div>
         </div>

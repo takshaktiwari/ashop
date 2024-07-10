@@ -14,6 +14,15 @@ class Cart extends Model
     use HasFactory;
     protected $guarded = [];
 
+    protected function price(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->product->price;
+            }
+        );
+    }
+
     protected function subtotal(): Attribute
     {
         return Attribute::make(
@@ -36,7 +45,9 @@ class Cart extends Model
     {
         return Attribute::make(
             get: function () {
-                return ($this->product->net_price * $this->quantity) - ($this->product->price * $this->quantity);
+                $discountOnNetPrice = ($this->product->net_price * $this->quantity) - ($this->product->price * $this->quantity);
+
+                return round($discountOnNetPrice, 2);
             }
         );
     }

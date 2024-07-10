@@ -1,4 +1,3 @@
-
 <div class="card product">
     <div class="product_image">
         <img class="card-img-top" src="{{ $product->image() }}" alt="Card image">
@@ -18,19 +17,22 @@
     </div>
     <div class="card-body">
         <a href="{{ route('shop.products.show', [$product]) }}" class="card-text lc-2">{{ $product->name }}</a>
+        <div class="mt-1 reviews_rating d-flex gap-2">
+            <div class="badge bg-warning my-auto text-dark">
+                {{ $product->rating }} <i class="fas fa-star"></i>
+            </div>
+            <a href="{{ route('shop.products.show', [$product]) }}#reviews_listing" class="my-auto">
+                {{ $product->reviews_count }} reviews
+            </a>
+        </div>
         <div class="mt-2">
             <b class="me-1">{{ $product->formattedPrice() }}</b>
             <del class="small">{{ $product->formattedNetPrice() }}</del>
         </div>
-        <div class="rating small">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-        </div>
     </div>
     <div class="card-footer text-center ">
-        <a href="{{ route('shop.carts.store', [$product]) }}" class="btn btn-sm btn-primary rounded-pill px-3 add_to_cart">
+        <a href="{{ route('shop.carts.store', [$product]) }}"
+            class="btn btn-sm btn-primary rounded-pill px-3 add_to_cart">
             <i class="fas fa-shopping-cart"></i> <span>Add to</span> cart
         </a>
     </div>
