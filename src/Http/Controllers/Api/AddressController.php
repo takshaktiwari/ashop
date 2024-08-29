@@ -1,25 +1,18 @@
 <?php
 
-namespace Takshak\Ashop\Http\Controllers\Shop;
+namespace Takshak\Ashop\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\View;
+use Takshak\Ashop\Http\Resources\AddressesResource;
 use Takshak\Ashop\Models\Shop\Address;
 
 class AddressController extends Controller
 {
     public function index()
     {
-        $addresses = Address::where('user_id', auth()->id())->orderBy('default_addr', 'DESC')->get();
-        return View::first(['shop.user.address.index', 'ashop::shop.user.address.index'])->with([
-            'addresses' => $addresses
-        ]);
-    }
-
-    public function create()
-    {
-        return View::first(['shop.user.address.create', 'ashop::shop.user.address.create']);
+        $addresses = Address::where('user_id', auth()->id())->get();
+        return AddressesResource::collection($addresses);
     }
 
     public function store(Request $request)
@@ -46,20 +39,20 @@ class AddressController extends Controller
             Address::where('id', '!=', $address->id)->update(['billing_addr' => false]);
         }
 
-        return to_route('shop.user.addresses.index')->withSuccess('New address has been added');
+        return AddressesResource::make($address);
     }
 
-    public function edit(Address $address)
+    public function show(Address $address)
     {
-        return View::first(['shop.user.address.edit', 'ashop::shop.user.address.edit'])->with([
-            'address' => $address
-        ]);
+        abort_if($address->user_id != auth()->id(), 404, 'Address is not found');
+        return AddressesResource::make($address);
     }
 
-    public function update(Address $address, Request $request)
+    public function update(Request $request, Address $address)
     {
+        abort_if($address->user_id != auth()->id(), 404, 'Address is not found');
+
         $validated = $request->validate([
-            'address_id' => 'nullable|numeric',
             'name' => 'required|max:200',
             'mobile' => 'required|max:50',
             'address_line_1' => 'required|max:255',
@@ -81,32 +74,14 @@ class AddressController extends Controller
             Address::where('id', '!=', $address->id)->update(['billing_addr' => false]);
         }
 
-        return to_route('shop.user.addresses.index')->withSuccess('Address has been updated');
+        return AddressesResource::make($address);
     }
 
-    public function destroy(Address $address)
+    public function delete(Address $address)
     {
-
-        if ($address->default_addr) {
-            $otherAddr = Address::where('id', '!=', $address->id)->first();
-            if ($otherAddr) {
-                $otherAddr->update(['default_addr' => true]);
-            }
-        }
-        if ($address->billing_addr) {
-            $otherAddr = Address::where('id', '!=', $address->id)->first();
-            if ($otherAddr) {
-                $otherAddr->update(['billing_addr' => true]);
-            }
-        }
+        abort_if($address->user_id != auth()->id(), 404, 'Address is not found');
         $address->delete();
-        return to_route('shop.user.addresses.index');
-    }
 
-    public function makeDefault(Address $address)
-    {
-        Address::where('user_id', auth()->id())->update(['default_addr' => false]);
-        $address->update(['default_addr' => true]);
-        return back();
+        return response()->json(['data' => ['message' => 'Address has been deleted']]);
     }
 }

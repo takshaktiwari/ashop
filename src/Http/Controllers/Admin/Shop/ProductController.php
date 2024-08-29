@@ -14,12 +14,17 @@ use Takshak\Ashop\Models\Shop\Product;
 use Takshak\Ashop\Models\Shop\ProductImage;
 use Takshak\Ashop\Models\Shop\ShopMeta;
 use Maatwebsite\Excel\Facades\Excel;
+use Takshak\Ashop\DataTables\ProductsDataTable;
 use Takshak\Ashop\Exports\ProductsExport;
 
 class ProductController extends Controller
 {
-    public function index(Request $request, ProductAction $action)
+    public function index(Request $request, ProductsDataTable $dataTable, ProductAction $action)
     {
+        return $dataTable->render(
+            View::exists('admin.shop.products.index') ? 'admin.shop.products.index' : 'ashop::admin.shop.products.index'
+        );
+
         $products = $action->filteredProducts(with: [
             'productParent:id,product_id,name',
             'productChildren:id,product_id,name',

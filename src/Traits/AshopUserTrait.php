@@ -20,6 +20,16 @@ trait AshopUserTrait
     }
 
     /**
+     * The favorites that belong to the AshopUserTrait
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function favorites(): BelongsToMany
+    {
+        return $this->wishlistItems();
+    }
+
+    /**
      * Get all of the addresses for the AshopUserTrait
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

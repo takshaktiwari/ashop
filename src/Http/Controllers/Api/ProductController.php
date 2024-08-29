@@ -4,6 +4,8 @@ namespace Takshak\Ashop\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
 use Takshak\Ashop\Http\Resources\CategoriesResource;
 use Takshak\Ashop\Http\Resources\ProductsResource;
 use Takshak\Ashop\Models\Shop\Category;
@@ -19,7 +21,8 @@ class ProductController extends Controller
             'search' => 'nullable|string',
             'limit' => 'nullable|numeric',
             'category' => 'nullable|string',
-            'order_by' => 'nullable|in:latest,oldest,price_asc,price_desc,name_asc,name_desc'
+            'order_by' => 'nullable|in:latest,oldest,price_asc,price_desc,name_asc,name_desc',
+            'paginate' => 'nullable|boolean'
         ]);
 
         $products = Product::query()
@@ -35,7 +38,7 @@ class ProductController extends Controller
                     $query->orWhere('categories.display_name', request('category'));
                 });
             })
-            ->when($request->input('featured'), fn ($q) => $q->featured())
+            ->when($request->input('featured'), fn($q) => $q->featured())
             ->when($request->input('search'), function ($query) {
                 $query->where(function ($query) {
                     $query->where('name', 'LIKE', '%' . request('search') . '%');
@@ -45,20 +48,30 @@ class ProductController extends Controller
                     $query->orWhere('search_tags', 'LIKE', '%' . request('search') . '%');
                 });
             })
-            ->when(request('order_by') == 'latest', fn ($q) => $q->latest())
-            ->when(request('order_by') == 'oldest', fn ($q) => $q->oldest())
-            ->when(request('order_by') == 'price_asc', fn ($q) => $q->orderBy('sell_price', 'ASC'))
-            ->when(request('order_by') == 'price_desc', fn ($q) => $q->orderBy('sell_price', 'DESC'))
-            ->when(request('order_by') == 'name_asc', fn ($q) => $q->orderBy('name', 'ASC'))
-            ->when(request('order_by') == 'name_desc', fn ($q) => $q->orderBy('name', 'DESC'))
-            ->paginate(request('limit', 50));
+            ->when(request('order_by') == 'latest', fn($q) => $q->latest())
+            ->when(request('order_by') == 'oldest', fn($q) => $q->oldest())
+            ->when(request('order_by') == 'price_asc', fn($q) => $q->orderBy('sell_price', 'ASC'))
+            ->when(request('order_by') == 'price_desc', fn($q) => $q->orderBy('sell_price', 'DESC'))
+            ->when(request('order_by') == 'name_asc', fn($q) => $q->orderBy('name', 'ASC'))
+            ->when(request('order_by') == 'name_desc', fn($q) => $q->orderBy('name', 'DESC'));
+
+        $products = request('paginate', true)
+            ? $products->paginate(request('limit', 50))
+            : $products->limit(request('limit', 50))->get();
 
         return ProductsResource::collection($products);
     }
 
-    public function show(Product $product)
+    public function show($slugOrId)
     {
-        $product->load(['categories' => fn ($q) => $q->active()])
+        $product = Product::query()
+            ->where('slug', $slugOrId)
+            ->orWhere('id', $slugOrId)
+            ->first();
+
+        abort_if(!$product, 404, 'Product not found');
+
+        $product->load(['categories' => fn($q) => $q->active()])
             ->load('images')
             ->load('metas')
             ->load('reviews')

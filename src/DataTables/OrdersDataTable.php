@@ -21,24 +21,31 @@ class OrdersDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addIndexColumn()
-            ->editColumn('action', function ($order) {
-                return '<a href="' . route('admin.shop.orders.destroy', [$order]) . '" class="load-circle btn btn-sm btn-danger delete-alert" title="Delete this">
-                    <i class="fas fa-trash"></i>
-                </a>';
+            ->editColumn('action', function ($item) {
+                return '
+                    <a href="' . route('admin.shop.orders.show', [$item]) . '" class="load-circle btn btn-sm btn-info" title="Order detail">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <a href="' . route('admin.shop.orders.destroy', [$item]) . '" class="load-circle btn btn-sm btn-danger delete-alert" title="Delete this">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                ';
             })
-            ->editColumn('checkbox', function ($order) {
+            ->editColumn('checkbox', function ($item) {
                 return '
                     <div class="form-check">
                         <label class="form-check-label mb-0">
-                            <input class="form-check-input selected_items" type="checkbox" name="selected_items[]" value="' . $order->id . '">
+                            <input class="form-check-input selected_items" type="checkbox" name="selected_items[]" value="' . $item->id . '">
                         </label>
                     </div>
                 ';
             })
             ->editColumn('order_no', function ($item) {
-                return '<a href="#">#' . $item->order_no . '</a>';
+                return '<a href="' . route('admin.shop.orders.show', [$item]) . '">#' . $item->order_no . '</a>';
             })
-            ->editColumn('user', fn ($item) => $item->user?->name)
+            ->editColumn('user', function ($item) {
+                return '<a href="' . route('admin.users.show', [$item->user]) . '" class="text-nowrap">' . $item->user?->name . '</a>';
+            })
             ->orderColumn('user', function ($query, $order) {
                 $query->orderByRaw('users.name ' . $order);
             })
@@ -50,26 +57,26 @@ class OrdersDataTable extends DataTable
                 });
             })
             ->editColumn('items', function ($item) {
-                return $item->order_products_count;
+                return  $item->order_products_count;
             })
             ->editColumn('amount', function ($item) {
-                return $item->total_amount;
+                return config('ashop.currency.sign') . $item->total_amount;
             })
             ->editColumn('payment', function ($item) {
                 $mode = '<span class="fw-bold">' . $item->paymentMode() . '</span>';
                 $status = '<span>' . $item->paymentStatus() . '</span>';
-                return $mode . '<span class="text-nowrap"> (' . $status . ')</span>';
+                return $mode . '<span class="text-nowrap small d-block"> (' . $status . ')</span>';
             })
             ->editColumn('order_status', function ($item) {
                 return '<span>' . $item->orderStatus() . '</span>';
             })
-            ->editColumn('address', function ($item) {
-                return '<span class="fs-12">' . $item->address(2) . '</span>';
-            })
+            // ->editColumn('address', function ($item) {
+            //     return '<span class="fs-12">' . $item->address(2) . '</span>';
+            // })
             ->editColumn('created_at', function ($item) {
                 return '<span class="text-nowrap">' . $item->created_at?->format('Y-m-d h:i A') . '</span>';
             })
-            ->rawColumns(['action', 'order_no', 'checkbox', 'payment', 'order_status', 'address', 'created_at']);
+            ->rawColumns(['action', 'order_no', 'user', 'checkbox', 'payment', 'order_status', 'address', 'created_at']);
     }
 
     /**
@@ -129,13 +136,7 @@ class OrdersDataTable extends DataTable
                 ->addClass('text-center'),
 
             Column::computed('checkbox')
-                ->title('
-                    <div class="form-check">
-                        <label class="form-check-label mb-0">
-                            <input class="form-check-input" type="checkbox" id="check_all_items" value="1">
-                        </label>
-                    </div>
-                ')
+                ->title('')
                 ->searchable(false)
                 ->orderable(false)
                 ->exportable(false)
@@ -149,14 +150,15 @@ class OrdersDataTable extends DataTable
             Column::make('amount')->width(100),
             Column::make('payment')->width(100),
             Column::make('order_status')->width(100)->addClass('text-nowrap'),
-            Column::make('address')->width(250)->orderable(false),
+            //Column::make('address')->width(250)->orderable(false),
             Column::make('created_at')->orderable(false),
             Column::computed('action')
                 ->width(60)
                 ->searchable(false)
                 ->orderable(false)
                 ->exportable(false)
-                ->printable(false),
+                ->printable(false)
+                ->addClass('text-nowrap'),
         ];
     }
 

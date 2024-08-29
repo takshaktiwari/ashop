@@ -3,7 +3,11 @@
         <h4 class="my-auto">
             <i class="fa-solid fa-box me-2"></i> Order: <b>#{{ $order->order_no }}</b>
         </h4>
+        <a href="{{ route('shop.user.orders.index') }}" class="btn btn-sm btn-primary px-3">
+            <i class="fa-solid fa-list"></i> Orders
+        </a>
     </x-slot:title>
+
     @push('styles')
     @endpush
 

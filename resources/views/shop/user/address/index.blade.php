@@ -57,5 +57,6 @@
                 </div>
             </div>
         @endforeach
+        <x-ashop-ashop:user-bottom-nav />
     </div>
 </x-ashop-ashop:user-account>

@@ -62,7 +62,7 @@
 
                     <div class="action_btns my-auto">
                         <h4 class="mb-1">{{ $order->orderStatus() }}</h4>
-                        <a href="" class="btn btn-sm btn-light border border-dark px-4 py-0 my-1">
+                        <a href="{{ route('shop.user.orders.show', [$order]) }}" class="btn btn-sm btn-light border border-dark px-4 py-0 my-1">
                             Details
                         </a>
                         <a href="" class="btn btn-sm btn-light border border-dark px-4 py-0 my-1 text-nowrap">

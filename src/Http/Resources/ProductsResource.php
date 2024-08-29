@@ -40,10 +40,6 @@ class ProductsResource extends JsonResource
             'checkout_type' => $this->checkout_type,
             'external_url' => $this->external_url,
             'created_at' => $this->created_at,
-            'categories' => $this->when(
-                $this->relationLoaded('categories'),
-                CategoriesResource::collection($this->categories)
-            ),
             'reviews' => $this->when(
                 $this->relationLoaded('reviews'),
                 $this->reviews
@@ -53,6 +49,10 @@ class ProductsResource extends JsonResource
                 ProductImagesResource::collection($this->images)
             ),
         ];
+
+        if($this->relationLoaded('categories')){
+            $arr['categories'] = CategoriesResource::collection($this->categories);
+        }
 
         // two condition with same relation doesn't work, so keeping it out of the $arr in a single condition
         if($this->relationLoaded('metas')){

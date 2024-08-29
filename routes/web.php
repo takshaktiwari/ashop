@@ -92,6 +92,7 @@ Route::middleware('web')->group(function () {
 
             Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
             Route::get('orders/{order}/delete', [OrderController::class, 'destroy'])->name('orders.destroy');
+            Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
         });
 
     Route::middleware(ReferrerMiddleware::class)->prefix('shop')->name('shop.')->group(function () {

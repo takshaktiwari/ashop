@@ -7,7 +7,7 @@
             <a href="{{ route('shop.user.addresses.create') }}" class="btn btn-sm btn-info px-3">
                 <i class="fa-solid fa-plus"></i> New
             </a>
-            <a href="{{ route('shop.user.addresses.create') }}" class="btn btn-sm btn-primary px-3">
+            <a href="{{ route('shop.user.addresses.index') }}" class="btn btn-sm btn-primary px-3">
                 <i class="fa-solid fa-list"></i> All Addresses
             </a>
         </div>
@@ -85,5 +85,6 @@
                 </button>
             </div>
         </form>
+        <x-ashop-ashop:user-bottom-nav />
     </div>
 </x-ashop-ashop:user-account>

@@ -3,7 +3,7 @@
         <h4 class="my-auto">
             <i class="fa-regular fa-address-book me-2"></i> New Address
         </h4>
-        <a href="{{ route('shop.user.addresses.create') }}" class="btn btn-sm btn-primary px-3">
+        <a href="{{ route('shop.user.addresses.index') }}" class="btn btn-sm btn-primary px-3">
             <i class="fa-solid fa-list"></i> All Addresses
         </a>
     </x-slot:title>
@@ -79,5 +79,7 @@
                 </button>
             </div>
         </form>
+
+        <x-ashop-ashop:user-bottom-nav />
     </div>
 </x-ashop-ashop:user-account>

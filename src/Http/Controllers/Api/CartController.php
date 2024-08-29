@@ -13,11 +13,16 @@ class CartController extends Controller
 {
     public function index()
     {
-        $carts = (new CartService)->items();
+        $carts = (new CartService())->items()->map(function ($item) {
+            unset($item->product->categories);
+            unset($item->product->metas);
+            return $item;
+        });
         return CartsResource::collection($carts);
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $request->validate([
             'quantity' => 'nullable|numeric|min:1',
             'product_id' => 'required|numeric'
@@ -62,7 +67,7 @@ class CartController extends Controller
                 'product_id' => $product->id
             ]);
         }
-
+        unset($cart->product->metas);
         return CartsResource::make($cart);
     }
 
@@ -84,7 +89,7 @@ class CartController extends Controller
 
         $cart->quantity = $quantity;
         $cart->save();
-
+        unset($cart->product->metas);
         return CartsResource::make($cart);
     }
 
