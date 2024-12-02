@@ -10,11 +10,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
+use Jenssegers\Agent\Facades\Agent;
+use Staudenmeir\EloquentEagerLimit\HasEagerLimit;
 use Takshak\Imager\Facades\Placeholder;
 
 class Category extends Model
 {
-    use HasFactory;
+    use HasFactory, HasEagerLimit;
     protected $guarded = [];
 
     /**
@@ -26,6 +28,7 @@ class Category extends Model
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
+
     public function parent(): BelongsTo
     {
         return $this->parentCategory();
@@ -90,7 +93,27 @@ class Category extends Model
 
     public function getMeta($key)
     {
-        return $this->metas->where('key', $key)->first()?->value;
+        if (!$this->relationLoaded('metas')) {
+            $this->load('metas');
+        }
+
+        $meta = $this->metas->where('key', $key)->first();
+        if (!$meta) {
+            return null;
+        }
+
+        return $meta->is_file ? storage($meta->value) : $meta->value;
+    }
+
+    public function banner()
+    {
+        if (Agent::isMobile()) {
+            return $this->getMeta('banner_mobile');
+        } elseif (Agent::isTablet()) {
+            return $this->getMeta('banner_tablet');
+        } else {
+            return $this->getMeta('banner_desktop');
+        }
     }
 
     public function image_lg()
@@ -129,6 +152,32 @@ class Category extends Model
             return $this->image_lg();
         } else {
             return $this->image_md();
+        }
+    }
+
+    public function excerpt($limit = 200)
+    {
+        return str($this->description)->limit($limit);
+    }
+
+    public function name()
+    {
+        return $this->display_name ? $this->display_name : $this->name;
+    }
+
+    public function parentCategoryIds()
+    {
+        $parentIds = [];
+        $this->recursiveGetParentIds($this, $parentIds);
+
+        return $parentIds;
+    }
+
+    private function recursiveGetParentIds($category, &$parentIds)
+    {
+        if ($category->parent) {
+            $parentIds[] = $category->parent->id;
+            $this->recursiveGetParentIds($category->parent, $parentIds);
         }
     }
 }

@@ -3,9 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
+use Takshak\Ashop\Models\Shop\Brand;
 use Takshak\Ashop\Models\Shop\Cart;
 use Takshak\Ashop\Models\Shop\Product;
+use Takshak\Imager\Facades\Picsum;
 
 class CartSeeder extends Seeder
 {

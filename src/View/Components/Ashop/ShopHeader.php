@@ -19,7 +19,10 @@ class ShopHeader extends Component
         $this->categories = Category::query()
             ->select('id', 'category_id', 'name', 'slug')
             ->isParent()
-            ->with('children:id,category_id,name,slug')
+            ->with(['children' => function ($query) {
+                $query->select('id', 'category_id', 'name', 'slug');
+                $query->with('children:id,category_id,name,slug');
+            }])
             ->get();
     }
 

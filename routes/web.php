@@ -105,6 +105,7 @@ Route::middleware('web')->group(function () {
 
         Route::get('products', [ShopProductController::class, 'index'])->name('products.index');
         Route::get('products/{product:slug}', [ShopProductController::class, 'show'])->name('products.show');
+        Route::get('products/reviews/{product:slug}', [ShopProductController::class, 'reviews'])->name('products.reviews');
 
         Route::prefix('carts')->name('carts.')->group(function () {
             Route::get('/', [ShopCartController::class, 'index'])->name('index');

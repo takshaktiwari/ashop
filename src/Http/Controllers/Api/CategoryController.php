@@ -34,7 +34,7 @@ class CategoryController extends Controller
             })
             ->when($request->input('count_products'), function ($query) {
                 $query->withCount(['products' => function ($query) {
-                    $query->active()->when(request('featured_products'), fn ($q) => $q->featured());
+                    $query->active()->when(request('featured_products'), fn($q) => $q->featured());
                 }]);
             })
             ->when($request->get('search'), function ($query) {
@@ -51,10 +51,10 @@ class CategoryController extends Controller
             ->when(!$request->get('category_id'), function ($query) {
                 $query->isParent();
             })
-            ->when($request->get('featured'), fn ($q) => $q->where('featured', true))
-            ->when($request->get('is_top'), fn ($q) => $q->where('is_top', true))
-            ->when($request->get('featured') == '0', fn ($q) => $q->where('featured', false))
-            ->when($request->get('is_top') == '0', fn ($q) => $q->where('is_top', false))
+            ->when($request->get('featured'), fn($q) => $q->where('featured', true))
+            ->when($request->get('is_top'), fn($q) => $q->where('is_top', true))
+            ->when($request->get('featured') == '0', fn($q) => $q->where('featured', false))
+            ->when($request->get('is_top') == '0', fn($q) => $q->where('is_top', false))
             ->paginate(request('limit', 50));
 
         return CategoriesResource::collection($categories);
@@ -75,7 +75,7 @@ class CategoryController extends Controller
         if (request('with_products')) {
             $category->load(['products' => function ($query) {
                 $query->active()
-                    ->when(request('products_featured'), fn ($q) => $q->featured())
+                    ->when(request('products_featured'), fn($q) => $q->featured())
                     ->limit(request('products_limit', 10));
             }]);
         }
@@ -83,7 +83,7 @@ class CategoryController extends Controller
         if (request('count_products')) {
             $category->loadCount(['products' => function ($query) {
                 $query->active()
-                    ->when(request('products_featured'), fn ($q) => $q->featured());
+                    ->when(request('products_featured'), fn($q) => $q->featured());
             }]);
         }
 
@@ -94,16 +94,58 @@ class CategoryController extends Controller
                         $query->active()->with(['children' => function ($query) {
                             $query->active()
                                 ->with('children')
-                                ->when(request('count_products'), fn ($q) => $q->withCount('products'));
+                                ->when(request('count_products'), fn($q) => $q->withCount('products'));
                         }]);
-                        $query->when(request('count_products'), fn ($q) => $q->withCount('products'));
+                        $query->when(request('count_products'), fn($q) => $q->withCount('products'));
                     }]);
-                    $query->when(request('count_products'), fn ($q) => $q->withCount('products'));
+                    $query->when(request('count_products'), fn($q) => $q->withCount('products'));
                 }]);
-                $query->when(request('count_products'), fn ($q) => $q->withCount('products'));
+                $query->when(request('count_products'), fn($q) => $q->withCount('products'));
             }]);
         }
 
         return CategoriesResource::make($category);
+    }
+
+    public function withProducts(Request $request)
+    {
+        $request->validate([
+            'categories' => 'nullable|array',
+            'featured' => 'nullable|boolean',
+            'is_top' => 'nullable|boolean',
+            'limit' => 'nullable|numeric',
+            'products' => 'nullable|array',
+            'products.limit' => 'nullable|numeric',
+            'products.featured' => 'nullable|boolean',
+            'products.order_by' => 'nullable|in:latest,oldest,price_asc,price_desc,name_asc,name_desc',
+        ]);
+
+        $categories = Category::query()
+            ->active()
+            ->when($request->boolean('is_top'), fn($q) => $q->where('is_top', true))
+            ->when(!$request->boolean('is_top'), fn($q) => $q->where('is_top', false))
+            ->when($request->boolean('featured'), fn($q) => $q->where('featured', true))
+            ->when(!$request->boolean('featured'), fn($q) => $q->where('featured', false))
+            ->when($request->input('categories'), function ($query) use ($request) {
+                $query->where(function ($query) use ($request) {
+                    $query->whereIn('id', $request->input('categories'));
+                    $query->orWhereIn('slug', $request->input('categories'));
+                });
+            })
+            ->with(['products' => function ($query) use ($request) {
+                $query->loadCardDetails()
+                    ->when($request->input('products.featured'), fn($q) => $q->featured())
+                    ->when($request->input('products.order_by') == 'latest', fn($q) => $q->latest())
+                    ->when($request->input('products.order_by') == 'oldest', fn($q) => $q->oldest())
+                    ->when($request->input('products.order_by') == 'price_asc', fn($q) => $q->orderBy('sell_price', 'ASC'))
+                    ->when($request->input('products.order_by') == 'price_desc', fn($q) => $q->orderBy('sell_price', 'DESC'))
+                    ->when($request->input('products.order_by') == 'name_asc', fn($q) => $q->orderBy('name', 'ASC'))
+                    ->when($request->input('products.order_by') == 'name_desc', fn($q) => $q->orderBy('name', 'DESC'))
+                    ->limit(request('products.limit', 10));
+            }])
+            ->limit(request('limit', 5))
+            ->get();
+
+        return CategoriesResource::collection($categories);
     }
 }

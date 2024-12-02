@@ -31,18 +31,51 @@
         enctype="multipart/form-data" class="card shadow-sm">
         @csrf
         <div class="card-body">
-            <div class="d-flex">
-                @if ($category?->detail?->banner_sm)
-                    <div class="banner pr-3">
-                        <img src="{{ url('storage' . $category?->detail?->banner_sm) }}" alt=""
-                            style="max-height: 70px;" class="border rounded">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="d-flex">
+                        @if ($category?->getMeta('banner_desktop'))
+                            <div class="banner pe-3 my-auto">
+                                <img src="{{ $category?->getMeta('banner_desktop') }}" alt=""
+                                    style="max-height: 65px; max-width: 100px;" class="border rounded">
+                            </div>
+                        @endif
+                        <div class="form-group flex-fill pr-3">
+                            <label for="">Category (Desktop)</label>
+                            <input type="file" name="metas[banner_desktop]" class="form-control">
+                        </div>
                     </div>
-                @endif
-                <div class="form-group flex-fill pr-3">
-                    <label for="">Category Banner</label>
-                    <input type="file" name="metas[banner]" class="form-control">
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex">
+                        @if ($category?->getMeta('banner_tablet'))
+                            <div class="banner pe-3 my-auto">
+                                <img src="{{ $category?->getMeta('banner_tablet') }}" alt=""
+                                    style="max-height: 65px; max-width: 100px;" class="border rounded">
+                            </div>
+                        @endif
+                        <div class="form-group flex-fill pr-3">
+                            <label for="">Category (Tablet)</label>
+                            <input type="file" name="metas[banner_tablet]" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex">
+                        @if ($category?->getMeta('banner_mobile'))
+                            <div class="banner pe-3">
+                                <img src="{{ $category?->getMeta('banner_mobile') }}" alt=""
+                                    style="max-height: 65px; max-width: 100px;" class="border rounded">
+                            </div>
+                        @endif
+                        <div class="form-group flex-fill pr-3">
+                            <label for="">Category (Mobile)</label>
+                            <input type="file" name="metas[banner_mobile]" class="form-control">
+                        </div>
+                    </div>
                 </div>
             </div>
+
 
             <div class="row">
                 <div class="col-md-3 col-6">
@@ -122,8 +155,9 @@
                     <div class="form-group">
                         <label for="">Replace In </label>
                         <div class="input-group">
-                            <input type="number" name="metas[replace_within]" class="form-control" placeholder="eg ."
-                                value="{{ $category?->getMeta('replace_within') }}" required max="15">
+                            <input type="number" name="metas[replace_within]" class="form-control"
+                                placeholder="eg ." value="{{ $category?->getMeta('replace_within') }}" required
+                                max="15">
                             <span class="input-group-append">
                                 <span class="input-group-text">Days</span>
                             </span>

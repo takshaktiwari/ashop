@@ -132,9 +132,13 @@
                     {!! $product->getDetail('description') !!}
 
                     <div class="reviews_listing mt-4" id="reviews_listing">
-                        <x-areviews-areviews:reviews :model="$product" column="col-12" />
+                        <x-areviews-areviews:reviews :model="$product" :addReview="auth()->check()" column="col-12" />
 
-                        <x-areviews-areviews:review-form :model="$product" />
+                        <div class="text-center">
+                            <a href="{{ route('shop.products.reviews', [$product]) }}" class="btn btn-sm px-4 btn-dark">
+                                <i class="fas fa-star"></i> See all reviews
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

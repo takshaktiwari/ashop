@@ -7,7 +7,8 @@
             <ul>
                 @foreach ($categories as $category)
                     <li>
-                        <a href="{{ route('shop.products.index', request()->except('category') + ['category' => $category->slug]) }}">
+                        <a
+                            href="{{ route('shop.products.index', request()->except(['category', 'page']) + ['category' => $category->slug]) }}">
                             {{ $category->name }}
                         </a>
                     </li>
@@ -15,7 +16,8 @@
                         <ul>
                             @foreach ($category->children as $childCategory)
                                 <li>
-                                    <a href="{{ route('shop.products.index', request()->except('category') + ['category' => $childCategory->slug]) }}">
+                                    <a
+                                        href="{{ route('shop.products.index', request()->except(['category', 'page']) + ['category' => $childCategory->slug]) }}">
                                         {{ $childCategory->name }}
                                     </a>
                                 </li>
@@ -49,30 +51,31 @@
                     </ul>
                 </div>
             </div>
-
-            @foreach ($primaryCategory->attributes as $attribute)
-                <div class="widget">
-                    <h6 class="shop_sidebar_title">
-                        <i class="fa-solid fa-caret-right"></i> {{ $attribute->name }}
-                    </h6>
-                    <div class="widget_body">
-                        <ul class="ps-4">
-                            @foreach ($attribute->options as $option)
-                                <li class="form-check">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox" name="attributes[]"
-                                            value="{{ $option }}"
-                                            onchange='document.getElementById("attributes_filter").submit()'
-                                            {{ collect(request()->get('attributes'))->contains($option) ? 'checked' : '' }}>
-                                        <span>{{ $option }}</span>
-                                    </label>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            @endforeach
         @endif
+
+        @foreach ($filterAttributes as $attribute => $options)
+            <div class="widget">
+                <h6 class="shop_sidebar_title">
+                    <i class="fa-solid fa-caret-right"></i> {{ $attribute }}
+                </h6>
+                <div class="widget_body">
+                    <ul class="ps-4">
+                        @foreach ($options as $option)
+                            <li class="form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" name="attributes[]"
+                                        value="{{ $option }}"
+                                        onchange='document.getElementById("attributes_filter").submit()'
+                                        {{ collect(request()->get('attributes'))->contains($option) ? 'checked' : '' }}>
+                                    <span>{{ $option }}</span>
+                                </label>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        @endforeach
+
         @foreach (request()->except(['attributes', 'brands_ids']) as $input => $value)
             <input type="hidden" name="{{ $input }}" value="{{ $value }}">
         @endforeach

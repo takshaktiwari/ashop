@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Takshak\Ashop\Console\Commands\ClearJunkOrdersCommand;
+use Takshak\Ashop\Console\Commands\ProductAttachParentCategoriesCommand;
 use Takshak\Ashop\Console\Commands\ProductsSearchTagsOptimizeCommand;
 use Takshak\Ashop\Console\Commands\SeedCommand;
 
@@ -15,6 +16,7 @@ class AshopServiceProvider extends ServiceProvider
     {
         $this->commands([
             ProductsSearchTagsOptimizeCommand::class,
+            ProductAttachParentCategoriesCommand::class,
             SeedCommand::class,
             ClearJunkOrdersCommand::class
         ]);

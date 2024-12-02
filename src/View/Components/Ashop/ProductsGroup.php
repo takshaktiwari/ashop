@@ -8,7 +8,6 @@ use Takshak\Ashop\Models\Shop\Product;
 
 class ProductsGroup extends Component
 {
-    public $products;
     /**
      * Create a new component instance.
      *
@@ -24,43 +23,42 @@ class ProductsGroup extends Component
         public $order = 'latest', //latest, oldest, rand
         public $ids = [],
         public $categories = [],
+        public $products = [],
         public $limit = 10,
         public $container = true,
         public $columns = 'row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5'
     ) {
-
-        $this->products = Product::query()
-            ->active()
-            ->withCount('reviews')
-            ->withAvg('reviews', 'rating')
-            ->with('wishlistAuthUser:id,name')
-            ->when(count($this->categories), function ($query) {
-                $query->whereHas('categories', function ($query) {
-                    $query->whereIn('categories.id', $this->categories);
-                    $query->orWhereIn('categories.name', $this->categories);
-                    $query->orWhereIn('categories.slug', $this->categories);
-                });
-            })
-            ->when($this->ids && count($this->ids), function ($query) {
-                $query->whereIn('products.id', $this->ids);
-            })
-            ->when($this->parent, function ($query) {
-                $query->parent();
-            })
-            ->when($this->type == 'featured', function ($query) {
-                $query->featured();
-            })
-            ->when($this->order == 'latest', function ($query) {
-                $query->latest();
-            })
-            ->when($this->order == 'oldest', function ($query) {
-                $query->oldest();
-            })
-            ->when($this->order == 'rand', function ($query) {
-                $query->inRandomOrder();
-            })
-            ->limit($this->limit)
-            ->get();
+        if (!count($this->products)) {
+            $this->products = Product::query()
+                ->loadCardDetails()
+                ->when(count($this->categories), function ($query) {
+                    $query->whereHas('categories', function ($query) {
+                        $query->whereIn('categories.id', $this->categories);
+                        $query->orWhereIn('categories.name', $this->categories);
+                        $query->orWhereIn('categories.slug', $this->categories);
+                    });
+                })
+                ->when($this->ids && count($this->ids), function ($query) {
+                    $query->whereIn('products.id', $this->ids);
+                })
+                ->when($this->parent, function ($query) {
+                    $query->parent();
+                })
+                ->when($this->type == 'featured', function ($query) {
+                    $query->featured();
+                })
+                ->when($this->order == 'latest', function ($query) {
+                    $query->latest();
+                })
+                ->when($this->order == 'oldest', function ($query) {
+                    $query->oldest();
+                })
+                ->when($this->order == 'rand', function ($query) {
+                    $query->inRandomOrder();
+                })
+                ->limit($this->limit)
+                ->get();
+        }
     }
 
     /**

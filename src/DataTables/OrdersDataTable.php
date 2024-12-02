@@ -44,7 +44,9 @@ class OrdersDataTable extends DataTable
                 return '<a href="' . route('admin.shop.orders.show', [$item]) . '">#' . $item->order_no . '</a>';
             })
             ->editColumn('user', function ($item) {
-                return '<a href="' . route('admin.users.show', [$item->user]) . '" class="text-nowrap">' . $item->user?->name . '</a>';
+                return $item->user
+                    ? '<a href="' . route('admin.users.show', [$item->user]) . '" class="text-nowrap">' . $item->user?->name . '</a>'
+                    : '';
             })
             ->orderColumn('user', function ($query, $order) {
                 $query->orderByRaw('users.name ' . $order);

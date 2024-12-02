@@ -16,11 +16,17 @@ class ShopSidebar extends Component
      *
      * @return void
      */
-    public function __construct(public $category = null)
+    public function __construct(public $category = null, public $filterAttributes = [])
     {
-        $this->primaryCategory = $this->category;
-        if (request('category')) {
-            $this->primaryCategory = Category::where('slug', request('category'))->first();
+
+        $this->primaryCategory  = request('category')
+            ? Category::where('slug', request('category'))->first()
+            : $this->category;
+
+        if (!count($this->filterAttributes) && $this->primaryCategory) {
+            $this->filterAttributes = $this->primaryCategory->attributes->groupBy('name')->map(function ($item) {
+                return $item->pluck('options')->collapse();
+            });
         }
 
         $this->categories = Category::query()

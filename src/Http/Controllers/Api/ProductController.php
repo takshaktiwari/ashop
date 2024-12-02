@@ -8,28 +8,28 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
 use Takshak\Ashop\Http\Resources\CategoriesResource;
 use Takshak\Ashop\Http\Resources\ProductsResource;
+use Takshak\Ashop\Models\Shop\Cart;
 use Takshak\Ashop\Models\Shop\Category;
+use Takshak\Ashop\Models\Shop\CategoryProduct;
 use Takshak\Ashop\Models\Shop\OrderProduct;
 use Takshak\Ashop\Models\Shop\Product;
+use Takshak\Ashop\Models\Shop\WishlistItem;
 
 class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'featured' => 'nullable|boolean',
             'search' => 'nullable|string',
             'limit' => 'nullable|numeric',
             'category' => 'nullable|string',
             'order_by' => 'nullable|in:latest,oldest,price_asc,price_desc,name_asc,name_desc',
-            'paginate' => 'nullable|boolean'
+            'paginate' => 'nullable|boolean',
+            'with_filter_attributes' => 'nullable|boolean',
         ]);
 
-        $products = Product::query()
-            ->active()
-            ->withCount('reviews')
-            ->withAvg('reviews', 'rating')
-            ->with('wishlistAuthUser:id,name')
+        $productsQuery = Product::query()
             ->when($request->input('category'), function ($query) {
                 $query->whereHas('categories', function ($query) {
                     $query->where('categories.id', request('category'));
@@ -47,39 +47,81 @@ class ProductController extends Controller
                     $query->orWhere('info', 'LIKE', '%' . request('search') . '%');
                     $query->orWhere('search_tags', 'LIKE', '%' . request('search') . '%');
                 });
-            })
-            ->when(request('order_by') == 'latest', fn($q) => $q->latest())
-            ->when(request('order_by') == 'oldest', fn($q) => $q->oldest())
-            ->when(request('order_by') == 'price_asc', fn($q) => $q->orderBy('sell_price', 'ASC'))
-            ->when(request('order_by') == 'price_desc', fn($q) => $q->orderBy('sell_price', 'DESC'))
-            ->when(request('order_by') == 'name_asc', fn($q) => $q->orderBy('name', 'ASC'))
-            ->when(request('order_by') == 'name_desc', fn($q) => $q->orderBy('name', 'DESC'));
+            });
 
+        $products = (clone $productsQuery)->loadCardDetails()->productsOrderBy(request('order_by'));
         $products = request('paginate', true)
-            ? $products->paginate(request('limit', 50))
-            : $products->limit(request('limit', 50))->get();
+            ? (clone $products)->paginate(request('limit', 50))
+            : (clone $products)->limit(request('limit', 50))->get();
 
-        return ProductsResource::collection($products);
+        $filterAttributes = [];
+        if ($request->boolean('with_filter_attributes')) {
+            $filterAttributes = (clone $productsQuery)->select('id')
+                ->with('attributes:metable_type,metable_id,name,key,value')
+                ->get()
+                ->pluck('attributes')
+                ->collapse()
+                ->map(function ($meta) {
+                    return [
+                        'name' => $meta->name,
+                        'value' => json_decode($meta->value, true)
+                    ];
+                })
+                ->sortBy('name')
+                ->groupBy('name')
+                ->map(function ($attribute) {
+                    return collect($attribute)->pluck('value')->flatten()->unique()->values();
+                })
+                ->take(10);
+        }
+
+        return ProductsResource::collection($products)->additional([
+            'filter_attributes' => $filterAttributes
+        ]);
     }
 
-    public function show($slugOrId)
+    public function show(Request $request, $slugOrId)
     {
+        $request->validate([
+            'similar_products' => 'nullable|boolean',
+            'similar_products_featured' => 'nullable|boolean',
+            'similar_products_limit' => 'nullable|numeric',
+            'similar_products_order_by' => 'nullable|in:latest,oldest,price_asc,price_desc,name_asc,name_desc,rand',
+            'reviews_limit' => 'nullable|numeric',
+        ]);
+
         $product = Product::query()
-            ->where('slug', $slugOrId)
-            ->orWhere('id', $slugOrId)
+            ->where(function ($query) use ($slugOrId) {
+                $query->where('slug', $slugOrId);
+                $query->orWhere('id', $slugOrId);
+            })
+            ->with(['categories' => fn($q) => $q->active()])
+            ->with('images')
+            ->with('metas')
+            ->with(['reviews' => fn($q) => $q->active()->limit('5')])
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->with('wishlistAuthUser:id,name')
             ->first();
 
         abort_if(!$product, 404, 'Product not found');
 
-        $product->load(['categories' => fn($q) => $q->active()])
-            ->load('images')
-            ->load('metas')
-            ->load('reviews')
-            ->loadCount('reviews')
-            ->loadAvg('reviews', 'rating')
-            ->load('wishlistAuthUser:id,name');
+        $similarProducts = [];
+        if ($request->boolean('similar_products')) {
+            $similarProducts = Product::query()
+                ->loadCardDetails()
+                ->whereHas('categories', function ($query) use ($product) {
+                    $query->whereIn('categories.id', $product->categories->pluck('id'));
+                })
+                ->when($request->boolean('similar_products_featured'), fn($q) => $q->featured())
+                ->limit(request('similar_products_limit', 10))
+                ->productsOrderBy($request->string('similar_products_order', 'latest'))
+                ->get();
+        }
 
-        return ProductsResource::make($product);
+        return ProductsResource::make($product)->additional([
+            'similar' => ProductsResource::collection($similarProducts)
+        ]);
     }
 
     public function popular(Request $request)
@@ -90,10 +132,7 @@ class ProductController extends Controller
         ]);
 
         $products = Product::query()
-            ->active()
-            ->withCount('reviews')
-            ->withAvg('reviews', 'rating')
-            ->with('wishlistAuthUser:id,name')
+            ->loadCardDetails()
             ->when($request->input('category'), function ($query) {
                 $query->whereHas('categories', function ($query) {
                     $query->where('categories.id', request('category'));
@@ -104,6 +143,65 @@ class ProductController extends Controller
             })
             ->withCount('orderProduct')
             ->orderBy('order_product_count', 'DESC')
+            ->limit(request('limit', 20))
+            ->get();
+
+        return ProductsResource::collection($products);
+    }
+
+    public function similar(Request $request)
+    {
+        $request->validate([
+            'products' => 'required|array|min:1',
+            'products.*' => 'required|numeric',
+            'limit' => 'nullable|numeric',
+            'featured' => 'nullable|boolean',
+            'order_by' => 'nullable|in:latest,oldest,price_asc,price_desc,name_asc,name_desc,rand',
+        ]);
+
+        $categoriesId = CategoryProduct::whereIn('product_id', $request->input('products'))->pluck('category_id');
+
+        abort_if($categoriesId->isEmpty(), 404, 'Product not found');
+
+        $similarProducts = Product::query()
+            ->loadCardDetails()
+            ->whereHas('categories', function ($query) use ($categoriesId) {
+                $query->whereIn('categories.id', $categoriesId);
+            })
+            ->when($request->boolean('similar_products_featured'), fn($q) => $q->featured())
+            ->limit(request('similar_products_limit', 10))
+            ->productsOrderBy($request->string('similar_products_order', 'latest'))
+            ->get();
+
+        return ProductsResource::collection($similarProducts);
+    }
+
+    public function recommended(Request $request)
+    {
+        $request->validate([
+            'limit' => 'nullable|numeric',
+            'featured' => 'nullable|boolean',
+            'order_by' => 'nullable|in:latest,oldest,price_asc,price_desc,name_asc,name_desc,rand',
+        ]);
+
+        $cartProductsId = Cart::where('user_id', auth()->id())->pluck('product_id');
+        $wishlistProductsId = WishlistItem::where('user_id', auth()->id())->pluck('product_id');
+        $orderProductsId = OrderProduct::query()
+            ->whereHas('order', fn($q) => $q->where('user_id', auth()->id()))
+            ->pluck('product_id');
+
+        $productIds = $cartProductsId->merge($wishlistProductsId)->merge($orderProductsId)->unique()->toArray();
+        $categoriesId = CategoryProduct::whereIn('product_id', $productIds)->pluck('category_id');
+
+        $products = Product::query()
+            ->loadCardDetails()
+            ->when(!$categoriesId->isEmpty(), function ($query) use ($categoriesId) {
+                $query->whereHas('categories', function ($query) use ($categoriesId) {
+                    $query->whereIn('categories.id', $categoriesId);
+                });
+            })
+            ->when($request->boolean('featured') || $categoriesId->isEmpty(), fn($q) => $q->featured())
+            ->productsOrderBy($request->string('order_by', 'latest'))
             ->limit(request('limit', 20))
             ->get();
 

@@ -18,9 +18,8 @@ class BrandSeeder extends Seeder
     {
         Brand::whereNotNull('id')->delete();
 
-        for ($i = 0; $i <= 25; $i++) {
-            $name = fake()->company;
-            $slug = str()->of($name)->slug('-');
+        foreach ($this->brands() as $brand) {
+            $slug = str()->of($brand)->slug('-');
             $image_lg = "brands/$slug.jpg";
             $image_md = "brands/md/$slug.jpg";
             $image_sm = "brands/sm/$slug.jpg";
@@ -33,7 +32,7 @@ class BrandSeeder extends Seeder
                 ->destroy();
 
             Brand::create([
-                'name'  =>  $name,
+                'name'  =>  $brand,
                 'slug'  =>  $slug,
                 'image_lg'  =>  $image_lg,
                 'image_sm'  =>  $image_sm,
@@ -41,5 +40,60 @@ class BrandSeeder extends Seeder
                 'status'    =>  rand(0, 1),
             ]);
         }
+    }
+
+    public function brands()
+    {
+        return [
+            'LEGO',
+            'Hasbro',
+            'Mattel',
+            'Fisher-Price',
+            'Nerf',
+            'Hot Wheels',
+            'Barbie',
+            'Playmobil',
+            'Melissa & Doug',
+            'VTech',
+            'LeapFrog',
+            'Crayola',
+            'Disney',
+            'Mega Bloks',
+            'Funko',
+            'Little Tikes',
+            'Transformers',
+            'Paw Patrol',
+            'Play-Doh',
+            'Schleich',
+            'Tonka',
+            'Ty',
+            'L.O.L. Surprise!',
+            'American Girl',
+            'Spin Master',
+            'K’NEX',
+            'Bandai',
+            'Baby Alive',
+            'Thomas & Friends',
+            'KidKraft',
+            'Radio Flyer',
+            'Meccano',
+            'Calico Critters',
+            'Brio',
+            'Hexbug',
+            'Hape',
+            'WowWee',
+            'Step2',
+            'TOMY',
+            'Moose Toys',
+            'Ravensburger',
+            'Jakks Pacific',
+            'Siku',
+            'Sylvanian Families',
+            'My Little Pony',
+            'Magformers',
+            'Ouaps',
+            'Beyblade',
+            'Peppa Pig'
+        ];
     }
 }

@@ -6,11 +6,42 @@
     <section class="py-5">
         <div class="container products_page">
             <div class="row g-4">
-                <div class="col-lg-3 col-md-4">
-                    <x-ashop-ashop:shop-sidebar />
-                </div>
-                <div class="col-lg-9 col-md-8">
+                @if (config('ashop.sections.products.sidebar', true))
+                    <div class="col-lg-3 col-md-4">
+                        <x-ashop-ashop:shop-sidebar :category="$category" :filterAttributes="$filterAttributes" />
+                    </div>
+                @endif
+
+                <div @class([
+                    'col-lg-12' => !config('ashop.sections.products.sidebar', true),
+                    'col-lg-9 col-md-8' => config('ashop.sections.products.sidebar', true),
+                ])>
                     <x-ashop-ashop:shop-header />
+
+                    @if ($products->currentPage() == 1)
+                        @if ($category?->banner() && config('ashop.sections.products.show_banner', true))
+                            <img src="{{ $category->banner() }}" alt="banner" class="w-100 rounded mb-4">
+                        @endif
+
+                        @if ($category?->children?->count() && config('ashop.sections.products.show_subcategories', true))
+                            <div class="row g-2 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 mb-4">
+                                @foreach ($category->children as $child)
+                                    <div class="col">
+                                        <div class="card ">
+                                            <img class="card-img-top" src="{{ $child->image() }}" alt="Card image">
+                                            <div class="card-body p-2">
+                                                <a href="{{ route('shop.products.index', ['category' => $child->slug]) }}"
+                                                    class="small my-auto">
+                                                    <span class="small">{{ $child->name() }}</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    @endif
+
                     @if (request('display') == 'list')
                         <div class="row g-2">
                             @foreach ($products as $product)
@@ -20,7 +51,7 @@
                             @endforeach
                         </div>
                     @else
-                        <div class="row g-2 row-cols-2 row-cols-lg-4 " data-masonry='{"percentPosition": true }'>
+                        <div class="row g-2 row-cols-2 row-cols-lg-4" data-masonry='{"percentPosition": true }'>
                             @foreach ($products as $product)
                                 <div class="col">
                                     <x-ashop-ashop:product-card :product="$product" />
@@ -37,7 +68,8 @@
                                 </span>
 
                                 <h3>No products found.</h3>
-                                <p class="fw-light fs-5 ">Nothing found with your search creteria, please search or filter using some other keywords or you can write us or explore more.</p>
+                                <p class="fw-light fs-5 ">Nothing found with your search creteria, please search or
+                                    filter using some other keywords or you can write us or explore more.</p>
 
                                 <div class="actions">
                                     <a href="{{ url('/') }}" class="btn btn-dark px-4">

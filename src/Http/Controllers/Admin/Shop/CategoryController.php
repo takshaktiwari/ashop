@@ -126,15 +126,21 @@ class CategoryController extends Controller
             foreach ($request->file('metas') as $name => $meta) {
                 $fileImage = $request->file('metas')[$name];
                 $filePath = $fileImage->storeAs(
-                    'metas/categories/',
+                    'metas/categories',
                     time() . rand() . '.' . $fileImage->extension(),
                     'public'
                 );
-                $category->metas()->create([
-                    'name' => $name,
-                    'key' => $name,
-                    'value' => storage($filePath),
-                ]);
+                $category->metas()->updateOrCreate(
+                    [
+                        'name' => $name,
+                        'key' => $name,
+                        'is_file' => true,
+                    ],
+                    [
+                        'value' => $filePath,
+                        'disk' => 'public'
+                    ]
+                );
             }
         }
 

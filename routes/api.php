@@ -14,11 +14,14 @@ Route::middleware('api')
     ->group(function () {
         Route::middleware([ApiUserMiddleware::class])->group(function () {
             Route::get('categories', [CategoryController::class, 'index']);
+            Route::get('categories/with-products', [CategoryController::class, 'withProducts']);
             Route::get('categories/{category}', [CategoryController::class, 'show']);
 
             Route::prefix('products')->group(function () {
                 Route::get('/', [ProductController::class, 'index']);
                 Route::get('popular', [ProductController::class, 'popular']);
+                Route::get('similar', [ProductController::class, 'similar']);
+                Route::get('recommended', [ProductController::class, 'recommended']);
                 Route::get('{product}', [ProductController::class, 'show']);
             });
 
