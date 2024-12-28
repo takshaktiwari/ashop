@@ -52,11 +52,9 @@
                     <div class="form-group">
                         <label for="">Max. Discount</label>
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <i class="fas fa-dollar-sign"></i>
-                                </span>
-                            </div>
+                            <span class="input-group-text">
+                                <i class="fas fa-dollar-sign"></i>
+                            </span>
                             <input type="number" name="max_discount" class="form-control" placeholder=" Flat Discount"
                                 value="{{ $coupon->max_discount }}">
                         </div>
@@ -66,19 +64,15 @@
                     <div class="form-group">
                         <label for="">Discount (Amt)</label>
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <i class="fas fa-dollar-sign"></i>
-                                </span>
-                            </div>
+                            <span class="input-group-text">
+                                <i class="fas fa-dollar-sign"></i>
+                            </span>
                             <input type="number" name="amount" id="d-amount" value="{{ $coupon->amount }}"
                                 class="form-control" placeholder=" Discount in Amount"
                                 onfocus="getElementById('d-percent').value = null">
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="">Expiry Date</label>
@@ -91,11 +85,9 @@
                     <div class="form-group">
                         <label for="">Minimum Purchase</label>
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <i class="fas fa-dollar-sign"></i>
-                                </span>
-                            </div>
+                            <span class="input-group-text">
+                                <i class="fas fa-dollar-sign"></i>
+                            </span>
                             <input type="number" name="min_purchase" value="{{ $coupon->min_purchase }}"
                                 class="form-control" placeholder="Minimum Purchase">
                         </div>
@@ -115,7 +107,8 @@
                         <label for="">Featured</label>
                         <select name="featured" class="form-control">
                             <option value="1" {{ $coupon->featured == 1 ? 'selected' : '' }}> Featured</option>
-                            <option value="0" {{ $coupon->featured == 0 ? 'selected' : '' }}> Not-Featured</option>
+                            <option value="0" {{ $coupon->featured == 0 ? 'selected' : '' }}> Not-Featured
+                            </option>
                         </select>
                     </div>
                 </div>

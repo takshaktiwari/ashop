@@ -7,7 +7,7 @@
             ['text' => 'All Coupons'],
 		]"
 		:actions="[
-			['text' => 'All Coupon', 'url' => route('admin.shop.coupons.index'), 'icon' => 'fas fa-plus', 'class' => 'btn btn-success btn-loader' ],
+			['text' => 'All Coupon', 'url' => route('admin.shop.coupons.index'), 'icon' => 'fas fa-list', 'class' => 'btn btn-success btn-loader' ],
             ['text' => 'New Coupon', 'url' => route('admin.shop.coupons.create'), 'icon' => 'fas fa-plus' ]
 		]"
 		/>

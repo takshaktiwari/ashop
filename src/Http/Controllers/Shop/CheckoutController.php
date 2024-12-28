@@ -203,6 +203,7 @@ class CheckoutController extends Controller
         }
 
         $order->shipping_charge = $this->cartService->shippingCharge();
+        $order->coupon_code = $this->cartService->coupon('code');
         $order->discount = $this->cartService->discount('coupon');
         $order->payment_mode = $request->post('payment_mode');
         $order->save();

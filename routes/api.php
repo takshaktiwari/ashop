@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Takshak\Ashop\Http\Controllers\Api\AddressController;
 use Takshak\Ashop\Http\Controllers\Api\CartController;
 use Takshak\Ashop\Http\Controllers\Api\CategoryController;
+use Takshak\Ashop\Http\Controllers\Api\CheckoutController;
 use Takshak\Ashop\Http\Controllers\Api\FavoriteController;
 use Takshak\Ashop\Http\Controllers\Api\ProductController;
 use Takshak\Ashop\Http\Controllers\Api\ReviewController;
@@ -31,6 +32,13 @@ Route::middleware('api')
                 Route::post('update/{cart}', [CartController::class, 'update']);
                 Route::post('delete/{cart}', [CartController::class, 'delete']);
             });
+
+            Route::get('reviews', [ReviewController::class, 'show']);
+            Route::post('checkout/address', [CheckoutController::class, 'address']);
+            Route::get('checkout/coupons', [CheckoutController::class, 'coupons']);
+            Route::post('checkout/coupons/apply', [CheckoutController::class, 'couponsApply']);
+            Route::post('checkout/coupons/remove', [CheckoutController::class, 'couponsRemove']);
+            Route::post('checkout/complete', [CheckoutController::class, 'complete']);
         });
 
         Route::middleware('auth:sanctum')->group(function () {
@@ -40,6 +48,7 @@ Route::middleware('api')
             });
 
             Route::post('reviews', [ReviewController::class, 'store']);
+
 
             Route::get('addresses', [AddressController::class, 'index']);
             Route::post('addresses', [AddressController::class, 'store']);

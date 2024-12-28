@@ -120,7 +120,7 @@ return [
         'final_status' => 'delivered',
         'default_shipping' => [
             'type' => 'percent', // may be percent of total order or flat amount
-            'amount' => 99
+            'amount' => 15
         ],
         'status' => [
             'order_placed' => 'Order Placed',

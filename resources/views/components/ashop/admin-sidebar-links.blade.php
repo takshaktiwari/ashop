@@ -45,3 +45,9 @@
         <span>Orders</span>
     </a>
 </li>
+<li>
+    <a href="{{ route('admin.shop.coupons.index') }}" class="waves-effect">
+        <i class="fas fa-ticket-alt"></i>
+        <span>Coupons</span>
+    </a>
+</li>

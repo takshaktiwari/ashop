@@ -45,11 +45,9 @@
                     <div class="form-group">
                         <label for="">Max. Discount</label>
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <i class="fas fa-dollar-sign"></i>
-                                </span>
-                            </div>
+                            <span class="input-group-text">
+                                <i class="fas fa-dollar-sign"></i>
+                            </span>
                             <input type="number" name="max_discount" class="form-control" placeholder=" Flat Discount">
                         </div>
                     </div>
@@ -59,11 +57,9 @@
                     <div class="form-group">
                         <label for="">Discount (Amt)</label>
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <i class="fas fa-dollar-sign"></i>
-                                </span>
-                            </div>
+                            <span class="input-group-text">
+                                <i class="fas fa-dollar-sign"></i>
+                            </span>
                             <input type="number" name="amount" id="d-amount" class="form-control"
                                 placeholder=" Flat Discount" onfocus="getElementById('d-percent').value = null"
                                 value="{{ old('amount') }}">
@@ -83,11 +79,9 @@
                     <div class="form-group">
                         <label for="">Minimum Purchase</label>
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <i class="fas fa-dollar-sign"></i>
-                                </span>
-                            </div>
+                            <span class="input-group-text">
+                                <i class="fas fa-dollar-sign"></i>
+                            </span>
                             <input type="number" name="min_purchase" class="form-control"
                                 placeholder="Minimum Purchase" value="{{ old('min_purchase') }}">
                         </div>
@@ -128,8 +122,7 @@
             </div>
             <div class="form-group">
                 <label for=""> Description <span class="text-danger">*</span></label>
-                <textarea name="description" rows="4" class="form-control summernote-editor"
-                    placeholder="Your Description">{{ old('description') }}</textarea>
+                <textarea name="description" rows="4" class="form-control summernote-editor" placeholder="Your Description">{{ old('description') }}</textarea>
             </div>
         </div>
         <div class="card-footer">

@@ -71,6 +71,7 @@ class CategoryController extends Controller
         ]);
 
         abort_if(!$category->status, 404, 'Category is not active');
+        $category->load('metas');
 
         if (request('with_products')) {
             $category->load(['products' => function ($query) {

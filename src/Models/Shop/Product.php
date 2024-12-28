@@ -19,7 +19,8 @@ use Takshak\Areviews\Traits\Models\ReviewModelTrait;
 class Product extends Model
 {
     use HasFactory;
-    use ReviewModelTrait, HasEagerLimit;
+    use ReviewModelTrait;
+    use HasEagerLimit;
     protected $guarded = [];
     protected $casts = [
         'deal_expiry'   =>  'date',
@@ -36,6 +37,11 @@ class Product extends Model
                     : $this->sell_price;
             }
         );
+    }
+
+    public function reviews(): MorphMany
+    {
+        return $this->morphMany(Review::class, 'reviewable');
     }
 
     /**
@@ -166,14 +172,14 @@ class Product extends Model
 
     public function scopeProductsOrderBy(Builder $query, string|null $order_by)
     {
-        return $query->when($order_by == 'latest', fn($q) => $q->latest())
-            ->when($order_by == 'oldest', fn($q) => $q->oldest())
-            ->when($order_by == 'price_asc', fn($q) => $q->orderBy('sell_price', 'ASC'))
-            ->when($order_by == 'price_desc', fn($q) => $q->orderBy('sell_price', 'DESC'))
-            ->when($order_by == 'name_asc', fn($q) => $q->orderBy('name', 'ASC'))
-            ->when($order_by == 'name_desc', fn($q) => $q->orderBy('name', 'DESC'))
-            ->when($order_by == 'rand', fn($q) => $q->inRandomOrder())
-            ->when(!$order_by, fn($q) => $q->latest());
+        return $query->when($order_by == 'latest', fn ($q) => $q->latest())
+            ->when($order_by == 'oldest', fn ($q) => $q->oldest())
+            ->when($order_by == 'price_asc', fn ($q) => $q->orderBy('sell_price', 'ASC'))
+            ->when($order_by == 'price_desc', fn ($q) => $q->orderBy('sell_price', 'DESC'))
+            ->when($order_by == 'name_asc', fn ($q) => $q->orderBy('name', 'ASC'))
+            ->when($order_by == 'name_desc', fn ($q) => $q->orderBy('name', 'DESC'))
+            ->when($order_by == 'rand', fn ($q) => $q->inRandomOrder())
+            ->when(!$order_by, fn ($q) => $q->latest());
     }
 
     public function details()

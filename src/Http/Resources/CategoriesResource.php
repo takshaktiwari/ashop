@@ -22,6 +22,7 @@ class CategoriesResource extends JsonResource
             'image_sm' => storage($this->image_sm),
             'image_md' => storage($this->image_md),
             'image_lg' => storage($this->image_lg),
+            'banner' => $this->banner(),
             'description' => $this->description,
             'status' => $this->status,
             'featured' => $this->featured,
@@ -30,6 +31,10 @@ class CategoriesResource extends JsonResource
             'children' => $this->when($this->relationLoaded('children'), CategoriesResource::collection($this->children)),
             'products' => $this->when($this->relationLoaded('products'), ProductsResource::collection($this->products)),
             'products_count' => $this->whenCounted('products', $this->products_count),
+            'category_metas' => $this->when(
+                $this->relationLoaded('metas'),
+                $this->metas
+            ),
         ];
     }
 }
