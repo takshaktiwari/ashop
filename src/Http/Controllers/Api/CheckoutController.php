@@ -203,6 +203,7 @@ class CheckoutController extends Controller
 
         abort_if(!$order, 403, 'Order not found');
         abort_if(!$order->order_products_count, 403, 'This order is empty. Please add some products to checkout.');
+        abort_if($order->order_status, 403, 'Order is already completed, current status is: ' . $order->orderStatus());
 
         $order->payment_mode = $request->input('payment_mode');
         $order->order_status = config('ashop.order.initial_status');
