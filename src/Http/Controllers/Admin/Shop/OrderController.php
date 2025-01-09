@@ -19,7 +19,11 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-        return View::first(['admin.shop.orders.index', 'ashop::admin.shop.orders.index'])->with([
+        $order->load(['orderUpdates' => function ($query) {
+            $query->orderBy('order_updates.id', 'desc');
+        }]);
+
+        return View::first(['admin.shop.orders.show', 'ashop::admin.shop.orders.show'])->with([
             'order' => $order
         ]);
     }

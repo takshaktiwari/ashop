@@ -6,6 +6,7 @@ use Takshak\Ashop\Http\Controllers\Api\CartController;
 use Takshak\Ashop\Http\Controllers\Api\CategoryController;
 use Takshak\Ashop\Http\Controllers\Api\CheckoutController;
 use Takshak\Ashop\Http\Controllers\Api\FavoriteController;
+use Takshak\Ashop\Http\Controllers\Api\OrderController;
 use Takshak\Ashop\Http\Controllers\Api\ProductController;
 use Takshak\Ashop\Http\Controllers\Api\ReviewController;
 use Takshak\Ashop\Http\Middleware\ApiUserMiddleware;
@@ -49,11 +50,13 @@ Route::middleware('api')
 
             Route::post('reviews', [ReviewController::class, 'store']);
 
-
             Route::get('addresses', [AddressController::class, 'index']);
             Route::post('addresses', [AddressController::class, 'store']);
             Route::get('addresses/{address}', [AddressController::class, 'show']);
             Route::post('addresses/{address}', [AddressController::class, 'update']);
             Route::post('addresses/{address}/delete', [AddressController::class, 'delete']);
+
+            Route::get('orders', [OrderController::class, 'index']);
+            Route::get('orders/{order}', [OrderController::class, 'show']);
         });
     });

@@ -1,5 +1,11 @@
 <x-admin.layout>
-    <x-admin.breadcrumb title='Carts' :links="[['text' => 'Carts']]" />
+    <x-admin.breadcrumb title='Orders' :links="[['text' => 'Dashboard', 'url' => route('admin.dashboard')], ['text' => 'Orders']]" :actions="[
+        [
+            'text' => 'Dashboard',
+            'url' => route('admin.dashboard'),
+            'class' => 'btn-dark btn-loader',
+        ],
+    ]" />
 
     <div class="card shadow-sm">
         <div class="card-body">
@@ -25,7 +31,7 @@
                             selectedValues.push($(this).val());
                         });
 
-                        let baseUrl = '{{ route("admin.shop.carts.destroy.checked") }}';
+                        let baseUrl = '{{ route('admin.shop.carts.destroy.checked') }}';
                         let params = selectedValues.map(value => `cart_ids[]=${value}`).join('&');
                         let fullUrl = `${baseUrl}?${params}`;
 

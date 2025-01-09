@@ -26,7 +26,8 @@ class CartService
             ->get();
     }
 
-    public function setCoupon(Coupon $coupon) {
+    public function setCoupon(Coupon $coupon)
+    {
         $discount = 0;
         if ($coupon->discount_type == "amount") {
             $discount = $coupon->amount;
@@ -46,11 +47,13 @@ class CartService
 
     public function coupon($param = null)
     {
-        if(session('coupon')){
+        if (session('coupon')) {
             return $param ? session('coupon.' . $param) : session('coupon');
         }
 
-        return $param ? $this->coupon[$param] : $this->coupon;
+        if (isset($this->coupon[$param])) {
+            return $param ? $this->coupon[$param] : $this->coupon;
+        }
     }
 
     public function items()

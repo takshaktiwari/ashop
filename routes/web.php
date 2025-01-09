@@ -12,6 +12,7 @@ use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductImageController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\CartController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\WishlistController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\OrderController;
+use Takshak\Ashop\Http\Controllers\Admin\Shop\OrderUpdateController;
 use Takshak\Ashop\Http\Controllers\Shop\AddressController as ShopAddressController;
 use Takshak\Ashop\Http\Controllers\Shop\BrandController as ShopBrandController;
 use Takshak\Ashop\Http\Controllers\Shop\CartController as ShopCartController;
@@ -93,6 +94,7 @@ Route::middleware('web')->group(function () {
             Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
             Route::get('orders/{order}/delete', [OrderController::class, 'destroy'])->name('orders.destroy');
             Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+            Route::post('orders/{order}/updates', [OrderUpdateController::class, 'store'])->name('orders.updates.store');
         });
 
     Route::middleware(ReferrerMiddleware::class)->prefix('shop')->name('shop.')->group(function () {

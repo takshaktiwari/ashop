@@ -33,6 +33,24 @@ class Order extends Model
         );
     }
 
+    protected function shippingCharge(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                return round($value, 2);
+            }
+        );
+    }
+
+    protected function discount(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                return round($value, 2);
+            }
+        );
+    }
+
     /**
      * Get the user that owns the Address
      *
@@ -51,6 +69,16 @@ class Order extends Model
     public function orderProducts(): HasMany
     {
         return $this->hasMany(OrderProduct::class);
+    }
+
+    /**
+     * Get all of the orderUpdates for the Order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orderUpdates(): HasMany
+    {
+        return $this->hasMany(OrderUpdate::class);
     }
 
     public function paymentStatus()
@@ -86,8 +114,11 @@ class Order extends Model
             $address .= '<br />';
         }
         $address .= $this->city . ', ';
-        $address .= $this->pincode . ', ';
         $address .= $this->state . ', ';
+        if ($lines > 3) {
+            $address .= '<br />';
+        }
+        $address .= '['.$this->pincode . '], ';
         $address .= $this->country;
         return $address;
     }
