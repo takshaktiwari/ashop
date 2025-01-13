@@ -35,14 +35,18 @@ class CartsDataTable extends DataTable
                     </div>
                 ';
             })
-            ->editColumn('ip', fn ($item) => $item->user_ip)
+            ->editColumn('ip', fn($item) => $item->user_ip)
             ->orderColumn('ip', function ($query, $order) {
                 $query->orderByRaw('carts.user_ip ' . $order);
             })
             ->filterColumn('ip', function ($query, $keyword) {
                 $query->whereRaw('carts.user_ip like ?', ["%{$keyword}%"]);
             })
-            ->editColumn('user', fn ($item) => $item->user?->name)
+            ->editColumn('user', function ($item) {
+                if ($item->user) {
+                    return '<a href="' . route('admin.users.show', [$item->user]) . '" target="_blank">' . $item->user?->name . '</a>';
+                }
+            })
             ->orderColumn('user', function ($query, $order) {
                 $query->orderByRaw('users.name ' . $order);
             })
@@ -58,14 +62,14 @@ class CartsDataTable extends DataTable
             ->filterColumn('product', function ($query, $keyword) {
                 $query->whereRaw('products.name like ?', ["%{$keyword}%"]);
             })
-            ->editColumn('qty', fn ($item) => $item->quantity)
+            ->editColumn('qty', fn($item) => $item->quantity)
             ->orderColumn('qty', function ($query, $order) {
                 $query->orderByRaw('carts.quantity ' . $order);
             })
             ->filterColumn('qty', function ($query, $keyword) {
                 $query->whereRaw('carts.quantity like ?', ["%{$keyword}%"]);
             })
-            ->editColumn('sell_price', fn ($item) => config('ashop.currency.sign', '₹') . $item->product->sell_price)
+            ->editColumn('sell_price', fn($item) => config('ashop.currency.sign', '₹') . $item->product->sell_price)
             ->orderColumn('sell_price', function ($query, $order) {
                 $query->orderByRaw('products.sell_price ' . $order);
             })
@@ -75,7 +79,7 @@ class CartsDataTable extends DataTable
             ->editColumn('created_at', function ($item) {
                 return '<span class="text-nowrap">' . $item->created_at->format('Y-m-d h:i A') . '</span>';
             })
-            ->rawColumns(['action', 'checkbox', 'product', 'created_at']);
+            ->rawColumns(['action', 'checkbox', 'product', 'created_at', 'user']);
     }
 
     /**
@@ -98,23 +102,39 @@ class CartsDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-            ->setTableId('carts-table')
+            ->setTableId('locations-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->dom('<"d-flex mb-3"B><"d-flex justify-content-between flex-wrap gap-3"lf>rt<"d-flex justify-content-between flex-wrap gap-3 mt-3"ip>')
+            ->dom('<"d-flex mb-2 justify-content-between flex-wrap gap-3"<"d-flex gap-3"lB>f>rt<"d-flex justify-content-between flex-wrap gap-3 mt-3"ip>')
             ->selectStyleSingle()
             ->responsive(true)
             ->pageLength(100)
             ->serverSide(true) // Enable server-side processing
             ->processing(true)
             ->buttons([
-                Button::make('excel')->text('<i class="fas fa-file-excel"></i> Excel'),
-                Button::make('pdf')->text('<i class="fas fa-file-pdf"></i> PDF'),
-                Button::make('print')->text('<i class="fas fa-print"></i> Print'),
-                Button::make('delete')->text('<i class="fas fa-trash"></i> Delete')->addClass('btn-danger'),
+                Button::make('excel'),
+                Button::make('csv'),
+                Button::make('pdf'),
+                Button::make('print'),
+                Button::make('reset'),
+                Button::make('reload'),
+                Button::raw('deleteItems')
+                    ->text('<i class="bi bi-archive" title="Delete Items"></i>')
+                    ->action("
+                        let selectedValues = [];
+                        $('.selected_carts:checked').each(function() {
+                            selectedValues.push($(this).val());
+                        });
+
+                        let baseUrl = '" . route('admin.shop.carts.destroy.checked') . "';
+                        let params = selectedValues.map(value => `cart_ids[]=`+value).join('&');
+                        let fullUrl = baseUrl+`?`+params;
+
+                        window.location.href = fullUrl;
+                    "),
             ])
             ->initComplete('function(settings, json) {
-                $("#check_all_carts").click(function(){
+                $("#check_all_items").click(function(){
                     $(".selected_carts").prop("checked", $(this).is(":checked"));
                 });
             }');
@@ -139,7 +159,7 @@ class CartsDataTable extends DataTable
                 ->title('
                     <div class="form-check">
                         <label class="form-check-label mb-0">
-                            <input class="form-check-input" type="checkbox" id="check_all_carts" value="1">
+                            <input class="form-check-input" type="checkbox" id="check_all_items" value="1">
                         </label>
                     </div>
                 ')

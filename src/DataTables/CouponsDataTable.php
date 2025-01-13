@@ -3,14 +3,14 @@
 namespace Takshak\Ashop\DataTables;
 
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
-use Takshak\Ashop\Models\Shop\WishlistItem;
+use Takshak\Ashop\Models\Shop\Cart;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
 
-class WishlistDataTable extends DataTable
+class CouponsDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
@@ -21,21 +21,32 @@ class WishlistDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addIndexColumn()
-            ->addColumn('action', function ($wishlist) {
-                return '<a href="' . route('admin.shop.wishlist.destroy', [$wishlist]) . '" class="load-circle btn btn-sm btn-danger delete-alert" title="Delete this">
+            ->addColumn('action', function ($cart) {
+                return '<a href="' . route('admin.shop.carts.destroy', [$cart]) . '" class="load-circle btn btn-sm btn-danger delete-alert" title="Delete this">
                     <i class="fas fa-trash"></i>
                 </a>';
             })
-            ->addColumn('checkbox', function ($wishlist) {
+            ->addColumn('checkbox', function ($cart) {
                 return '
                     <div class="form-check">
                         <label class="form-check-label mb-0">
-                            <input class="form-check-input selected_items" type="checkbox" name="selected_items[]" value="' . $wishlist->id . '">
+                            <input class="form-check-input selected_carts" type="checkbox" name="selected_carts[]" value="' . $cart->id . '">
                         </label>
                     </div>
                 ';
             })
-            ->editColumn('user', fn($item) => $item->user?->name)
+            ->editColumn('ip', fn ($item) => $item->user_ip)
+            ->orderColumn('ip', function ($query, $order) {
+                $query->orderByRaw('carts.user_ip ' . $order);
+            })
+            ->filterColumn('ip', function ($query, $keyword) {
+                $query->whereRaw('carts.user_ip like ?', ["%{$keyword}%"]);
+            })
+            ->editColumn('user', function ($item) {
+                if ($item->user) {
+                    return '<a href="' . route('admin.users.show', [$item->user]) . '" target="_blank">' . $item->user?->name . '</a>';
+                }
+            })
             ->orderColumn('user', function ($query, $order) {
                 $query->orderByRaw('users.name ' . $order);
             })
@@ -51,7 +62,14 @@ class WishlistDataTable extends DataTable
             ->filterColumn('product', function ($query, $keyword) {
                 $query->whereRaw('products.name like ?', ["%{$keyword}%"]);
             })
-            ->editColumn('sell_price', fn($item) => config('ashop.currency.sign', '₹') . $item->product->sell_price)
+            ->editColumn('qty', fn ($item) => $item->quantity)
+            ->orderColumn('qty', function ($query, $order) {
+                $query->orderByRaw('carts.quantity ' . $order);
+            })
+            ->filterColumn('qty', function ($query, $keyword) {
+                $query->whereRaw('carts.quantity like ?', ["%{$keyword}%"]);
+            })
+            ->editColumn('sell_price', fn ($item) => config('ashop.currency.sign', '₹') . $item->product->sell_price)
             ->orderColumn('sell_price', function ($query, $order) {
                 $query->orderByRaw('products.sell_price ' . $order);
             })
@@ -59,9 +77,9 @@ class WishlistDataTable extends DataTable
                 $query->whereRaw('products.sell_price like ?', ["%{$keyword}%"]);
             })
             ->editColumn('created_at', function ($item) {
-                return '<span class="text-nowrap">' . $item->created_at?->format('Y-m-d h:i A') . '</span>';
+                return '<span class="text-nowrap">' . $item->created_at->format('Y-m-d h:i A') . '</span>';
             })
-            ->rawColumns(['action', 'checkbox', 'product', 'created_at']);
+            ->rawColumns(['action', 'checkbox', 'product', 'created_at', 'user']);
     }
 
     /**
@@ -69,12 +87,12 @@ class WishlistDataTable extends DataTable
      */
     public function query(): QueryBuilder
     {
-        return WishlistItem::query()
-            ->select('wishlist_items.*')
+        return Cart::query()
+            ->select('carts.*')
             ->with('product')
             ->with('user')
-            ->join('products', 'products.id', '=', 'wishlist_items.product_id')
-            ->leftJoin('users', 'users.id', '=', 'wishlist_items.user_id')
+            ->join('products', 'products.id', '=', 'carts.product_id')
+            ->leftJoin('users', 'users.id', '=', 'carts.user_id')
             ->newQuery();
     }
 
@@ -104,12 +122,12 @@ class WishlistDataTable extends DataTable
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
                     ->action("
                         let selectedValues = [];
-                        $('.selected_items:checked').each(function() {
+                        $('.selected_carts:checked').each(function() {
                             selectedValues.push($(this).val());
                         });
 
-                        let baseUrl = '" . route('admin.shop.wishlist.destroy.checked') . "';
-                        let params = selectedValues.map(value => `wishlist_ids[]=`+value).join('&');
+                        let baseUrl = '" . route('admin.shop.carts.destroy.checked') . "';
+                        let params = selectedValues.map(value => `cart_ids[]=`+value).join('&');
                         let fullUrl = baseUrl+`?`+params;
 
                         window.location.href = fullUrl;
@@ -117,7 +135,7 @@ class WishlistDataTable extends DataTable
             ])
             ->initComplete('function(settings, json) {
                 $("#check_all_items").click(function(){
-                    $(".selected_items").prop("checked", $(this).is(":checked"));
+                    $(".selected_carts").prop("checked", $(this).is(":checked"));
                 });
             }');
     }
@@ -153,16 +171,17 @@ class WishlistDataTable extends DataTable
                 ->addClass('text-center'),
 
             Column::make('user'),
+            Column::make('ip'),
             Column::make('product'),
+            Column::make('qty'),
             Column::make('sell_price')->width(120),
-            Column::make('created_at')->addClass('text-nowrap'),
+            Column::make('created_at'),
             Column::computed('action')
-                ->width(60)
-                ->addClass('text-center')
-                ->searchable(false)
-                ->orderable(false)
                 ->exportable(false)
-                ->printable(false),
+                ->printable(false)
+                ->orderable(false)
+                ->width(60)
+                ->addClass('text-center'),
         ];
     }
 
@@ -171,6 +190,6 @@ class WishlistDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Wishlist_' . date('YmdHis');
+        return 'Carts_' . date('YmdHis');
     }
 }

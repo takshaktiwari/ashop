@@ -24,13 +24,13 @@ class ProductsDataTable extends DataTable
             ->addIndexColumn()
             ->addColumn('action', function ($item) {
                 return '
-                    <a href="'.route('admin.shop.products.copy', [$item]).'" class="btn btn-sm btn-info load-circle">
+                    <a href="' . route('admin.shop.products.copy', [$item]) . '" class="btn btn-sm btn-info load-circle">
                         <i class="fas fa-copy"></i>
                     </a>
-                    <a href="'.route('admin.shop.products.edit', [$item]).'" class="btn btn-sm btn-success load-circle">
+                    <a href="' . route('admin.shop.products.edit', [$item]) . '" class="btn btn-sm btn-success load-circle">
                         <i class="fas fa-edit"></i>
                     </a>
-                    <a href="'.route('admin.shop.products.delete', [$item]).'" class="btn btn-sm btn-danger load-circle">
+                    <a href="' . route('admin.shop.products.delete', [$item]) . '" class="btn btn-sm btn-danger load-circle">
                         <i class="fas fa-trash"></i>
                     </a>
                 ';
@@ -66,18 +66,18 @@ class ProductsDataTable extends DataTable
             ->editColumn('status', function ($item) {
                 $colorClass = $item->status ? "text-success" : "text-danger";
 
-                $html = '<div class="d-block font-weight-bold ' . $colorClass . '">';
+                $html = '<span class="font-weight-bold ' . $colorClass . '">';
                 $html .= $item->status ? 'Active' : 'In-Active';
-                $html .= '</div>';
+                $html .= '</span>';
 
                 return $html;
             })
             ->editColumn('featured', function ($item) {
                 $colorClass = $item->featured ? "text-success" : "text-danger";
 
-                $html = '<div class="d-block font-weight-bold ' . $colorClass . '">';
+                $html = '<span class="font-weight-bold ' . $colorClass . '">';
                 $html .= $item->featured ? 'Featured' : 'Not-featured';
-                $html .= '</div>';
+                $html .= '</span>';
 
                 return $html;
             })
@@ -102,23 +102,39 @@ class ProductsDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-            ->setTableId('products-table')
+            ->setTableId('locations-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->dom('<"d-flex mb-3"B><"d-flex justify-content-between flex-wrap gap-3"lf>rt<"d-flex justify-content-between flex-wrap gap-3 mt-3"ip>')
+            ->dom('<"d-flex mb-2 justify-content-between flex-wrap gap-3"<"d-flex gap-3"lB>f>rt<"d-flex justify-content-between flex-wrap gap-3 mt-3"ip>')
             ->selectStyleSingle()
             ->responsive(true)
             ->pageLength(100)
             ->serverSide(true) // Enable server-side processing
             ->processing(true)
             ->buttons([
-                Button::make('excel')->text('<i class="fas fa-file-excel"></i> Excel'),
-                Button::make('pdf')->text('<i class="fas fa-file-pdf"></i> PDF'),
-                Button::make('print')->text('<i class="fas fa-print"></i> Print'),
-                Button::make('delete')->text('<i class="fas fa-trash"></i> Delete')->addClass('btn-danger'),
+                Button::make('excel'),
+                Button::make('csv'),
+                Button::make('pdf'),
+                Button::make('print'),
+                Button::make('reset'),
+                Button::make('reload'),
+                Button::raw('deleteItems')
+                    ->text('<i class="bi bi-archive" title="Delete Items"></i>')
+                    ->action("
+                        let selectedValues = [];
+                        $('.selected_items:checked').each(function() {
+                            selectedValues.push($(this).val());
+                        });
+
+                        let baseUrl = '" . route('admin.shop.wishlist.destroy.checked') . "';
+                        let params = selectedValues.map(value => `wishlist_ids[]=`+value).join('&');
+                        let fullUrl = baseUrl+`?`+params;
+
+                        window.location.href = fullUrl;
+                    "),
             ])
             ->initComplete('function(settings, json) {
-                $("#check_all_products").click(function(){
+                $("#check_all_items").click(function(){
                     $(".selected_products").prop("checked", $(this).is(":checked"));
                 });
             }');
@@ -143,7 +159,7 @@ class ProductsDataTable extends DataTable
                 ->title('
                     <div class="form-check">
                         <label class="form-check-label mb-0">
-                            <input class="form-check-input" type="checkbox" id="check_all_products" value="1">
+                            <input class="form-check-input" type="checkbox" id="check_all_items" value="1">
                         </label>
                     </div>
                 ')
@@ -161,7 +177,7 @@ class ProductsDataTable extends DataTable
             Column::make('image')->searchable(false)->orderable(false),
             Column::make('name')->width(300),
             Column::make('sku'),
-            Column::make('categories')->searchable(false)->orderable(false),
+            Column::make('categories')->searchable(false)->orderable(false)->width(400),
             Column::make('net_price')->addClass('text-nowrap'),
             Column::make('sell_price')->addClass('text-nowrap'),
             Column::make('deal_price')->addClass('text-nowrap'),

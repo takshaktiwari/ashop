@@ -34,7 +34,7 @@
     </a>
 </li>
 <li>
-    <a href="{{ route('admin.shop.carts.index') }}" class="waves-effect">
+    <a href="{{ route('admin.shop.wishlist.index') }}" class="waves-effect">
         <i class="fas fa-heart"></i>
         <span>Wishlist</span>
     </a>

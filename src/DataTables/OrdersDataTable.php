@@ -61,7 +61,10 @@ class OrdersDataTable extends DataTable
             ->editColumn('items', function ($item) {
                 return  $item->order_products_count;
             })
-            ->editColumn('amount', function ($item) {
+            ->orderColumn('items', function ($query, $order) {
+                $query->orderByRaw('order_products_count ' . $order);
+            })
+            ->editColumn('total_amount', function ($item) {
                 return config('ashop.currency.sign') . $item->total_amount;
             })
             ->editColumn('payment', function ($item) {
@@ -72,9 +75,9 @@ class OrdersDataTable extends DataTable
             ->editColumn('order_status', function ($item) {
                 return '<span>' . $item->orderStatus() . '</span>';
             })
-            // ->editColumn('address', function ($item) {
-            //     return '<span class="fs-12">' . $item->address(2) . '</span>';
-            // })
+            ->editColumn('address', function ($item) {
+                return '<span class="fs-12">' . $item->address(2) . '</span>';
+            })
             ->editColumn('created_at', function ($item) {
                 return '<span class="text-nowrap">' . $item->created_at?->format('Y-m-d h:i A') . '</span>';
             })
@@ -100,20 +103,36 @@ class OrdersDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-            ->setTableId('order-table')
+            ->setTableId('locations-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->dom('<"d-flex mb-3"B><"d-flex justify-content-between flex-wrap gap-3"lf>rt<"d-flex justify-content-between flex-wrap gap-3 mt-3"ip>')
+            ->dom('<"d-flex mb-2 justify-content-between flex-wrap gap-3"<"d-flex gap-3"lB>f>rt<"d-flex justify-content-between flex-wrap gap-3 mt-3"ip>')
             ->selectStyleSingle()
             ->responsive(true)
             ->pageLength(100)
             ->serverSide(true) // Enable server-side processing
             ->processing(true)
             ->buttons([
-                Button::make('excel')->text('<i class="fas fa-file-excel"></i> Excel'),
-                Button::make('pdf')->text('<i class="fas fa-file-pdf"></i> PDF'),
-                Button::make('print')->text('<i class="fas fa-print"></i> Print'),
-                Button::make('delete')->text('<i class="fas fa-trash"></i> Delete')->addClass('btn-danger'),
+                Button::make('excel'),
+                Button::make('csv'),
+                Button::make('pdf'),
+                Button::make('print'),
+                Button::make('reset'),
+                Button::make('reload'),
+                Button::raw('deleteItems')
+                    ->text('<i class="bi bi-archive" title="Delete Items"></i>')
+                    ->action("
+                        let selectedValues = [];
+                        $('.selected_carts:checked').each(function() {
+                            selectedValues.push($(this).val());
+                        });
+
+                        let baseUrl = '" . route('admin.shop.carts.destroy.checked') . "';
+                        let params = selectedValues.map(value => `cart_ids[]=`+value).join('&');
+                        let fullUrl = baseUrl+`?`+params;
+
+                        window.location.href = fullUrl;
+                    "),
             ])
             ->initComplete('function(settings, json) {
                 $("#check_all_items").click(function(){
@@ -138,7 +157,13 @@ class OrdersDataTable extends DataTable
                 ->addClass('text-center'),
 
             Column::computed('checkbox')
-                ->title('')
+                ->title('
+                    <div class="form-check">
+                        <label class="form-check-label mb-0">
+                            <input class="form-check-input" type="checkbox" id="check_all_items" value="1">
+                        </label>
+                    </div>
+                ')
                 ->searchable(false)
                 ->orderable(false)
                 ->exportable(false)
@@ -146,14 +171,6 @@ class OrdersDataTable extends DataTable
                 ->width(20)
                 ->addClass('text-center'),
 
-            Column::make('order_no')->addClass('text-nowrap'),
-            Column::make('user'),
-            Column::make('items'),
-            Column::make('amount')->width(100),
-            Column::make('payment')->width(100),
-            Column::make('order_status')->width(100)->addClass('text-nowrap'),
-            //Column::make('address')->width(250)->orderable(false),
-            Column::make('created_at')->orderable(false),
             Column::computed('action')
                 ->width(60)
                 ->searchable(false)
@@ -161,6 +178,20 @@ class OrdersDataTable extends DataTable
                 ->exportable(false)
                 ->printable(false)
                 ->addClass('text-nowrap'),
+
+            Column::make('order_no')->addClass('text-nowrap'),
+            Column::make('user'),
+            Column::make('items')->searchable(false),
+            Column::make('subtotal'),
+            Column::make('discount'),
+            Column::make('shipping_charge')->title('Shipping'),
+            Column::make('total_amount')->width(100)->orderable(false)->searchable(false),
+            Column::make('coupon_code'),
+            Column::make('payment_mode')->width(100),
+            Column::make('payment_status')->width(100),
+            Column::make('order_status')->width(100)->addClass('text-nowrap'),
+            Column::make('address')->width(250)->orderable(false),
+            Column::make('created_at'),
         ];
     }
 
@@ -170,5 +201,9 @@ class OrdersDataTable extends DataTable
     protected function filename(): string
     {
         return 'Orders_' . date('YmdHis');
+    }
+
+    protected function deleteItems()
+    {
     }
 }
