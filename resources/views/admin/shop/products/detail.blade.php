@@ -127,7 +127,7 @@
             </div>
             <div class="form-group">
                 <label for="">Product Description</label>
-                <textarea name="metas[description]" rows="6" class="form-control text-editor">{{ $product->getDetail('description') }}</textarea>
+                <textarea name="metas[description]" rows="6" class="form-control summernote-editor">{{ $product->getDetail('description') }}</textarea>
             </div>
             <div class="form-group">
                 <label for="">Meta Tile</label>
@@ -149,20 +149,4 @@
         </div>
     </form>
 
-    @push('scripts')
-        <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-        <script>
-            tinymce.init({
-                selector: '.text-editor',
-                plugins: 'print preview paste importcss searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap emoticons',
-                imagetools_cors_hosts: ['picsum.photos'],
-                menubar: 'file edit view insert format tools table help',
-                toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview print | insertfile image link codesample',
-                toolbar_sticky: true,
-                autosave_ask_before_unload: true,
-                height: 400,
-                toolbar_mode: 'sliding',
-            });
-        </script>
-    @endpush
 </x-admin.layout>

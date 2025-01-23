@@ -5,7 +5,6 @@
     @endpush
     <section class="py-5">
         <div class="container shop_page">
-
             @foreach (config('ashop.sections.home', []) as $section => $attributes)
                 @if ($section == 'new_arrivals' && config('ashop.sections.home.new_arrivals.status', true))
                     <x-ashop-ashop:products-group title="New Arrivals" type="latest" :limit="config('ashop.sections.home.new_arrivals.items', 10)"
@@ -55,6 +54,9 @@
                     @endforeach
                 @endif
             @endforeach
+
+            <x-ashop-ashop:products-viewed-history title="Products Viewed " subtitle="Here are the products you have viewed recently" limit="25" />
         </div>
     </section>
+
 </x-app-layout>

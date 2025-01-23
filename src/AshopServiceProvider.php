@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Blade;
 use Takshak\Ashop\Console\Commands\ClearJunkOrdersCommand;
 use Takshak\Ashop\Console\Commands\ProductAttachParentCategoriesCommand;
 use Takshak\Ashop\Console\Commands\ProductsSearchTagsOptimizeCommand;
+use Takshak\Ashop\Console\Commands\ProductsViewedDeleteCommand;
 use Takshak\Ashop\Console\Commands\SeedCommand;
 
 class AshopServiceProvider extends ServiceProvider
@@ -18,7 +19,8 @@ class AshopServiceProvider extends ServiceProvider
             ProductsSearchTagsOptimizeCommand::class,
             ProductAttachParentCategoriesCommand::class,
             SeedCommand::class,
-            ClearJunkOrdersCommand::class
+            ClearJunkOrdersCommand::class,
+            ProductsViewedDeleteCommand::class
         ]);
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'ashop');
         $this->loadViewComponentsAs('ashop', [
@@ -34,10 +36,12 @@ class AshopServiceProvider extends ServiceProvider
             View\Components\Ashop\BrandsGroup::class,
             View\Components\Ashop\UserAccount::class,
             View\Components\Ashop\UserBottomNav::class,
+            View\Components\Ashop\ProductsViewedHistory::class
         ]);
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+        $this->loadRoutesFrom(__DIR__ . '/../routes/admin.php');
         $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
 
         $this->publishes([

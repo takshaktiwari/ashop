@@ -10,6 +10,7 @@ use Takshak\Ashop\Models\Shop\Cart;
 use Takshak\Ashop\Models\Shop\Coupon;
 use Takshak\Ashop\Models\Shop\Order;
 use Takshak\Ashop\Models\Shop\OrderProduct;
+use Takshak\Ashop\Models\Shop\OrderUpdate;
 use Takshak\Ashop\Services\CartService;
 
 class CheckoutController extends Controller
@@ -222,6 +223,13 @@ class CheckoutController extends Controller
 
         $order->order_status = config('ashop.order.initial_status');
         $order->save();
+
+        OrderUpdate::create([
+            'order_id' => $order->id,
+            'order_status' => $order->order_status,
+            'payment_status' => $order->payment_status ?? false,
+            'notes' => 'Order has been successfully placed.',
+        ]);
 
         $this->cartService->empty();
         return to_route('shop.checkout.confirmation');

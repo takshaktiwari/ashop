@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\View;
 use Takshak\Ashop\Models\Shop\Category;
 use Takshak\Ashop\Models\Shop\Product;
+use Takshak\Ashop\Models\Shop\ProductViewed;
 
 class ProductController extends Controller
 {
@@ -101,6 +102,18 @@ class ProductController extends Controller
             ->load('metas')
             ->loadCount('reviews');
 
+        ProductViewed::query()
+            ->where('product_id', $product->id)
+            ->where(function ($query) {
+                $query->where('user_id', auth()->id());
+                $query->orWhere('user_ip', request()->ip());
+            })
+            ->delete();
+        ProductViewed::create([
+            'product_id' => $product->id,
+            'user_id' => auth()->id(),
+            'user_ip' => $request->ip()
+        ]);
 
         return View::first(['shop.products.show', 'ashop::shop.products.show'])
             ->with([

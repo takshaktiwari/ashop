@@ -5,7 +5,7 @@
     @endpush
     <section class="py-5">
         <div class="container products_page">
-            <div class="row g-4">
+            <div class="row g-4 mb-5">
                 @if (config('ashop.sections.products.sidebar', true))
                     <div class="col-lg-3 col-md-4">
                         <x-ashop-ashop:shop-sidebar :category="$category" :filterAttributes="$filterAttributes" />
@@ -89,6 +89,7 @@
                 </div>
             </div>
 
+            <x-ashop-ashop:products-viewed-history title="Products Viewed " subtitle="Here are the products you have viewed recently" limit="25" class="py-0" />
         </div>
     </section>
 

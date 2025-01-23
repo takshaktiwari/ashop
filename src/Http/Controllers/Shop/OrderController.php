@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\View;
 use Takshak\Ashop\Models\Shop\Order;
+use Takshak\Ashop\Models\Shop\OrderUpdate;
 
 class OrderController extends Controller
 {
@@ -24,9 +25,20 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-        $order->load('orderProducts');
+        $order->load(['orderProducts' => function ($query) {
+            $query->with(['product' => function ($query) {
+                $query->select('products.id', 'products.name', 'products.slug');
+                $query->with('metas');
+            }]);
+        }]);
+        $order->load(['orderUpdates' => function ($query) {
+            $query->latest();
+        }]);
+
         return View::first(['shop.user.orders.show', 'ashop::shop.user.orders.show'])->with([
             'order' => $order
         ]);
     }
+
+
 }

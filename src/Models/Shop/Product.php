@@ -15,10 +15,11 @@ use Takshak\Imager\Facades\Placeholder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Staudenmeir\EloquentEagerLimit\HasEagerLimit;
 use Takshak\Areviews\Traits\Models\ReviewModelTrait;
+use Takshak\Ashop\Traits\AshopModelTrait;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, AshopModelTrait;
     use ReviewModelTrait;
     use HasEagerLimit;
     protected $guarded = [];
@@ -193,14 +194,16 @@ class Product extends Model
     }
 
 
-    public function getDetail($name = null, $value = true)
+    public function getDetail($name = null, $value = true, $default = null)
     {
         if (!$name) {
             return $this->metas;
         }
 
         $meta = $this->metas->where('key', 'product_details')->where('name', $name)->first();
-        return $value ? $meta?->value : $meta;
+        $mDetail = $value ? $meta?->value : $meta;
+
+        return $mDetail ?? $default;
     }
 
     public function attribute($name = null, $value = true)

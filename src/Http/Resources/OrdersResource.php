@@ -42,6 +42,7 @@ class OrdersResource extends JsonResource
             'order_products' => $this->when($this->relationLoaded('orderProducts'), OrderProductsResource::collection($this->orderProducts)),
             'order_updates' => $this->when($this->relationLoaded('orderUpdates'), OrderUpdatesResource::collection($this->orderUpdates)),
             'order_products_count' => $this->when($this->order_products_count, $this->order_products_count),
+            'created_at' => $this->created_at
         ];
     }
 

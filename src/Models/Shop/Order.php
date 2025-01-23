@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Takshak\Ashop\Traits\AshopModelTrait;
 
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, AshopModelTrait;
     protected $guarded = [];
 
     public static function boot()
@@ -121,5 +122,92 @@ class Order extends Model
         $address .= '['.$this->pincode . '], ';
         $address .= $this->country;
         return $address;
+    }
+
+    public function cancellable()
+    {
+        $cancellable = true;
+        if(!in_array($this->order_status, config('ashop.order.cancel.order_status', []))) {
+            return false;
+        }
+
+        foreach ($this->orderProducts as $oProduct) {
+            if (!config('ashop.order.cancel.status')) {
+                $cancellable = false;
+                break;
+            } elseif (!$oProduct->product->getDetail('cancellable')) {
+                $cancellable = false;
+                break;
+            } else {
+                $cancel_within = $oProduct->product->getDetail(
+                    name: 'cancel_within',
+                    default: config('ashop.order.cancel.within', 0)
+                );
+                if ($this->created_at->addDays((int)$cancel_within) < now()) {
+                    $cancellable = false;
+                    break;
+                }
+            }
+        }
+
+        return $cancellable;
+    }
+
+    public function returnable()
+    {
+        $returnable = true;
+        if(!in_array($this->order_status, config('ashop.order.return.order_status', []))) {
+            return false;
+        }
+
+        foreach ($this->orderProducts as $oProduct) {
+            if (!config('ashop.order.return.status')) {
+                $returnable = false;
+                break;
+            } elseif (!$oProduct->product->getDetail('returnable')) {
+                $returnable = false;
+                break;
+            } else {
+                $return_within = $oProduct->product->getDetail(
+                    name: 'return_within',
+                    default: config('ashop.order.return.within', 0)
+                );
+                if ($this->created_at->addDays((int)$return_within) < now()) {
+                    $returnable = false;
+                    break;
+                }
+            }
+        }
+
+        return $returnable;
+    }
+
+    public function replaceable()
+    {
+        $replaceable = true;
+        if(!in_array($this->order_status, config('ashop.order.replace.order_status', []))) {
+            return false;
+        }
+
+        foreach ($this->orderProducts as $oProduct) {
+            if (!config('ashop.order.replace.status')) {
+                $replaceable = false;
+                break;
+            } elseif (!$oProduct->product->getDetail('replaceable')) {
+                $replaceable = false;
+                break;
+            } else {
+                $replace_within = $oProduct->product->getDetail(
+                    name: 'replace_within',
+                    default: config('ashop.order.replace.within', 0)
+                );
+                if ($this->created_at->addDays((int)$replace_within) < now()) {
+                    $replaceable = false;
+                    break;
+                }
+            }
+        }
+
+        return $replaceable;
     }
 }

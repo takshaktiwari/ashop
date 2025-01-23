@@ -1,119 +1,36 @@
 <?php
 
-use Takshak\Adash\Http\Middleware\GatesMiddleware;
 use Illuminate\Support\Facades\Route;
 use Takshak\Adash\Http\Middleware\ReferrerMiddleware;
-use Takshak\Ashop\Http\Controllers\Admin\Shop\AttributeController;
-use Takshak\Ashop\Http\Controllers\Admin\Shop\BrandController;
-use Takshak\Ashop\Http\Controllers\Admin\Shop\CategoryController;
-use Takshak\Ashop\Http\Controllers\Admin\Shop\CouponController;
-use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductController;
-use Takshak\Ashop\Http\Controllers\Admin\Shop\ProductImageController;
-use Takshak\Ashop\Http\Controllers\Admin\Shop\CartController;
-use Takshak\Ashop\Http\Controllers\Admin\Shop\WishlistController;
-use Takshak\Ashop\Http\Controllers\Admin\Shop\OrderController;
-use Takshak\Ashop\Http\Controllers\Admin\Shop\OrderUpdateController;
-use Takshak\Ashop\Http\Controllers\Shop\AddressController as ShopAddressController;
-use Takshak\Ashop\Http\Controllers\Shop\BrandController as ShopBrandController;
-use Takshak\Ashop\Http\Controllers\Shop\CartController as ShopCartController;
-use Takshak\Ashop\Http\Controllers\Shop\CategoryController as ShopCategoryController;
-use Takshak\Ashop\Http\Controllers\Shop\OrderController as ShopOrderController;
-use Takshak\Ashop\Http\Controllers\Shop\ProductController as ShopProductController;
-use Takshak\Ashop\Http\Controllers\Shop\UserController as ShopUserController;
-use Takshak\Ashop\Http\Controllers\Shop\WishlistController as ShopWishlistController;
+use Takshak\Ashop\Http\Controllers\Shop\AddressController;
+use Takshak\Ashop\Http\Controllers\Shop\BrandController;
+use Takshak\Ashop\Http\Controllers\Shop\CartController;
+use Takshak\Ashop\Http\Controllers\Shop\CategoryController;
+use Takshak\Ashop\Http\Controllers\Shop\OrderController;
+use Takshak\Ashop\Http\Controllers\Shop\UserController;
+use Takshak\Ashop\Http\Controllers\Shop\WishlistController;
 use Takshak\Ashop\Http\Controllers\Shop\ShopController;
 use Takshak\Ashop\Http\Controllers\Shop\CheckoutController;
+use Takshak\Ashop\Http\Controllers\Shop\ProductController;
 
 Route::middleware('web')->group(function () {
-    Route::middleware(['auth', GatesMiddleware::class])
-        ->prefix('admin/shop')
-        ->name('admin.shop.')
-        ->group(function () {
-            Route::resource('attributes', AttributeController::class);
-
-            Route::resource('categories', CategoryController::class);
-            Route::prefix('categories')
-                ->name('categories.')
-                ->controller(CategoryController::class)
-                ->group(function () {
-                    Route::get('details/{category}', 'details')->name('details');
-                    Route::post('details/{category}/update', 'detailsUpdate')->name('details.update');
-                    Route::get('brands/{category}', 'brands')->name('brands');
-                    Route::post('brands/{category}/update', 'brandsUpdate')->name('brands.update');
-                    Route::get('status/{category}', 'statusToggle')->name('status');
-                    Route::get('featured/{category}', 'featuredToggle')->name('featured');
-                    Route::get('is_top/{category}', 'isTopToggle')->name('is_top');
-                    Route::get('attributes/{category}', 'attributes')->name('attributes');
-                    Route::post('attributes/{category}/update', 'attributesUpdate')->name('attributes.update');
-                    Route::get('delete/{category}', 'destroy')->name('destroy');
-                });
-
-
-            Route::resource('brands', BrandController::class)->except(['show']);
-            Route::get('brands/status/{brand}', [BrandController::class, 'statusToggle'])->name('brands.status.toggle');
-            Route::get('brands/featured/{brand}', [BrandController::class, 'featuredToggle'])->name('brands.featured.toggle');
-
-            Route::resource('products', ProductController::class);
-            Route::prefix('products')->name('products.')->group(function () {
-                Route::controller(ProductController::class)->group(function () {
-                    Route::get('delete/{product}', 'delete')->name('delete');
-                    Route::get('detail/{product}', 'detail')->name('detail');
-                    Route::post('detail/update/{product}', 'detailUpdate')->name('detail.update');
-
-                    Route::get('attributes/{product}', 'attributes')->name('attributes');
-                    Route::post('attributes/update/{product}', 'attributesUpdate')->name('attributes.update');
-
-                    Route::post('selected/delete', 'selectedDelete')->name('selected.delete');
-                    Route::post('selected/featured/{value}', 'selectedFeatured')->name('selected.featured');
-                    Route::get('copy/{product}', 'copy')->name('copy');
-
-                    Route::get('export/excel', 'exportExcel')->name('export.excel');
-
-                    Route::get('import/sheets', 'import')->name('import.sheets');
-                    Route::post('import/sheets', 'importUpdate')->name('import.update');
-                });
-
-                Route::controller(ProductImageController::class)->group(function () {
-                    Route::get('images/{product}', 'index')->name('images');
-                    Route::post('images/store/{product}', 'store')->name('images.store');
-                    Route::get('images/delete/{productImage}', 'destroy')->name('images.destroy');
-                    Route::post('images/bulk/delete', 'bulkDelete')->name('images.bulk.destroy');
-                });
-            });
-
-            Route::resource('coupons', CouponController::class);
-
-            Route::get('carts', [CartController::class, 'index'])->name('carts.index');
-            Route::get('carts/delete', [CartController::class, 'destroyChecked'])->name('carts.destroy.checked');
-            Route::get('carts/{cart}/delete', [CartController::class, 'destroy'])->name('carts.destroy');
-
-            Route::get('wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-            Route::get('wishlist/delete', [WishlistController::class, 'destroyChecked'])->name('wishlist.destroy.checked');
-            Route::get('wishlist/{wishlist}/delete', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
-
-            Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
-            Route::get('orders/{order}/delete', [OrderController::class, 'destroy'])->name('orders.destroy');
-            Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-            Route::post('orders/{order}/updates', [OrderUpdateController::class, 'store'])->name('orders.updates.store');
-        });
-
     Route::middleware(ReferrerMiddleware::class)->prefix('shop')->name('shop.')->group(function () {
         Route::get('/', [ShopController::class, 'index'])->name('index');
 
-        Route::get('categories', [ShopCategoryController::class, 'index'])->name('categories.index');
-        Route::get('categories/list', [ShopCategoryController::class, 'list'])->name('categories.list');
+        Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
+        Route::get('categories/list', [CategoryController::class, 'list'])->name('categories.list');
 
-        Route::get('brands', [ShopBrandController::class, 'index'])->name('brands.index');
+        Route::get('brands', [BrandController::class, 'index'])->name('brands.index');
 
-        Route::get('products', [ShopProductController::class, 'index'])->name('products.index');
-        Route::get('products/{product:slug}', [ShopProductController::class, 'show'])->name('products.show');
-        Route::get('products/reviews/{product:slug}', [ShopProductController::class, 'reviews'])->name('products.reviews');
+        Route::get('products', [ProductController::class, 'index'])->name('products.index');
+        Route::get('products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
+        Route::get('products/reviews/{product:slug}', [ProductController::class, 'reviews'])->name('products.reviews');
 
         Route::prefix('carts')->name('carts.')->group(function () {
-            Route::get('/', [ShopCartController::class, 'index'])->name('index');
-            Route::put('update/{cart}', [ShopCartController::class, 'update'])->name('update');
-            Route::get('store/{product}', [ShopCartController::class, 'store'])->name('store');
-            Route::get('delete/{cart}', [ShopCartController::class, 'delete'])->name('delete');
+            Route::get('/', [CartController::class, 'index'])->name('index');
+            Route::put('update/{cart}', [CartController::class, 'update'])->name('update');
+            Route::get('store/{product}', [CartController::class, 'store'])->name('store');
+            Route::get('delete/{cart}', [CartController::class, 'delete'])->name('delete');
         });
 
         Route::prefix('checkout')->name('checkout.')->group(function () {
@@ -129,20 +46,23 @@ Route::middleware('web')->group(function () {
 
         Route::middleware(['auth'])->group(function () {
             Route::prefix('user')->name('user.')->group(function () {
-                Route::get('dashboard', [ShopUserController::class, 'dashboard'])->name('dashboard');
-                Route::get('profile', [ShopUserController::class, 'profile'])->name('profile');
-                Route::post('profile', [ShopUserController::class, 'profileUpdate'])->name('profile.update');
+                Route::get('dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+                Route::get('profile', [UserController::class, 'profile'])->name('profile');
+                Route::post('profile', [UserController::class, 'profileUpdate'])->name('profile.update');
 
-                Route::get('orders', [ShopOrderController::class, 'index'])->name('orders.index');
-                Route::get('orders/{order}', [ShopOrderController::class, 'show'])->name('orders.show');
+                Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+                Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+                Route::get('orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+                Route::get('orders/{order}/return', [OrderController::class, 'orderReturn'])->name('orders.return');
+                Route::get('orders/{order}/replace', [OrderController::class, 'replace'])->name('orders.replace');
 
-                Route::resource('addresses', ShopAddressController::class);
-                Route::get('addresses/{address}/make-default', [ShopAddressController::class, 'makeDefault'])
+                Route::resource('addresses', AddressController::class);
+                Route::get('addresses/{address}/make-default', [AddressController::class, 'makeDefault'])
                     ->name('addresses.make-default');
 
                 Route::prefix('wishlist')->name('wishlist.')->group(function () {
-                    Route::get('items', [ShopWishlistController::class, 'items'])->name('items.index');
-                    Route::get('items/toggle/{product}', [ShopWishlistController::class, 'itemToggle'])->name('items.toggle');
+                    Route::get('items', [WishlistController::class, 'items'])->name('items.index');
+                    Route::get('items/toggle/{product}', [WishlistController::class, 'itemToggle'])->name('items.toggle');
                 });
             });
         });

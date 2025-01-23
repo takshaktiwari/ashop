@@ -9,6 +9,7 @@ use Takshak\Ashop\Models\Shop\Cart;
 use Takshak\Ashop\Models\Shop\CategoryProduct;
 use Takshak\Ashop\Models\Shop\OrderProduct;
 use Takshak\Ashop\Models\Shop\Product;
+use Takshak\Ashop\Models\Shop\ProductViewed;
 use Takshak\Ashop\Models\Shop\WishlistItem;
 use Takshak\Ashop\Traits\AshopProductTrait;
 
@@ -36,7 +37,7 @@ class ProductController extends Controller
                     $query->orWhere('categories.display_name', request('category'));
                 });
             })
-            ->when($request->input('featured'), fn ($q) => $q->featured())
+            ->when($request->input('featured'), fn($q) => $q->featured())
             ->when($request->input('search'), function ($query) {
                 $query->where(function ($query) {
                     $query->where('name', 'LIKE', '%' . request('search') . '%');
@@ -93,10 +94,10 @@ class ProductController extends Controller
                 $query->where('slug', $slugOrId);
                 $query->orWhere('id', $slugOrId);
             })
-            ->with(['categories' => fn ($q) => $q->active()])
+            ->with(['categories' => fn($q) => $q->active()])
             ->with('images')
             ->with('metas')
-            ->with(['reviews' => fn ($q) => $q->limit('5')])
+            ->with(['reviews' => fn($q) => $q->limit('5')])
             ->withCount('reviews')
             ->withAvg('reviews', 'rating')
             ->with('wishlistAuthUser:id,name')
@@ -111,11 +112,24 @@ class ProductController extends Controller
                 ->whereHas('categories', function ($query) use ($product) {
                     $query->whereIn('categories.id', $product->categories->pluck('id'));
                 })
-                ->when($request->boolean('similar_products_featured'), fn ($q) => $q->featured())
+                ->when($request->boolean('similar_products_featured'), fn($q) => $q->featured())
                 ->limit(request('similar_products_limit', 10))
                 ->productsOrderBy($request->string('similar_products_order', 'latest'))
                 ->get();
         }
+
+        ProductViewed::query()
+            ->where('product_id', $product->id)
+            ->where(function ($query) {
+                $query->where('user_id', auth()->id());
+                $query->orWhere('user_ip', request()->ip());
+            })
+            ->delete();
+        ProductViewed::create([
+            'product_id' => $product->id,
+            'user_id' => auth()->id(),
+            'user_ip' => $request->ip()
+        ]);
 
         return ProductsResource::make($product)->additional([
             'similar' => ProductsResource::collection($similarProducts),
@@ -167,7 +181,7 @@ class ProductController extends Controller
             ->whereHas('categories', function ($query) use ($categoriesId) {
                 $query->whereIn('categories.id', $categoriesId);
             })
-            ->when($request->boolean('similar_products_featured'), fn ($q) => $q->featured())
+            ->when($request->boolean('similar_products_featured'), fn($q) => $q->featured())
             ->limit(request('similar_products_limit', 10))
             ->productsOrderBy($request->string('similar_products_order', 'latest'))
             ->get();
@@ -186,7 +200,7 @@ class ProductController extends Controller
         $cartProductsId = Cart::where('user_id', auth()->id())->pluck('product_id');
         $wishlistProductsId = WishlistItem::where('user_id', auth()->id())->pluck('product_id');
         $orderProductsId = OrderProduct::query()
-            ->whereHas('order', fn ($q) => $q->where('user_id', auth()->id()))
+            ->whereHas('order', fn($q) => $q->where('user_id', auth()->id()))
             ->pluck('product_id');
 
         $productIds = $cartProductsId->merge($wishlistProductsId)->merge($orderProductsId)->unique()->toArray();
@@ -199,11 +213,36 @@ class ProductController extends Controller
                     $query->whereIn('categories.id', $categoriesId);
                 });
             })
-            ->when($request->boolean('featured') || $categoriesId->isEmpty(), fn ($q) => $q->featured())
+            ->when($request->boolean('featured') || $categoriesId->isEmpty(), fn($q) => $q->featured())
             ->productsOrderBy($request->string('order_by', 'latest'))
             ->limit(request('limit', 20))
             ->get();
 
         return ProductsResource::collection($products);
+    }
+
+    public function viewedHistory(Request $request)
+    {
+        $request->validate([
+            'limit' => 'nullable|numeric',
+        ]);
+
+        $productsIds = ProductViewed::query()
+            ->where('user_id', auth()->id())
+            ->orWhere('user_ip', request()->ip())
+            ->pluck('product_id');
+
+        $products = Product::query()
+            ->select('id', 'name', 'slug', 'image_sm')
+            ->whereIn('id', $productsIds)
+            ->get()
+            ->map(function ($product) {
+                $product->image_sm = $product->image('sm');
+                return $product;
+            });
+
+        return response()->json([
+            'data' => $products
+        ]);
     }
 }

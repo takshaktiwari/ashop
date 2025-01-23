@@ -25,6 +25,7 @@ Route::middleware('api')
                 Route::get('similar', [ProductController::class, 'similar']);
                 Route::get('recommended', [ProductController::class, 'recommended']);
                 Route::get('{product}', [ProductController::class, 'show']);
+                Route::get('viewed/history', [ProductController::class, 'viewedHistory']);
             });
 
             Route::prefix('carts')->group(function () {
@@ -58,5 +59,8 @@ Route::middleware('api')
 
             Route::get('orders', [OrderController::class, 'index']);
             Route::get('orders/{order}', [OrderController::class, 'show']);
+            Route::get('orders/{order}/cancel', [OrderController::class, 'cancel']);
+            Route::get('orders/{order}/return', [OrderController::class, 'orderReturn']);
+            Route::get('orders/{order}/replace', [OrderController::class, 'replace']);
         });
     });

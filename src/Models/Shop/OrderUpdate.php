@@ -14,6 +14,16 @@ class OrderUpdate extends Model
     use HasFactory;
     protected $guarded = [];
 
+protected static function boot()
+{
+    parent::boot();
+
+    static::updating(function ($model) {
+        $model->payment_status = $model->payment_status ?? false;
+    });
+}
+
+
     public function orderStatus()
     {
         return config('ashop.order.status.' . $this->order_status);

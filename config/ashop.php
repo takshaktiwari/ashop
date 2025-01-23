@@ -80,7 +80,7 @@ return [
     ],
     'shop' => [
         'name'  =>  config('app.name'),
-        'home'  =>  config('app.url'),
+        'website'  =>  config('app.url'),
         'email' =>  env('MAIL_PRIMARY', 'shop@example.com'),
         'mobile' => env('SHOP_MOBILE', "+91 9876 987 987"),
         'address' => env('SHOP_ADDRESS', 'Shop No. 12B, Shanti Apartments, Laxmi Nagar, Delhi - 110092')
@@ -124,12 +124,36 @@ return [
         ],
         'status' => [
             'order_placed' => 'Order Placed',
+            'order_processing' => 'Order Processing',
             'order_shipped' => 'Order Shipped',
             'out_of_delivery' => 'Out For Delivery',
             'delivered' => 'Delivered',
-            'return' => 'Return',
-            'refund' => 'Refund',
             'cancelled' => 'Order Cancelled',
+            'replace_requested' => 'Replacement Requested',
+            'replace_rejected' => 'Replacement Rejected',
+            'replace_initiated' => 'Replacement Initiated',
+            'replaced' => 'Replaced',
+            'return_requested' => 'Return Requested',
+            'return_rejected' => 'Return Rejected',
+            'return_initiated' => 'Return Initiated',
+            'returned' => 'Returned',
+            'refund_initiated' => 'Refund Initiated',
+            'refunded' => 'Refunded',
+        ],
+        'cancel' => [
+            'status' => true,
+            'within' => 7,
+            'order_status' => ['order_placed', 'order_processing']
+        ],
+        'return' => [
+            'status' => true,
+            'within' => 7,
+            'order_status' => ['delivered']
+        ],
+        'replace' => [
+            'status' => true,
+            'within' => 7,
+            'order_status' => ['delivered']
         ]
     ]
 ];

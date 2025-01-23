@@ -33,13 +33,30 @@
                                 </td>
                             </tr>
                             <tr>
+                                <th>Subtotal</th>
+                                <td>{{ $order->priceFormat('subtotal') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Shipping Charge</th>
+                                <td>{{ $order->priceFormat('shipping_charge') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Discount</th>
+                                <td>
+                                    {{ $order->priceFormat('discount') }}
+                                    @if ($order->coupon_code)
+                                        <span>; Coupon: {{ $order->coupon_code }}</span>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
                                 <th>Total Amount</th>
                                 <td>
-                                    {{ config('ashop.currency.sign', '₹') . $order->totalAmount }}
+                                    {{ $order->priceFormat('totalAmount') }}
                                     <i class="fa-solid fa-circle-info text-secondary" data-bs-toggle="tooltip"
-                                        title="Subtotal ({{ config('ashop.currency.sign', '₹') . $order->subtotal }}) + Shipping
-                                        ({{ config('ashop.currency.sign', '₹') . $order->shipping_charge }}) - Discount
-                                        ({{ config('ashop.currency.sign', '₹') . $order->discount }})"></i>
+                                        title="Subtotal ({{ $order->priceFormat('subtotal') }}) + Shipping
+                                        ({{ $order->priceFormat('shipping_charge') }}) - Discount
+                                        ({{ $order->priceFormat('discount') }})"></i>
                                 </td>
                             </tr>
                         </table>
@@ -51,6 +68,23 @@
                     <div class="card-body">
                         <p class="fw-bold">Shipping Address:</p>
                         <p class="mb-0">{!! $order->address() !!}</p>
+
+                        @if ($order->cancellable())
+                            <a href="{{ route('shop.user.orders.cancel', [$order]) }}"
+                                class="btn btn-sm btn-danger px-3 mt-3">
+                                <i class="fas fa-ban"></i> Cancel
+                            </a>
+                        @endif
+                        @if ($order->replaceable())
+                            <a href="{{ route('shop.user.orders.replace', [$order]) }}" class="btn btn-sm btn-danger px-3 mt-3">
+                                <i class="fas fa-box-open"></i> Replace
+                            </a>
+                        @endif
+                        @if ($order->returnable())
+                            <a href="{{ route('shop.user.orders.return', [$order]) }}" class="btn btn-sm btn-danger px-3 mt-3">
+                                <i class="fas fa-truck-loading"></i> Return
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -58,14 +92,19 @@
                 @foreach ($order->orderProducts as $orderProduct)
                     <div class="card mb-1">
                         <div class="card-body d-flex gap-3">
-                            <div class="product_image">
+                            <a href="{{ route('shop.products.show', [$orderProduct->product]) }}" target="_blank" class="product_image">
                                 <img src="{{ $orderProduct->image() }}" alt="product image" class="rounded"
                                     style="max-height: 80px">
-                            </div>
+                            </a>
                             <div class="product_detail flex-fill">
-                                <p class="mb-0">{{ $orderProduct->name }}</p>
+                                <p class="mb-2">
+                                    <a href="{{ route('shop.products.show', [$orderProduct->product]) }}" target="_blank">
+                                        {{ $orderProduct->name }}
+                                    </a>
+                                </p>
                                 <p class="small">
-                                    <del class="me-1 text-secondary">{{ config('ashop.currency.sign', '₹') . $orderProduct->net_price }}</del>
+                                    <del
+                                        class="me-1 text-secondary">{{ config('ashop.currency.sign', '₹') . $orderProduct->net_price }}</del>
                                     <b>{{ config('ashop.currency.sign', '₹') . $orderProduct->price }}</b>
                                     <span>x</span>
                                     <b>{{ $orderProduct->quantity }}</b>
@@ -80,43 +119,24 @@
             <div class="col-12">
                 <div class="card order_updates">
                     <div class="card-body">
-                        <div class="d-flex gap-2 mb-4">
-                            <div class="dot text-center" style="position: relative">
-                                <span class="d-block">
-                                    <i class="fa-solid fa-circle-dot"></i>
-                                </span>
-                                <span class="bg-dark" style="width: 4px; position: absolute; height: 100%; left: 6px;"></span>
+                        @foreach ($order->orderUpdates as $update)
+                            <div class="d-flex gap-2 mb-3">
+                                <div class="dot text-center" style="position: relative">
+                                    <span class="d-block">
+                                        <i class="fa-solid fa-circle-dot"></i>
+                                    </span>
+                                    <span class="bg-dark"
+                                        style="width: 4px; position: absolute; height: 90%; left: 6px;"></span>
+                                </div>
+                                <div class="flex-fill">
+                                    <p class="fw-bold mb-0 mt-1 lh-1">{{ $update->orderStatus() }}</p>
+                                    <span class="d-block small text-secondary mb-1">
+                                        <em class="small">{{ $update->created_at->diffForHumans() }}</em>
+                                    </span>
+                                    <p class="small mb-0 text-secondary">{{ $update->notes }}</p>
+                                </div>
                             </div>
-                            <div class="flex-fill">
-                                <p class="fw-bold mb-0 mt-1 lh-1">Order Placed</p>
-                                <span class="d-block small text-secondary mb-1">
-                                    <em class="small">22-12-1212 23:23:23</em>
-                                </span>
-                                <p class="small mb-0 text-secondary">
-                                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="d-flex gap-2">
-                            <div class="dot text-center">
-                                <span class="d-block">
-                                    <i class="fa-solid fa-circle-dot"></i>
-                                </span>
-                            </div>
-                            <div class="flex-fill">
-                                <p class="fw-bold mb-0 mt-1 lh-1">
-                                    Order Placed
-                                </p>
-                                <span class="d-block small text-secondary mb-1">
-                                    <em class="small">22-12-1212 23:23:23</em>
-                                </span>
-
-                                <p class="small mb-0 text-secondary">
-                                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                                </p>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>

@@ -135,7 +135,8 @@
                         <x-areviews-areviews:reviews :model="$product" :addReview="auth()->check()" column="col-12" />
 
                         <div class="text-center">
-                            <a href="{{ route('shop.products.reviews', [$product]) }}" class="btn btn-sm px-4 btn-dark">
+                            <a href="{{ route('shop.products.reviews', [$product]) }}"
+                                class="btn btn-sm px-4 btn-dark">
                                 <i class="fas fa-star"></i> See all reviews
                             </a>
                         </div>
@@ -146,7 +147,14 @@
         <hr />
         <x-ashop-ashop:products-group title="Related Products" subtitle="Browse other products related to this category"
             :categories="$product->categories->pluck('id')->toArray()" limit="10" />
+
+        <div class="container">
+            <x-ashop-ashop:products-viewed-history title="Products Viewed "
+                subtitle="Here are the products you have viewed recently" limit="25" />
+        </div>
     </section>
+
+
 
     @if ($product->checkout_type == 'query')
         <div class="modal" id="product_query_modal">

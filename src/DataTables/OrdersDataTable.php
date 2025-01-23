@@ -190,7 +190,7 @@ class OrdersDataTable extends DataTable
             Column::make('payment_mode')->width(100),
             Column::make('payment_status')->width(100),
             Column::make('order_status')->width(100)->addClass('text-nowrap'),
-            Column::make('address')->width(250)->orderable(false),
+            Column::make('address')->width(250)->orderable(false)->searchable(false),
             Column::make('created_at'),
         ];
     }

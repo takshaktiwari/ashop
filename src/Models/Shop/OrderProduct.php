@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
+use Takshak\Ashop\Traits\AshopModelTrait;
 use Takshak\Imager\Facades\Placeholder;
 
 class OrderProduct extends Model
 {
-    use HasFactory;
+    use HasFactory, AshopModelTrait;
     protected $guarded = [];
 
     protected $casts = [

@@ -28,6 +28,18 @@
     @endpush
 
     <div id="user_orders">
+        @if (!$orders->count())
+            <div class="py-5 text-center">
+                <h3 class="text-center text-secondary">
+                    You currently have no orders.
+                </h3>
+                <p class="small mb-4">Explore our products and make an order to get started.</p>
+                <a href="{{ route('shop.products.index') }}" class="btn btn-primary px-4">
+                    Shop Now
+                </a>
+            </div>
+        @endif
+
         @foreach ($orders as $order)
             <div class="card mb-3">
                 <div class="card-body d-flex flex-wrap gap-2">
@@ -60,9 +72,10 @@
                         </div>
                     </div>
 
-                    <div class="action_btns my-auto">
-                        <h4 class="mb-1">{{ $order->orderStatus() }}</h4>
-                        <a href="{{ route('shop.user.orders.show', [$order]) }}" class="btn btn-sm btn-light border border-dark px-4 py-0 my-1">
+                    <div class="action_btns my-auto ms-auto text-end">
+                        <h5 class="mb-1">{{ $order->orderStatus() }}</h5>
+                        <a href="{{ route('shop.user.orders.show', [$order]) }}"
+                            class="btn btn-sm btn-light border border-dark px-4 py-0 my-1">
                             Details
                         </a>
                         <a href="" class="btn btn-sm btn-light border border-dark px-4 py-0 my-1 text-nowrap">
