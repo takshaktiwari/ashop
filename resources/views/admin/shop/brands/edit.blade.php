@@ -37,7 +37,7 @@
 
                     <div class="row">
                         <div class="col-6">
-                            <div class="form-group">
+                            <div class="form-group mb-0">
                                 <label for="">Status <span class="text-danger">*</span></label>
                                 <select name="status" class="form-control" required>
                                     <option value="1" @selected($brand->status)>Active</option>
@@ -46,7 +46,7 @@
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="form-group">
+                            <div class="form-group mb-0">
                                 <label for="">Featured <span class="text-danger">*</span></label>
                                 <select name="featured" class="form-control" required>
                                     <option value="1" @selected($brand->featured)>Featured</option>

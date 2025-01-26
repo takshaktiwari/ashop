@@ -36,7 +36,8 @@ class AshopServiceProvider extends ServiceProvider
             View\Components\Ashop\BrandsGroup::class,
             View\Components\Ashop\UserAccount::class,
             View\Components\Ashop\UserBottomNav::class,
-            View\Components\Ashop\ProductsViewedHistory::class
+            View\Components\Ashop\ProductsViewedHistory::class,
+            View\Components\Ashop\MailLayout::class
         ]);
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');

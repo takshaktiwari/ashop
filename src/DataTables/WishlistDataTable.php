@@ -35,12 +35,10 @@ class WishlistDataTable extends DataTable
                     </div>
                 ';
             })
-            ->editColumn('user', fn($item) => $item->user?->name)
-            ->orderColumn('user', function ($query, $order) {
-                $query->orderByRaw('users.name ' . $order);
-            })
-            ->filterColumn('user', function ($query, $keyword) {
-                $query->whereRaw('users.name like ?', ["%{$keyword}%"]);
+            ->editColumn('user.name', function ($item) {
+                if ($item->user) {
+                    return '<a href="' . route('admin.users.show', [$item->user]) . '" target="_blank">' . $item->user?->name . '</a>';
+                }
             })
             ->editColumn('product', function ($item) {
                 return '<a href="' . route('shop.products.show', [$item->product]) . '" class="lc-2" target="_blank">' . $item->product?->name . '</a>';
@@ -61,7 +59,7 @@ class WishlistDataTable extends DataTable
             ->editColumn('created_at', function ($item) {
                 return '<span class="text-nowrap">' . $item->created_at?->format('Y-m-d h:i A') . '</span>';
             })
-            ->rawColumns(['action', 'checkbox', 'product', 'created_at']);
+            ->rawColumns(['action', 'checkbox', 'product', 'created_at', 'user.name']);
     }
 
     /**
@@ -84,7 +82,7 @@ class WishlistDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-            ->setTableId('locations-table')
+            ->setTableId('wishlist-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('<"d-flex mb-2 justify-content-between flex-wrap gap-3"<"d-flex gap-3"lB>f>rt<"d-flex justify-content-between flex-wrap gap-3 mt-3"ip>')
@@ -152,7 +150,7 @@ class WishlistDataTable extends DataTable
                 ->width(20)
                 ->addClass('text-center'),
 
-            Column::make('user'),
+            Column::make('user.name'),
             Column::make('product'),
             Column::make('sell_price')->width(120),
             Column::make('created_at')->addClass('text-nowrap'),

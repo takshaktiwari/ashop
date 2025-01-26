@@ -67,11 +67,7 @@ class OrdersDataTable extends DataTable
             ->editColumn('total_amount', function ($item) {
                 return config('ashop.currency.sign') . $item->total_amount;
             })
-            ->editColumn('payment', function ($item) {
-                $mode = '<span class="fw-bold">' . $item->paymentMode() . '</span>';
-                $status = '<span>' . $item->paymentStatus() . '</span>';
-                return $mode . '<span class="text-nowrap small d-block"> (' . $status . ')</span>';
-            })
+            ->editColumn('payment_mode', fn($item) => $item->paymentMode())
             ->editColumn('order_status', function ($item) {
                 return '<span>' . $item->orderStatus() . '</span>';
             })
@@ -81,7 +77,7 @@ class OrdersDataTable extends DataTable
             ->editColumn('created_at', function ($item) {
                 return '<span class="text-nowrap">' . $item->created_at?->format('Y-m-d h:i A') . '</span>';
             })
-            ->rawColumns(['action', 'order_no', 'user', 'checkbox', 'payment', 'order_status', 'address', 'created_at']);
+            ->rawColumns(['action', 'order_no', 'user', 'checkbox', 'order_status', 'address', 'created_at']);
     }
 
     /**
@@ -123,12 +119,12 @@ class OrdersDataTable extends DataTable
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
                     ->action("
                         let selectedValues = [];
-                        $('.selected_carts:checked').each(function() {
+                        $('.selected_items:checked').each(function() {
                             selectedValues.push($(this).val());
                         });
 
-                        let baseUrl = '" . route('admin.shop.carts.destroy.checked') . "';
-                        let params = selectedValues.map(value => `cart_ids[]=`+value).join('&');
+                        let baseUrl = '" . route('admin.shop.orders.bulk.delete') . "';
+                        let params = selectedValues.map(value => `item_ids[]=`+value).join('&');
                         let fullUrl = baseUrl+`?`+params;
 
                         window.location.href = fullUrl;

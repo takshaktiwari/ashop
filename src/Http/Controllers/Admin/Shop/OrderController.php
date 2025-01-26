@@ -27,4 +27,21 @@ class OrderController extends Controller
             'order' => $order
         ]);
     }
+
+    public function destroy(Order $order)
+    {
+        $order->delete();
+        return to_route('admin.shop.orders.index')->withSuccess('Order deleted successfully');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'item_ids' => 'required|array|min:1'
+        ]);
+
+        Order::query()->whereIn('id', $request->input('item_ids'))->delete();
+
+        return to_route('admin.shop.orders.index')->withSuccess('Orders deleted successfully');
+    }
 }

@@ -30,7 +30,7 @@
 
                     <div class="row">
                         <div class="col-6">
-                            <div class="form-group">
+                            <div class="form-group mb-0">
                                 <label for="">Status <span class="text-danger">*</span></label>
                                 <select name="status" class="form-control" required>
                                     <option value="1">Active</option>
@@ -39,7 +39,7 @@
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="form-group">
+                            <div class="form-group mb-0">
                                 <label for="">Featured <span class="text-danger">*</span></label>
                                 <select name="featured" class="form-control" required>
                                     <option value="1">Featured</option>
@@ -50,7 +50,9 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <input type="submit" class="btn btn-dark px-3">
+                    <button type="submit" class="btn btn-dark px-3">
+                        <i class="fas fa-save"></i> Submit
+                    </button>
                 </div>
             </form>
         </div>

@@ -23,7 +23,8 @@ class CartController extends Controller
     public function store(Request $request, Product $product)
     {
         $request->validate([
-            'quantity' => 'nullable|numeric|min:1'
+            'quantity' => 'nullable|numeric|min:1',
+            'buy_now' => 'nullable|boolean'
         ]);
 
         if (!$product->status || !$product->stock) {
@@ -65,10 +66,12 @@ class CartController extends Controller
         }
 
         $alertMessage = View::first(['shop._alerts.shop-cart-added', 'ashop::shop._alerts.shop-cart-added'])
-            ->with([
-                'product'    =>  $product
-            ])
+            ->with(['product' => $product])
             ->render();
+
+        if ($request->boolean('buy_now')) {
+            return to_route('shop.checkout.index')->withSuccess($alertMessage);
+        }
 
         return back()->withTitle('Product is added to your cart.')->withSuccess($alertMessage);
     }

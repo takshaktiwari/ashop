@@ -81,7 +81,8 @@ Route::middleware('web')->group(function () {
             Route::get('wishlist/{wishlist}/delete', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
 
             Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
-            Route::get('orders/{order}/delete', [OrderController::class, 'destroy'])->name('orders.destroy');
+            Route::get('orders/bulk/delete', [OrderController::class, 'bulkDelete'])->name('orders.bulk.delete');
+            Route::get('orders/{order}/delete', [OrderController::class, 'destroy'])->name('orders.destroy')->where('order', '[0-9]+');
             Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
             Route::post('orders/{order}/updates', [OrderUpdateController::class, 'store'])->name('orders.updates.store');
         });

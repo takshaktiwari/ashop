@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Takshak\Ashop\Traits\AshopModelTrait;
 
 class Order extends Model
@@ -70,6 +71,16 @@ class Order extends Model
     public function orderProducts(): HasMany
     {
         return $this->hasMany(OrderProduct::class);
+    }
+
+    /**
+     * Get the orderUpdate associated with the Order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function orderUpdate(): HasOne
+    {
+        return $this->hasOne(OrderUpdate::class)->latest();
     }
 
     /**

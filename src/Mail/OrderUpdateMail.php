@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\View;
 use Takshak\Ashop\Models\Shop\Order;
 use Takshak\Ashop\Models\Shop\OrderUpdate;
 
-class OrderConfirmationMail extends Mailable
+class OrderUpdateMail extends Mailable
 {
     use Queueable;
     use SerializesModels;
@@ -20,7 +20,7 @@ class OrderConfirmationMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public Order $order)
+    public function __construct(public Order $order, public OrderUpdate $orderUpdate)
     {
         //
     }
@@ -31,7 +31,7 @@ class OrderConfirmationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Order Confirmation - Thank You for Shopping with Us!',
+            subject: 'Order #' . $this->order->order_no . ' - ' . $this->order->orderStatus(),
         );
     }
 
@@ -41,9 +41,9 @@ class OrderConfirmationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: View::exists('mails.orders.confirmation')
-                ? 'mails.orders.confirmation'
-                : 'ashop::mails.orders.confirmation',
+            view: View::exists('mails.orders.update')
+                ? 'mails.orders.update'
+                : 'ashop::mails.orders.update',
         );
     }
 

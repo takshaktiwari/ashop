@@ -4,8 +4,10 @@ namespace Takshak\Ashop\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use Takshak\Ashop\Http\Resources\OrdersResource;
 use Takshak\Ashop\Http\Resources\ProductsResource;
+use Takshak\Ashop\Mail\OrderUpdateMail;
 use Takshak\Ashop\Models\Shop\Order;
 use Takshak\Ashop\Models\Shop\OrderUpdate;
 use Takshak\Ashop\Models\Shop\Product;
@@ -60,6 +62,12 @@ class OrderController extends Controller
             'notes' => 'Order Cancelled by user: ' . auth()->user()->name
         ]);
 
+        if ($order->user?->email) {
+            dispatch(function () use ($order) {
+                Mail::to($order->user?->email)->send(new OrderUpdateMail($order, $order->orderUpdate));
+            })->onQueue(config('ashop.queues.emails'))->delay(now()->addMinute());
+        }
+
         return response()->json(['data' => ['message' => 'Order has been cancelled successfully']]);
     }
 
@@ -76,6 +84,12 @@ class OrderController extends Controller
             'notes' => 'Order Return has been requested by user: ' . auth()->user()->name
         ]);
 
+        if ($order->user?->email) {
+            dispatch(function () use ($order) {
+                Mail::to($order->user?->email)->send(new OrderUpdateMail($order, $order->orderUpdate));
+            })->onQueue(config('ashop.queues.emails'))->delay(now()->addMinute());
+        }
+
         return response()->json(['data' => ['message' => 'Order Return has been requested successfully']]);
     }
 
@@ -91,6 +105,12 @@ class OrderController extends Controller
             'payment_status' => $order->payment_status ?? false,
             'notes' => 'Order Replacement has been requested by user: ' . auth()->user()->name
         ]);
+
+        if ($order->user?->email) {
+            dispatch(function () use ($order) {
+                Mail::to($order->user?->email)->send(new OrderUpdateMail($order, $order->orderUpdate));
+            })->onQueue(config('ashop.queues.emails'))->delay(now()->addMinute());
+        }
 
         return response()->json(['data' => ['message' => 'Order Replacement has been requested successfully']]);
     }

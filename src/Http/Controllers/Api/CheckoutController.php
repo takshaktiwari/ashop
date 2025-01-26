@@ -4,8 +4,10 @@ namespace Takshak\Ashop\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use Takshak\Ashop\Http\Resources\CouponsResource;
 use Takshak\Ashop\Http\Resources\OrdersResource;
+use Takshak\Ashop\Mail\OrderConfirmationMail;
 use Takshak\Ashop\Models\Shop\Address;
 use Takshak\Ashop\Models\Shop\Coupon;
 use Takshak\Ashop\Models\Shop\Order;
@@ -220,6 +222,12 @@ class CheckoutController extends Controller
         $this->cartService->empty();
 
         $order->load('orderProducts.product');
+
+        if ($order->user?->email) {
+            dispatch(function () use ($order) {
+                Mail::to($order->user?->email)->send(new OrderConfirmationMail($order));
+            })->onQueue(config('ashop.queues.emails'))->delay(now()->addMinute());
+        }
 
         return OrdersResource::make($order);
     }

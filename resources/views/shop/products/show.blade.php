@@ -234,6 +234,11 @@
         <script>
             $(document).ready(function() {
 
+                $("#buy_now_btn").click(function(e) {
+                    $("#buy_now_btn").before('<input type="hidden" name="buy_now" value="1">');
+                    return true;
+                });
+
                 $('a.zoomImage').zoom({
                     magnify: 1.75,
                     url: $(this).attr('href')

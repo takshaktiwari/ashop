@@ -43,7 +43,7 @@
                                 <li class="list-group-item rounded-0 d-flex gap-2">
                                     <div class="image">
                                         <img src="{{ $item->product->image('sm') }}" alt="image" class="rounded"
-                                            style="max-height: 100px;">
+                                            style="max-height: 80px;">
                                     </div>
                                     <div class="flex-fill my-auto">
                                         <a href="{{ route('shop.products.show', [$item->product]) }}" class="d-block"

@@ -1,6 +1,6 @@
 <div class="d-flex gap-2">
     <div class="my-auto">
-        <img src="{{ $product->image('sm') }}" alt="image" class="w-100" style="max-height: 170px;">
+        <img src="{{ $product->image('sm') }}" alt="image" class="w-100" style="max-height: 80px;">
     </div>
     <div class="my-auto flex-fill">
         <p class="fw-bold mb-1 small">
