@@ -71,6 +71,13 @@ Route::middleware('web')->group(function () {
             });
 
             Route::resource('coupons', CouponController::class);
+            Route::prefix('coupons/bulk')->name('coupons.bulk.')->group(function () {
+                Route::get('delete', [CouponController::class, 'bulkDelete'])->name('delete');
+                Route::get('active', [CouponController::class, 'bulkActive'])->name('active');
+                Route::get('inactive', [CouponController::class, 'bulkInactive'])->name('inactive');
+                Route::get('featured', [CouponController::class, 'bulkFeatured'])->name('featured');
+                Route::get('not-featured', [CouponController::class, 'bulkNotFeatured'])->name('not-featured');
+            });
 
             Route::get('carts', [CartController::class, 'index'])->name('carts.index');
             Route::get('carts/delete', [CartController::class, 'destroyChecked'])->name('carts.destroy.checked');

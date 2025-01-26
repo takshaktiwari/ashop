@@ -4,6 +4,8 @@ namespace Takshak\Ashop\DataTables;
 
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Takshak\Ashop\Models\Shop\Cart;
+use Takshak\Ashop\Models\Shop\Coupon;
+use Takshak\Ashop\Traits\AshopDataTableTrait;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
@@ -12,6 +14,8 @@ use Yajra\DataTables\Services\DataTable;
 
 class CouponsDataTable extends DataTable
 {
+    use AshopDataTableTrait;
+
     /**
      * Build the DataTable class.
      *
@@ -21,65 +25,42 @@ class CouponsDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addIndexColumn()
-            ->addColumn('action', function ($cart) {
-                return '<a href="' . route('admin.shop.carts.destroy', [$cart]) . '" class="load-circle btn btn-sm btn-danger delete-alert" title="Delete this">
-                    <i class="fas fa-trash"></i>
-                </a>';
+            ->addColumn('action', function ($item) {
+                $html = view('components.admin.btns.action-show', [
+                    'url' => route('admin.shop.coupons.show', [$item])
+                ]);
+
+                $html .= view('components.admin.btns.action-edit', [
+                    'url' => route('admin.shop.coupons.edit', [$item])
+                ]);
+
+                $html .= view('components.admin.btns.action-delete', [
+                    'url' => route('admin.shop.coupons.destroy', [$item])
+                ]);
+
+                return $html;
             })
             ->addColumn('checkbox', function ($cart) {
                 return '
                     <div class="form-check">
                         <label class="form-check-label mb-0">
-                            <input class="form-check-input selected_carts" type="checkbox" name="selected_carts[]" value="' . $cart->id . '">
+                            <input class="form-check-input selected_items" type="checkbox" name="selected_items[]" value="' . $cart->id . '">
                         </label>
                     </div>
                 ';
             })
-            ->editColumn('ip', fn ($item) => $item->user_ip)
-            ->orderColumn('ip', function ($query, $order) {
-                $query->orderByRaw('carts.user_ip ' . $order);
-            })
-            ->filterColumn('ip', function ($query, $keyword) {
-                $query->whereRaw('carts.user_ip like ?', ["%{$keyword}%"]);
-            })
-            ->editColumn('user', function ($item) {
-                if ($item->user) {
-                    return '<a href="' . route('admin.users.show', [$item->user]) . '" target="_blank">' . $item->user?->name . '</a>';
-                }
-            })
-            ->orderColumn('user', function ($query, $order) {
-                $query->orderByRaw('users.name ' . $order);
-            })
-            ->filterColumn('user', function ($query, $keyword) {
-                $query->whereRaw('users.name like ?', ["%{$keyword}%"]);
-            })
-            ->editColumn('product', function ($item) {
-                return '<a href="' . route('shop.products.show', [$item->product]) . '" class="lc-2" target="_blank">' . $item->product?->name . '</a>';
-            })
-            ->orderColumn('product', function ($query, $order) {
-                $query->orderByRaw('products.name ' . $order);
-            })
-            ->filterColumn('product', function ($query, $keyword) {
-                $query->whereRaw('products.name like ?', ["%{$keyword}%"]);
-            })
-            ->editColumn('qty', fn ($item) => $item->quantity)
-            ->orderColumn('qty', function ($query, $order) {
-                $query->orderByRaw('carts.quantity ' . $order);
-            })
-            ->filterColumn('qty', function ($query, $keyword) {
-                $query->whereRaw('carts.quantity like ?', ["%{$keyword}%"]);
-            })
-            ->editColumn('sell_price', fn ($item) => config('ashop.currency.sign', '₹') . $item->product->sell_price)
-            ->orderColumn('sell_price', function ($query, $order) {
-                $query->orderByRaw('products.sell_price ' . $order);
-            })
-            ->filterColumn('sell_price', function ($query, $keyword) {
-                $query->whereRaw('products.sell_price like ?', ["%{$keyword}%"]);
-            })
             ->editColumn('created_at', function ($item) {
                 return '<span class="text-nowrap">' . $item->created_at->format('Y-m-d h:i A') . '</span>';
             })
-            ->rawColumns(['action', 'checkbox', 'product', 'created_at', 'user']);
+            ->editColumn('discount_type', fn($item) =>  ucfirst($item->discount_type))
+            ->editColumn('percent', fn($item) => $item->percent ? $item->percent . '%' : '')
+            ->editColumn('amount', fn($item) => $item->priceFormat('amount', true))
+            ->editColumn('min_purchase', fn($item) => $item->priceFormat('min_purchase', true))
+            ->editColumn('max_discount', fn($item) => $item->priceFormat('max_discount', true))
+            ->editColumn('expires_at', fn($item) => $item->expires_at->format('d-m-Y h:i A'))
+            ->editColumn('status', fn($q) => $q->status ? 'Active' : '')
+            ->editColumn('featured', fn($q) => $q->featured ? 'Featured' : '')
+            ->rawColumns(['action', 'checkbox', 'created_at']);
     }
 
     /**
@@ -87,13 +68,7 @@ class CouponsDataTable extends DataTable
      */
     public function query(): QueryBuilder
     {
-        return Cart::query()
-            ->select('carts.*')
-            ->with('product')
-            ->with('user')
-            ->join('products', 'products.id', '=', 'carts.product_id')
-            ->leftJoin('users', 'users.id', '=', 'carts.user_id')
-            ->newQuery();
+        return Coupon::query()->newQuery();
     }
 
     /**
@@ -102,7 +77,7 @@ class CouponsDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-            ->setTableId('locations-table')
+            ->setTableId('coupons-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('<"d-flex mb-2 justify-content-between flex-wrap gap-3"<"d-flex gap-3"lB>f>rt<"d-flex justify-content-between flex-wrap gap-3 mt-3"ip>')
@@ -120,22 +95,32 @@ class CouponsDataTable extends DataTable
                 Button::make('reload'),
                 Button::raw('deleteItems')
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
-                    ->action("
-                        let selectedValues = [];
-                        $('.selected_carts:checked').each(function() {
-                            selectedValues.push($(this).val());
-                        });
+                    ->addClass('bg-danger text-white')
+                    ->action($this->rawButtonActionUrl(route('admin.shop.coupons.bulk.delete'))),
 
-                        let baseUrl = '" . route('admin.shop.carts.destroy.checked') . "';
-                        let params = selectedValues.map(value => `cart_ids[]=`+value).join('&');
-                        let fullUrl = baseUrl+`?`+params;
+                Button::raw('activeItems')
+                    ->text('<i class="bi bi-check-circle-fill" title="Make Items Active"></i>')
+                    ->addClass('bg-primary text-white')
+                    ->action($this->rawButtonActionUrl(route('admin.shop.coupons.bulk.active'))),
 
-                        window.location.href = fullUrl;
-                    "),
+                Button::raw('inactiveItems')
+                    ->text('<i class="bi bi-circle" title="Make Items Inactive"></i>')
+                    ->addClass('bg-primary text-white')
+                    ->action($this->rawButtonActionUrl(route('admin.shop.coupons.bulk.inactive'))),
+
+                Button::raw('featuredItems')
+                    ->text('<i class="bi bi-bookmark-star-fill" title="Make Items featured"></i>')
+                    ->addClass('bg-secondary text-white')
+                    ->action($this->rawButtonActionUrl(route('admin.shop.coupons.bulk.featured'))),
+
+                Button::raw('notFeaturedItems')
+                    ->text('<i class="bi bi-bookmark" title="Make Items not featured"></i>')
+                    ->addClass('bg-secondary text-white')
+                    ->action($this->rawButtonActionUrl(route('admin.shop.coupons.bulk.not-featured'))),
             ])
             ->initComplete('function(settings, json) {
                 $("#check_all_items").click(function(){
-                    $(".selected_carts").prop("checked", $(this).is(":checked"));
+                    $(".selected_items").prop("checked", $(this).is(":checked"));
                 });
             }');
     }
@@ -153,7 +138,7 @@ class CouponsDataTable extends DataTable
                 ->exportable(false)
                 ->printable(true)
                 ->width(30)
-                ->addClass('text-center'),
+                ->addClass('text-center text-nowrap'),
 
             Column::computed('checkbox')
                 ->title('
@@ -170,11 +155,17 @@ class CouponsDataTable extends DataTable
                 ->width(20)
                 ->addClass('text-center'),
 
-            Column::make('user'),
-            Column::make('ip'),
-            Column::make('product'),
-            Column::make('qty'),
-            Column::make('sell_price')->width(120),
+            Column::make('code'),
+            Column::make('discount_type')->title('Type'),
+            Column::make('percent'),
+            Column::make('amount'),
+            Column::make('min_purchase')->addClass('text-nowrap'),
+            Column::make('max_discount')->addClass('text-nowrap'),
+            Column::make('expires_at')->addClass('text-nowrap'),
+            Column::make('max_usable')->title('Usable'),
+            Column::make('status'),
+            Column::make('featured'),
+            Column::make('title'),
             Column::make('created_at'),
             Column::computed('action')
                 ->exportable(false)
@@ -190,6 +181,6 @@ class CouponsDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Carts_' . date('YmdHis');
+        return 'Coupons_' . date('YmdHis');
     }
 }

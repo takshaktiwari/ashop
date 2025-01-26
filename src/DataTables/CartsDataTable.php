@@ -153,7 +153,7 @@ class CartsDataTable extends DataTable
                 ->exportable(false)
                 ->printable(true)
                 ->width(30)
-                ->addClass('text-center'),
+                ->addClass('text-center text-nowrap'),
 
             Column::computed('checkbox')
                 ->title('

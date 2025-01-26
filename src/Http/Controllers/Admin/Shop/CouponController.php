@@ -6,18 +6,16 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\View;
 use Takshak\Ashop\Actions\CouponAction;
+use Takshak\Ashop\DataTables\CouponsDataTable;
 use Takshak\Ashop\Models\Shop\Coupon;
 
 class CouponController extends Controller
 {
-    public function index(Request $request)
+    public function index(CouponsDataTable $dataTable)
     {
-        $coupons = Coupon::withCount('users')->orderBy('id', 'DESC')->get();
-
-        return View::first(['admin.shop.coupons.index', 'ashop::admin.shop.coupons.index'])
-            ->with([
-                'coupons'   =>  $coupons
-            ]);
+        return $dataTable->render(
+            View::exists('admin.shop.coupons.index') ? 'admin.shop.coupons.index' : 'ashop::admin.shop.coupons.index'
+        );
     }
 
     public function create()
@@ -67,5 +65,56 @@ class CouponController extends Controller
     {
         $coupon->delete();
         return to_route('admin.shop.coupons.index')->withSuccess('SUCCESS !! Coupon is successfully deleted.');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'item_ids'  =>  'required|array|min:1'
+        ]);
+
+        Coupon::query()->whereIn('id', $request->input('item_ids'))->delete();
+
+        return to_route('admin.shop.coupons.index')->withSuccess('SUCCESS !! Coupons are successfully deleted.');
+    }
+
+    public function bulkActive(Request $request) {
+        $request->validate([
+            'item_ids'  =>  'required|array|min:1'
+        ]);
+
+        Coupon::query()->whereIn('id', $request->input('item_ids'))->update(['status' => true]);
+
+        return to_route('admin.shop.coupons.index')->withSuccess('SUCCESS !! Coupons are successfully updated.');
+    }
+
+    public function bulkInactive(Request $request) {
+        $request->validate([
+            'item_ids'  =>  'required|array|min:1'
+        ]);
+
+        Coupon::query()->whereIn('id', $request->input('item_ids'))->update(['status' => false]);
+
+        return to_route('admin.shop.coupons.index')->withSuccess('SUCCESS !! Coupons are successfully updated.');
+    }
+
+    public function bulkFeatured(Request $request) {
+        $request->validate([
+            'item_ids'  =>  'required|array|min:1'
+        ]);
+
+        Coupon::query()->whereIn('id', $request->input('item_ids'))->update(['featured' => true]);
+
+        return to_route('admin.shop.coupons.index')->withSuccess('SUCCESS !! Coupons are successfully updated.');
+    }
+
+    public function bulkNotFeatured(Request $request) {
+        $request->validate([
+            'item_ids'  =>  'required|array|min:1'
+        ]);
+
+        Coupon::query()->whereIn('id', $request->input('item_ids'))->update(['featured' => false]);
+
+        return to_route('admin.shop.coupons.index')->withSuccess('SUCCESS !! Coupons are successfully updated.');
     }
 }

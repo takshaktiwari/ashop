@@ -9,8 +9,12 @@ trait AshopModelTrait
         return number_format($this->{$key}, 2);
     }
 
-    public function priceFormat($key)
+    public function priceFormat($key, $nullable = false)
     {
+        if($nullable && !$this->{$key}) {
+            return null;
+        }
+
         return config('ashop.currency.sign', '₹') . number_format($this->{$key}, 2);
     }
 }
