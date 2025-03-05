@@ -19,7 +19,13 @@ class OrderController extends Controller
         $orders = Order::query()
             ->where('user_id', $request->user()?->id)
             ->withCount('orderProducts')
-            ->paginate(50);
+            ->with('orderProducts:id,order_id,image')
+            ->paginate(50)
+            ->through(function ($order) {
+                $order->images = $order->orderProducts->pluck('image')->map(fn($img) => storage($img));
+                unset($order->orderProducts);
+                return $order;
+            });
 
         return OrdersResource::collection($orders);
     }
@@ -30,7 +36,12 @@ class OrderController extends Controller
             $query->with(['product' => function ($query) {
                 $query->with(['metas' => function ($query) {
                     $query->whereIn('shop_metas.name', [
-                        "cancellable", "cancel_within", "returnable", "return_within", "replaceable", "replace_within"
+                        "cancellable",
+                        "cancel_within",
+                        "returnable",
+                        "return_within",
+                        "replaceable",
+                        "replace_within"
                     ]);
                 }]);
             }]);

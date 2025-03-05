@@ -114,6 +114,15 @@ class CategoryController extends Controller
             'metas.banner' => 'nullable|image',
         ]);
 
+        foreach ($request->post('taxes') ?? [] as $tax => $value) {
+            $category->metas()->create([
+                'key' => 'taxes',
+                'name' => $tax,
+                'value' => $value,
+            ]);
+        }
+        $category->metas()->whereNotIn('name', array_keys($request->post('taxes') ?? []))->delete();
+
         foreach ($request->post('metas') as $name => $meta) {
             $category->metas()->create([
                 'key' => $name,
@@ -133,7 +142,7 @@ class CategoryController extends Controller
                 $category->metas()->updateOrCreate(
                     [
                         'name' => $name,
-                        'key' => $name,
+                        'key' => 'details',
                         'is_file' => true,
                     ],
                     [

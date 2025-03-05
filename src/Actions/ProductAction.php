@@ -51,53 +51,9 @@ class ProductAction
 
     public function filteredProducts($paginate = 50, $withQueryString = true, $with = [])
     {
-        $query   = Product::with(['categories']);
-        if (request()->get('search')) {
-            $query->where(function ($query) {
-                $query->where('tags', 'LIKE', '%' . request()->get('search') . '%');
-                $query->orWhere('name', 'LIKE', '%' . request()->get('search') . '%');
-                $query->orWhere('slug', 'LIKE', '%' . request()->get('search') . '%');
-            });
-        }
-        if (request()->get('category')) {
+        $query   =  Product::with(['categories']);
+        $query = $this->searchFilter($query);
 
-            $query->whereHas('categories', function ($query) {
-                $query->where('categories.id', request()->get('category'));
-            });
-        }
-        if (request()->get('product_id')) {
-            $query->where('product_id', request()->get('product_id'));
-        }
-        if (request()->get('brand_id')) {
-            $query->where('brand_id', request()->get('brand_id'));
-        }
-        if (request()->get('min-net_price')) {
-            $query->where('net_price', '>=', request()->get('min-net_price'));
-        }
-        if (request()->get('max-net_price')) {
-            $query->where('net_price', '<=', request()->get('max-net_price'));
-        }
-        if (request()->get('min-sell_price')) {
-            $query->where('sell_price', '>=', request()->get('min-sell_price'));
-        }
-        if (request()->get('max-sell_price')) {
-            $query->where('sell_price', '<=', request()->get('max-sell_price'));
-        }
-        if (request()->get('min-stock')) {
-            $query->where('stock', '>=', request()->get('min-stock'));
-        }
-        if (request()->get('max-stock')) {
-            $query->where('stock', '<=', request()->get('max-stock'));
-        }
-        if (request()->get('status') != null) {
-            $query->where('status', request()->get('status'));
-        }
-        if (request()->get('featured') != null) {
-            $query->where('featured', request()->get('featured'));
-        }
-        if (request()->get('user_id')) {
-            $query->where('user_id', request()->get('user_id'));
-        }
         if ($with && count($with)) {
             $query->with($with);
         }
@@ -107,6 +63,53 @@ class ProductAction
         } else {
             return $query->orderBy('products.id', 'DESC')->paginate($paginate);
         }
+    }
+
+    public function searchFilter($productQuery)
+    {
+        return $productQuery->when(request()->get('search_text'), function ($query) {
+            $query->where('search_tags', 'LIKE', '%' . request()->get('search_text') . '%');
+            $query->orWhere('name', 'LIKE', '%' . request()->get('search_text') . '%');
+            $query->orWhere('slug', 'LIKE', '%' . request()->get('search_text') . '%');
+        })
+            ->when(request()->get('category'), function ($query) {
+                $query->whereHas('categories', function ($query) {
+                    $query->where('categories.id', request()->get('category'));
+                });
+            })
+            ->when(request()->get('product_id'), function ($query) {
+                $query->where('product_id', request()->get('product_id'));
+            })
+            ->when(request()->get('brand_id'), function ($query) {
+                $query->where('brand_id', request()->get('brand_id'));
+            })
+            ->when(request()->get('min-net_price'), function ($query) {
+                $query->where('net_price', '>=', request()->get('min-net_price'));
+            })
+            ->when(request()->get('max-net_price'), function ($query) {
+                $query->where('net_price', '<=', request()->get('max-net_price'));
+            })
+            ->when(request()->get('min-sell_price'), function ($query) {
+                $query->where('sell_price', '>=', request()->get('min-sell_price'));
+            })
+            ->when(request()->get('max-sell_price'), function ($query) {
+                $query->where('sell_price', '<=', request()->get('max-sell_price'));
+            })
+            ->when(request()->get('min-stock'), function ($query) {
+                $query->where('stock', '>=', request()->get('min-stock'));
+            })
+            ->when(request()->get('max-stock'), function ($query) {
+                $query->where('stock', '<=', request()->get('max-stock'));
+            })
+            ->when(request()->get('status') != null, function ($query) {
+                $query->where('status', request()->get('status'));
+            })
+            ->when(request()->get('featured') != null, function ($query) {
+                $query->where('featured', request()->get('featured'));
+            })
+            ->when(request()->get('user_id'), function ($query) {
+                $query->where('user_id', request()->get('user_id'));
+            });
     }
 
     public function productTags($product, $action = 'update')

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\View;
 use Takshak\Ashop\DataTables\CartsDataTable;
 use Takshak\Ashop\Models\Shop\Cart;
+use Takshak\Ashop\Models\Shop\Order;
 
 class CartController extends Controller
 {

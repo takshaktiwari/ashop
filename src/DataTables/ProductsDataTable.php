@@ -3,6 +3,7 @@
 namespace Takshak\Ashop\DataTables;
 
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Takshak\Ashop\Actions\ProductAction;
 use Takshak\Ashop\Models\Shop\Cart;
 use Takshak\Ashop\Models\Shop\Product;
 use Yajra\DataTables\EloquentDataTable;
@@ -92,8 +93,9 @@ class ProductsDataTable extends DataTable
      */
     public function query(): QueryBuilder
     {
-        return Product::query()
-            ->newQuery();
+        $query = Product::query();
+        $query = (new ProductAction())->searchFilter($query);
+        return $query->newQuery();
     }
 
     /**

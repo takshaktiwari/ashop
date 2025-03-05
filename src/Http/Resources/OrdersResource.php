@@ -38,6 +38,7 @@ class OrdersResource extends JsonResource
             'payment_status' => $this->paymentStatus(),
             'user_id' => $this->user_id,
             'user_ip' => $this->user_ip,
+            'images' => $this->when($this->images, $this->images),
             'user' => $this->when($this->relationLoaded('user'), UsersResource::make($this->user)),
             'order_products' => $this->when($this->relationLoaded('orderProducts'), OrderProductsResource::collection($this->orderProducts)),
             'order_updates' => $this->when($this->relationLoaded('orderUpdates'), OrderUpdatesResource::collection($this->orderUpdates)),

@@ -76,7 +76,6 @@
                 </div>
             </div>
 
-
             <div class="row">
                 <div class="col-md-3 col-6">
                     <div class="form-group">
@@ -94,21 +93,20 @@
                         </select>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-md-3 col-6">
                     <div class="form-group">
                         <label for="">Cancellable </label>
-                        <select name="metas[cancellable]" class="form-control" required="">
-                            <option value="1" {{ $category?->getMeta('cancellable') == 1 ? 'selected' : '' }}>Yes
-                            </option>
-                            <option value="0" {{ $category?->getMeta('cancellable') == 0 ? 'selected' : '' }}>No
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="form-group">
-                        <label for="">Cancel In </label>
                         <div class="input-group">
+                            <select name="metas[cancellable]" class="form-control input-group-text" required="">
+                                <option value="1" {{ $category?->getMeta('cancellable') == 1 ? 'selected' : '' }}>
+                                    Yes
+                                </option>
+                                <option value="0" {{ $category?->getMeta('cancellable') == 0 ? 'selected' : '' }}>
+                                    No
+                                </option>
+                            </select>
                             <input type="number" name="metas[cancel_within]" class="form-control" placeholder="eg ."
                                 value="{{ $category?->getMeta('cancel_within') }}" required max="15">
                             <span class="input-group-append">
@@ -120,18 +118,15 @@
                 <div class="col-md-3 col-6">
                     <div class="form-group">
                         <label for="">Returnable </label>
-                        <select name="metas[returnable]" class="form-control bg-light rounded-0">
-                            <option value="1" {{ $category?->getMeta('returnable') == 1 ? 'selected' : '' }}>Yes
-                            </option>
-                            <option value="0" {{ $category?->getMeta('returnable') == 0 ? 'selected' : '' }}>No
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="form-group">
-                        <label for="">Return In </label>
                         <div class="input-group">
+                            <select name="metas[returnable]" class="form-control input-group-text">
+                                <option value="1" {{ $category?->getMeta('returnable') == 1 ? 'selected' : '' }}>
+                                    Yes
+                                </option>
+                                <option value="0" {{ $category?->getMeta('returnable') == 0 ? 'selected' : '' }}>
+                                    No
+                                </option>
+                            </select>
                             <input type="number" name="metas[return_within]" class="form-control" placeholder="eg ."
                                 value="{{ $category?->getMeta('return_within') }}" required max="15">
                             <span class="input-group-append">
@@ -141,20 +136,17 @@
                     </div>
                 </div>
                 <div class="col-md-3 col-6">
-                    <div class="form-group">
+                    <div class="form-group" x-data="{ replaceable: {{ (bool) $category?->getMeta('replaceable') }} }">
                         <label for="">Replaceable </label>
-                        <select name="metas[replaceable]" class="form-control bg-light rounded-0">
-                            <option value="1" {{ $category?->getMeta('replaceable') == 1 ? 'selected' : '' }}>Yes
-                            </option>
-                            <option value="0" {{ $category?->getMeta('replaceable') == 0 ? 'selected' : '' }}>No
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="form-group">
-                        <label for="">Replace In </label>
                         <div class="input-group">
+                            <select name="metas[replaceable]" class="form-control input-group-text">
+                                <option value="1"
+                                    {{ $category?->getMeta('replaceable') == 1 ? 'selected' : '' }}>Yes
+                                </option>
+                                <option value="0"
+                                    {{ $category?->getMeta('replaceable') == 0 ? 'selected' : '' }}>No
+                                </option>
+                            </select>
                             <input type="number" name="metas[replace_within]" class="form-control"
                                 placeholder="eg ." value="{{ $category?->getMeta('replace_within') }}" required
                                 max="15">
@@ -165,10 +157,47 @@
                     </div>
                 </div>
             </div>
+
+            <hr style="opacity: 0.5" />
+            <div class="row g-3" x-data="taxesData">
+                <div class="col-12 d-flex gap-2">
+                    <h5>Add Taxes </h5> <a href="javascript:void(0)" class="my-auto fw-bold" @click="addNewTax">+
+                        Add</a>
+                </div>
+                <template x-for="(value, tax) in taxes" :key="tax">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input type="text" class="input-group-text" x-model="tax" style="width: 40%;">
+                            <input type="number" class="form-control flex-fill" x-bind:name="`taxes[${tax}]`"
+                                placeholder="eg. 10%" x-model="value">
+                            <button type="button" class="btn btn-danger" @click="removeTax(tax)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </template>
+            </div>
         </div>
         <div class="card-footer">
             <button type="submit" class="btn btn-dark px-4 btn-loader">Submit</button>
         </div>
     </form>
 
+    @push('scripts')
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('taxesData', () => ({
+                    taxes: @json($category->getTaxes()),
+                    updatedTaxes: [],
+                    addNewTax() {
+                        var totalTaxes = Object.keys(this.taxes).length;
+                        this.taxes['Tax ' + totalTaxes] = 0;
+                    },
+                    removeTax(tax) {
+                        delete this.taxes[tax];
+                    }
+                }))
+            })
+        </script>
+    @endpush
 </x-admin.layout>

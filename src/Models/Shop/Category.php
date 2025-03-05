@@ -105,6 +105,19 @@ class Category extends Model
         return $meta->is_file ? storage($meta->value) : $meta->value;
     }
 
+    public function getTaxes($default = false)
+    {
+        if (!$this->relationLoaded('metas')) {
+            $this->load('metas');
+        }
+
+        $taxes = $this->metas->where('key', 'taxes')->mapWithKeys(function ($tax, $key) {
+            return [$tax->name => $tax->value];
+        });
+
+        return count($taxes) ? $taxes : $default;
+    }
+
     public function banner()
     {
         if (Agent::isMobile()) {

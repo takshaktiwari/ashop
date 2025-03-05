@@ -35,21 +35,19 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-4">
-                    <div class="form-group">
-                        <div class="d-flex">
-                            <div class="mr-3" id="image-thumb">
-                                <img src="{{ $category->image_sm() }}" alt="" style="max-height: 70px;">
-                            </div>
-                            <div class="flex-fill">
-                                <label for="">Select Image </label>
-                                <input type="file" name="image_file" class="form-control" id="crop-image">
-                            </div>
+                    <div class="d-flex">
+                        <div class="mr-3" id="image-thumb">
+                            <img src="{{ $category->image_sm() }}" alt="" style="max-height: 70px;">
                         </div>
-                        <div class="small text-secondary">
-                            <div><b>*</b> Image format should be 'jpg' or 'png'</div>
-                            <div><b>*</b> Image should be in ratio of 4:5, eg:
-                                {{ config('ashop.categories.images.width', 800) . ' x ' . config('shopze.categories.images.height', 900) }}
-                            </div>
+                        <div class="flex-fill">
+                            <label for="">Select Image </label>
+                            <input type="file" name="image_file" class="form-control" id="crop-image">
+                        </div>
+                    </div>
+                    <div class="small text-info mb-2">
+                        <div><b>*</b> Image format should be 'jpg' or 'png'</div>
+                        <div><b>*</b> Image should be in ratio of 4:5, eg:
+                            {{ config('ashop.categories.images.width', 800) . ' x ' . config('shopze.categories.images.height', 900) }}
                         </div>
                     </div>
                 </div>
@@ -68,7 +66,7 @@
                             value="{{ $category->display_name ? $category->display_name : $category->category }}">
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label for="">Parent Category </label>
                         <select name="category_id" class="form-control select2">
@@ -86,7 +84,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-4 col-6">
+                <div class="col-md-3 col-6">
                     <div class="form-group">
                         <label for="">Featured <span class="text-danger">*</span></label>
                         <select name="featured" class="form-control" required>
@@ -95,7 +93,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-4 col-6">
+                <div class="col-md-3 col-6">
                     <div class="form-group">
                         <label for="">Status <span class="text-danger">*</span></label>
                         <select name="status" class="form-control" required>
@@ -105,7 +103,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-4 col-12">
+                <div class="col-md-3 col-12">
                     <div class="form-group">
                         <label for="">Is Top <span class="text-danger">*</span></label>
                         <select name="is_top" class="form-control" required>

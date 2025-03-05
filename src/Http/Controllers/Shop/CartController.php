@@ -13,7 +13,7 @@ class CartController extends Controller
 {
     public function index()
     {
-        $carts = (new CartService)->items();
+        $carts = (new CartService())->items();
         return View::first(['shop.carts.index', 'ashop::shop.carts.index'])
             ->with([
                 'carts'    =>  $carts

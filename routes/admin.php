@@ -45,6 +45,7 @@ Route::middleware('web')->group(function () {
             Route::resource('products', ProductController::class);
             Route::prefix('products')->name('products.')->group(function () {
                 Route::controller(ProductController::class)->group(function () {
+                    Route::get('viewed/history', 'viewedHistory')->name('viewed.history');
                     Route::get('delete/{product}', 'delete')->name('delete');
                     Route::get('detail/{product}', 'detail')->name('detail');
                     Route::post('detail/update/{product}', 'detailUpdate')->name('detail.update');

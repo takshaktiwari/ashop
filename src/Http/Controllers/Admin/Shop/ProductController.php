@@ -15,30 +15,24 @@ use Takshak\Ashop\Models\Shop\ProductImage;
 use Takshak\Ashop\Models\Shop\ShopMeta;
 use Maatwebsite\Excel\Facades\Excel;
 use Takshak\Ashop\DataTables\ProductsDataTable;
+use Takshak\Ashop\DataTables\ProductViewedDataTable;
 use Takshak\Ashop\Exports\ProductsExport;
 
 class ProductController extends Controller
 {
-    public function index(Request $request, ProductsDataTable $dataTable, ProductAction $action)
+    public function index(Request $request, ProductsDataTable $dataTable)
     {
-        return $dataTable->render(
-            View::exists('admin.shop.products.index') ? 'admin.shop.products.index' : 'ashop::admin.shop.products.index'
-        );
-
-        $products = $action->filteredProducts(with: [
-            'productParent:id,product_id,name',
-            'productChildren:id,product_id,name',
-        ]);
         $categories = Category::with('parentCategory')->orderBy('name')->get();
         $brands     = Brand::orderBy('name')->get();
         $users      = User::orderBy('name')->get();
-        return View::first(['admin.shop.products.index', 'ashop::admin.shop.products.index'])
-            ->with([
-                'products'      =>  $products,
+        return $dataTable->render(
+            View::exists('admin.shop.products.index') ? 'admin.shop.products.index' : 'ashop::admin.shop.products.index',
+            [
                 'categories'    =>  $categories,
                 'brands'        =>  $brands,
                 'users'         =>  $users,
-            ]);
+            ]
+        );
     }
 
     public function create()
@@ -324,5 +318,22 @@ class ProductController extends Controller
         $product->delete();
 
         return back()->withSuccess('SUCCESS !! Product has been successfully deleted');
+    }
+
+    public function viewedHistory(ProductViewedDataTable $dataTable, Request $request)
+    {
+        $categories = Category::with('parentCategory')->orderBy('name')->get();
+        $brands     = Brand::orderBy('name')->get();
+        $users      = User::orderBy('name')->get();
+        return $dataTable->render(
+            View::exists('admin.shop.products.viewed-history')
+                ? 'admin.shop.products.viewed-history'
+                : 'ashop::admin.shop.products.viewed-history',
+            [
+                'categories'    =>  $categories,
+                'brands'        =>  $brands,
+                'users'         =>  $users,
+            ]
+        );
     }
 }

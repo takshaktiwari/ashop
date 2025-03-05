@@ -25,6 +25,7 @@
         <li><a href="{{ route('admin.shop.products.create') }}">New Product</a></li>
         <li><a href="{{ route('admin.shop.products.index') }}">All Products</a></li>
         <li><a href="{{ route('admin.shop.products.import.sheets') }}">Import Products</a></li>
+        <li><a href="{{ route('admin.shop.products.viewed.history') }}">Viewed Products</a></li>
     </ul>
 </li>
 <li>

@@ -176,5 +176,11 @@ return [
     ],
     'queues' => [
         'emails' => env('MAIL_QUEUE', 'emails')
+    ],
+    'taxes' => [
+        'GST' => 18,
+        'CGST' => 9,
+        'SGST' => 9,
+        'IGST' => 18
     ]
 ];
