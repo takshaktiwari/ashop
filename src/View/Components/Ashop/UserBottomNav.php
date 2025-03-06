@@ -7,13 +7,12 @@ use Illuminate\Support\Facades\View;
 
 class UserBottomNav extends Component
 {
-    public $title = '';
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($title = null)
+    public function __construct()
     {
 
     }

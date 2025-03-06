@@ -20,7 +20,6 @@ class BrandsGroup extends Component
         public $title,
         public $subtitle = null,
         public $buttons = [],
-        public $type = null, //featured, is_top
         public $order = 'latest', //latest, oldest, rand
         public $ids = [],
         public $categories = [],

@@ -47,6 +47,7 @@ class SeedCommand extends Command
             Category::truncate();
             Product::truncate();
             WishlistItem::truncate();
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         }
 
         $this->line('Seeding brands to the database');
