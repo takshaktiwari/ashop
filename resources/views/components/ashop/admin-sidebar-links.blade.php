@@ -52,3 +52,4 @@
         <span>Coupons</span>
     </a>
 </li>
+<x-areviews-areviews:admin-sidebar-links />
