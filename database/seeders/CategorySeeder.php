@@ -9,6 +9,8 @@ use Takshak\Ashop\Models\Shop\Attribute;
 use Takshak\Ashop\Models\Shop\Brand;
 use Takshak\Ashop\Models\Shop\Category;
 use Takshak\Imager\Facades\Picsum;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class CategorySeeder extends Seeder
 {
@@ -19,6 +21,10 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
+        $output = new ConsoleOutput();
+        $progressBar = new ProgressBar($output, count($this->categories()));
+        $progressBar->start();
+
         foreach ($this->categories() as $key => $item) {
             if (is_array($item)) {
                 $category = $this->createCategory($key);
@@ -42,7 +48,11 @@ class CategorySeeder extends Seeder
             } else {
                 $this->createCategory($item);
             }
+
+            $progressBar->advance();
         }
+        $progressBar->finish();
+        $output->writeln('');
     }
 
     public function createCategory($name, $parentCategory = null)

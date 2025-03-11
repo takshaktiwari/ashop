@@ -24,6 +24,9 @@ class ProductSeeder extends Seeder
         $productNames = $this->productNames();
         shuffle($productNames);
 
+        // Limit to 100
+        $productNames = array_slice($productNames, 0, 100);
+
         $output = new ConsoleOutput();
         $progressBar = new ProgressBar($output, count($productNames));
         $progressBar->start();

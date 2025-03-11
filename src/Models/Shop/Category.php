@@ -11,12 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
 use Jenssegers\Agent\Facades\Agent;
-use Staudenmeir\EloquentEagerLimit\HasEagerLimit;
 use Takshak\Imager\Facades\Placeholder;
 
 class Category extends Model
 {
-    use HasFactory, HasEagerLimit;
+    use HasFactory;
     protected $guarded = [];
 
     /**

@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
 use Takshak\Imager\Facades\Placeholder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Staudenmeir\EloquentEagerLimit\HasEagerLimit;
 use Takshak\Areviews\Traits\Models\ReviewModelTrait;
 use Takshak\Ashop\Traits\AshopModelTrait;
 
@@ -21,7 +20,6 @@ class Product extends Model
 {
     use HasFactory, AshopModelTrait;
     use ReviewModelTrait;
-    use HasEagerLimit;
     protected $guarded = [];
     protected $casts = [
         'deal_expiry'   =>  'date',

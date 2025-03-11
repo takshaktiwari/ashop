@@ -12,10 +12,10 @@
         }
     ],
     "require": {
-        "takshak/adash": "^8.0",
+        "takshak/adash": "dev-main",
         "takshak/adash-reviews": "^1.3",
         "barryvdh/laravel-snappy": "^1.0",
-        "mpyw/compoships-eager-limit": "^1.2",
+        "awobaz/compoships": "^2.4",
         "jenssegers/agent": "^2.6"
     },
     "autoload": {
