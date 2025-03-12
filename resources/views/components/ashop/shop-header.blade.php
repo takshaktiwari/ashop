@@ -1,23 +1,3 @@
-<style>
-    .shop_header .form-control,
-    .shop_header #search_form_btn {
-        font-size: 0.8rem;
-        height: 2rem;
-    }
-
-    .shop_header .search #search_form_category {
-        border-radius: 3rem 0rem 0rem 3rem;
-        max-width: 8rem;
-    }
-
-    .shop_header .search #search_form_search {
-        max-width: 12rem;
-    }
-
-    .shop_header .search #search_form_btn {
-        border-radius: 0rem 3rem 3rem 0rem;
-    }
-</style>
 <div class="shop_header pb-4">
     <div class="d-flex justify-content-between gap-4">
         <div class="flex-fill">

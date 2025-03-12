@@ -10,14 +10,14 @@
 
 .card.product .product_image {
 	position: relative;
-    overflow: hidden;
+	overflow: hidden;
 }
-.card.product .product_image img{
-    transition: all 0.25s ease;
+.card.product .product_image img {
+	transition: all 0.25s ease;
 }
 .card.product .product_image:hover img {
 	scale: 1.25;
-    transition: all 0.5s ease;
+	transition: all 0.5s ease;
 }
 
 .card.product .overlay {
@@ -30,10 +30,10 @@
 .card.product .rating {
 	font-size: 11px;
 }
-.card.product .wishlist_btn{
-    position: absolute;
-    left: 0.5rem;
-    top: 0.5rem;
+.card.product .wishlist_btn {
+	position: absolute;
+	left: 0.5rem;
+	top: 0.5rem;
 }
 
 .products_page .shop_sidebar {
@@ -58,6 +58,28 @@
 	max-height: 20rem;
 }
 .product_page #add_to_cart_form input#cart_quantity {
-    max-width: 5rem;
-    padding: 0.1rem 0.25rem;
+	max-width: 5rem;
+	padding: 0.1rem 0.25rem;
+}
+.shop_header .form-control,
+.shop_header #search_form_btn {
+	font-size: 0.8rem;
+	height: 2rem;
+}
+
+.shop_header .form-control {
+	padding: 4px 10px;
+}
+
+.shop_header .search #search_form_category {
+	border-radius: 3rem 0rem 0rem 3rem;
+	max-width: 8rem;
+}
+
+.shop_header .search #search_form_search {
+	max-width: 12rem;
+}
+
+.shop_header .search #search_form_btn {
+	border-radius: 0rem 3rem 3rem 0rem;
 }

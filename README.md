@@ -12,6 +12,20 @@ This package is a part of **Adash** ecosystem. It is a shop implementation for A
 
 Add argument 'fresh' (`php artisan ashop:seed fresh`) if you are seeding the first time. It will publish the seeders first and then see the database
 
+Add `AshopUserTrait` to User model:
+
+    use Takshak\Ashop\Traits\AshopUserTrait;
+
+    class User extends Authenticatable implements MustVerifyEmail
+    {
+        use AshopUserTrait;
+
+        ...
+    }
+
+
+Publish assets `php artisan vendor:publish --tag=ashop-assets`
+
 # Publishable Files
 
     php artisan vendor:publish --tag=ashop-config
