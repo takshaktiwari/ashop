@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "takshak/adash": "dev-main",
+        "takshak/adash": "^9.0",
         "takshak/adash-reviews": "^1.3",
         "barryvdh/laravel-snappy": "^1.0",
         "awobaz/compoships": "^2.4",
