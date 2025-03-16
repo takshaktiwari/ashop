@@ -1,9 +1,9 @@
 <x-app-layout>
-    <x-breadcrumb title="Shop" :links="[['text' => 'Shop']]" />
+    <x-breadcrumb title="Shop" :links="[['text' => 'Home', 'url' => url('/')], ['text' => 'Shop']]" />
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/ashop/style.css') }}">
     @endpush
-    <section class="py-5">
+    <section class="ashop_page_wrapper">
         <div class="container shop_page">
             @foreach (config('ashop.sections.home', []) as $section => $attributes)
                 @if ($section == 'new_arrivals' && config('ashop.sections.home.new_arrivals.status', true))
@@ -55,7 +55,8 @@
                 @endif
             @endforeach
 
-            <x-ashop-ashop:products-viewed-history title="Products Viewed " subtitle="Here are the products you have viewed recently" limit="25" />
+            <x-ashop-ashop:products-viewed-history title="Products Viewed "
+                subtitle="Here are the products you have viewed recently" limit="25" />
         </div>
     </section>
 

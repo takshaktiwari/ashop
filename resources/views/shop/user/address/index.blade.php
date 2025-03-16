@@ -1,4 +1,8 @@
 <x-ashop-ashop:user-account>
+    <x-slot:breadcrumb>
+        <x-breadcrumb title="Address Book" :links="[['text' => 'Home', 'url' => url('/')], ['text' => 'Dashboard', 'url' => route('shop.user.dashboard')], ['text' => 'Address Book']]" />
+    </x-slot:breadcrumb>
+
     <x-slot:title>
         <h4 class="my-auto">
             <i class="fa-regular fa-address-book me-2"></i> Address Book

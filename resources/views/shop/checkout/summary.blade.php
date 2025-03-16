@@ -1,32 +1,16 @@
 <x-app-layout>
     <x-breadcrumb title="Checkout" :links="[
+        ['text' => 'Home', 'url' => url('/')],
         ['text' => 'Shop', 'url' => route('shop.index')],
-        ['text' => 'My Cart', 'url' => route('shop.carts.index')],
         ['text' => 'Checkout'],
     ]" />
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/ashop/style.css') }}">
-        <style>
-            .coupon_form .form-control[name='coupon'] {
-                border-top-right-radius: 0rem;
-                border-bottom-right-radius: 0rem;
-            }
-
-            .coupon_form .btn {
-                border-top-left-radius: 0rem;
-                border-bottom-left-radius: 0rem;
-            }
-
-            #couponsModal .coupons .coupon_code {
-                border: 2px dashed;
-            }
-        </style>
     @endpush
-    <section class="py-5">
+    <section class="ashop_page_wrapper">
         <div class="container shop_page">
             <div class="row g-4">
                 <div class="col-md-6 mx-auto">
-
                     <div class="card shadow-sm">
                         <div class="card-header">
                             <h6 class="my-auto py-2">
@@ -170,6 +154,12 @@
                                 <p class="mb-0 small">{!! $coupon->description !!}</p>
                             </li>
                         @endforeach
+
+                        @if($coupons->isEmpty())
+                            <li class="coupon list-group-item py-4">
+                                <h4 class="text-center">No coupons found</h4>
+                            </li>
+                        @endif
                     </ul>
                 </div>
 

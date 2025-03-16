@@ -32,7 +32,7 @@
     </div>
     <div class="card-footer text-center ">
         <a href="{{ route('shop.carts.store', [$product]) }}"
-            class="btn btn-sm btn-primary rounded-pill px-3 add_to_cart">
+            class="btn btn-sm btn-dark rounded-pill px-3 add_to_cart">
             <i class="fas fa-shopping-cart"></i> <span>Add to</span> cart
         </a>
     </div>

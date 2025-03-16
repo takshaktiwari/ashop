@@ -1,9 +1,13 @@
 <x-app-layout>
-    <x-breadcrumb title="Products" :links="[['text' => 'Products']]" />
+    <x-breadcrumb title="Products" :links="[
+        ['text' => 'Home', 'url' => url('/')],
+        ['text' => 'Shop', 'url' => route('shop.index')],
+        ['text' => 'Products']
+        ]" />
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/ashop/style.css') }}">
     @endpush
-    <section class="py-5">
+    <section class="ashop_page_wrapper">
         <div class="container products_page">
             <div class="row g-4 mb-5">
                 @if (config('ashop.sections.products.sidebar', true))

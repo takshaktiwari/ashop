@@ -1,32 +1,8 @@
 <x-app-layout>
-    <x-breadcrumb title="User Dashboard" :links="[['text' => 'User'], ['text' => 'Dashboard']]" />
+    {!! isset($breadcrumb) ? $breadcrumb : '' !!}
+
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/ashop/style.css') }}">
-        <style>
-            .user_account .user_nav .list-group a i {
-                width: 24px;
-                font-size: 110%;
-            }
-
-            .user_account .user_nav .nav-block {
-                display: none;
-            }
-
-            .user_account .user_nav .nav-block.collapse.show {
-                display: block;
-            }
-
-            .user_account .user_nav .nav-block a {
-                padding: 0.75rem 1.5rem;
-                transition: all 0.2s ease;
-            }
-
-            .user_account .user_nav .nav-block a:hover {
-                padding-left: 2rem;
-                background-color: #eaeaea;
-                transition: all 0.2s ease;
-            }
-        </style>
     @endpush
     <section class="py-5">
         <div class="container user_account">

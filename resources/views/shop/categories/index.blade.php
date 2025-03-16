@@ -1,6 +1,7 @@
 <x-app-layout>
-    <x-breadcrumb title="Categories" :links="[['text' => 'Categories']]" />
-    <section class="py-5">
+    <x-breadcrumb title="Categories" :links="[['text' => 'Home', 'url' => url('/')], ['text' => 'Shop', 'url' => route('shop.index')], ['text' => 'Categories']]" />
+
+    <section class="ashop_page_wrapper">
         <div class="container">
             <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5" data-masonry='{"percentPosition": true }'>
                 @foreach ($categories as $category)

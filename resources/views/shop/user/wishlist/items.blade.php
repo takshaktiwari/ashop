@@ -1,4 +1,8 @@
 <x-ashop-ashop:user-account>
+    <x-slot:breadcrumb>
+        <x-breadcrumb title="Wishlist" :links="[['text' => 'Home', 'url' => url('/')], ['text' => 'Dashboard', 'url' => route('shop.user.dashboard')], ['text' => 'Wishlist']]" />
+    </x-slot:breadcrumb>
+
     <x-slot:title>
         <h4 class="my-auto">
             <i class="fa-solid fa-heart me-2"></i> Wishlist Items

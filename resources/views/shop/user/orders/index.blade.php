@@ -1,4 +1,8 @@
 <x-ashop-ashop:user-account>
+    <x-slot:breadcrumb>
+        <x-breadcrumb title="Orders" :links="[['text' => 'Home', 'url' => url('/')], ['text' => 'Dashboard', 'url' => route('shop.user.dashboard')], ['text' => 'Orders']]" />
+    </x-slot:breadcrumb>
+
     <x-slot:title>
         <h4 class="my-auto">
             <i class="fa-solid fa-box me-2"></i> All Orders

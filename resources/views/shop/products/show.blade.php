@@ -1,10 +1,14 @@
 <x-app-layout>
-    <x-breadcrumb title="Products" :links="[['text' => 'Products', 'url' => route('shop.products.index')], ['text' => $product->name]]" />
+    <x-breadcrumb title="Products" :links="[
+        ['text' => 'Home', 'url' => url('/')],
+        ['text' => 'Shop', 'url' => route('shop.index')],
+        ['text' => $product->name]
+    ]" />
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/ashop/style.css') }}">
     @endpush
-    <section class="">
-        <div class="container product_page py-5">
+    <section class="ashop_page_wrapper">
+        <div class="container product_page">
             <div class="row g-4">
                 <div class="col-lg-4 col-md-5">
                     <div class="product_images sticky-top">

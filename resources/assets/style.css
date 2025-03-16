@@ -1,3 +1,7 @@
+.ashop_page_wrapper {
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+}
 .card.product.list_item .product_image {
 	width: 12rem;
 	min-width: 12rem;
@@ -37,12 +41,49 @@
 }
 
 .products_page .shop_sidebar {
-	border: 1px solid #00000020;
 	border-radius: 0.25rem;
-	padding-top: 0.5rem;
+}
+
+.products_page .shop_sidebar .widget {
+	border-color: #ccc;
+	margin-bottom: 1rem;
+	border: 1px solid #00000020;
+}
+
+.products_page .shop_sidebar .widget .widget_body::-webkit-scrollbar {
+	width: 4px;
+}
+
+.products_page .shop_sidebar .widget .widget_body::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+.products_page .shop_sidebar .widget .widget_body::-webkit-scrollbar-thumb {
+	background: #888;
+}
+
+.products_page .shop_sidebar form .widget .widget_body ul {
+	padding-left: 0rem;
+}
+
+.products_page .shop_sidebar .widget .widget_body ul {
+	padding-left: 1rem;
+}
+
+.products_page .shop_sidebar .widget .widget_body ul ul {
+	margin-bottom: 0.5rem;
+}
+
+.products_page .shop_sidebar .widget .widget_body ul li {
+	display: list-item;
 }
 
 .products_page .shop_sidebar .shop_sidebar_title {
+	border-bottom: 1px solid #ccc;
+}
+
+.products_page .shop_sidebar .shop_sidebar_title,
+.products_page .shop_sidebar .widget_body {
 	padding: 10px;
 	margin-bottom: 0px;
 }
@@ -82,4 +123,47 @@
 
 .shop_header .search #search_form_btn {
 	border-radius: 0rem 3rem 3rem 0rem;
+}
+
+.products_viewed .scroll-item {
+	width: clamp(100px, 10%, 200px);
+}
+.coupon_form .form-control[name='coupon'] {
+    border-top-right-radius: 0rem;
+    border-bottom-right-radius: 0rem;
+}
+
+.coupon_form .btn {
+    border-top-left-radius: 0rem;
+    border-bottom-left-radius: 0rem;
+}
+
+#couponsModal .coupons .coupon_code {
+    border: 2px dashed;
+}
+.order_confirmation .tick_icon {
+    font-size: 6rem;
+}
+.user_account .user_nav .list-group a i {
+    width: 24px;
+    font-size: 110%;
+}
+
+.user_account .user_nav .nav-block {
+    display: none;
+}
+
+.user_account .user_nav .nav-block.collapse.show {
+    display: block;
+}
+
+.user_account .user_nav .nav-block a {
+    padding: 0.75rem 1.5rem;
+    transition: all 0.2s ease;
+}
+
+.user_account .user_nav .nav-block a:hover {
+    padding-left: 2rem;
+    background-color: #eaeaea;
+    transition: all 0.2s ease;
 }

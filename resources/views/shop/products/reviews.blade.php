@@ -1,19 +1,26 @@
 <x-app-layout>
-    <x-breadcrumb title="Products" :links="[
-        ['text' => 'Products', 'url' => route('shop.products.index')],
+    <x-breadcrumb title="Product Reviews" :links="[
+        ['text' => 'Home', 'url' => url('/')],
+        ['text' => 'Shop', 'url' => route('shop.index')],
         ['text' => str($product->name)->limit(20), 'url' => route('shop.products.show', $product)],
         ['text' => 'Reviews', 'url' => route('shop.products.reviews', $product)],
     ]" />
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/ashop/style.css') }}">
     @endpush
-    <section class="py-5">
+    <section class="ashop_page_wrapper">
         <div class="container products_page">
             <div class="row">
                 <div class="col-md-4 ">
                     <div class="sticky-top mb-4">
-                        <img src="{{ $product->image_sm() }}" alt="product image" class="w-100 rounded mb-2">
-                        <h5>{{ $product->name }}</h5>
+                        <a href="{{ route('shop.products.show', [$product]) }}" class="w-100">
+                            <img src="{{ $product->image_sm() }}" alt="product image" class="w-100 rounded mb-2">
+                        </a>
+                        <h5>
+                            <a href="{{ route('shop.products.show', [$product]) }}">
+                                {{ $product->name }}
+                            </a>
+                        </h5>
                         <div class="mt-2 fs-5">
                             <b class="me-1">{{ $product->formattedPrice() }}</b>
                             <del class="small">{{ $product->formattedNetPrice() }}</del>

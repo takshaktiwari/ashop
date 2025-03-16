@@ -59,7 +59,7 @@
                     <i class="fa-solid fa-caret-right"></i> {{ $attribute }}
                 </h6>
                 <div class="widget_body">
-                    <ul class="ps-4">
+                    <ul class="">
                         @foreach ($options as $option)
                             <li class="form-check">
                                 <label class="form-check-label">

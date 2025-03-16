@@ -222,8 +222,7 @@ class CheckoutController extends Controller
         if (!$order) {
             return to_route('shop.carts.index')->withErrors('Sorry! Something not right, please try to checkout again');
         }
-
-        $order->order_status = config('ashop.order.initial_status');
+        $order->order_status = config('ashop.order.initial_status', 'order_placed');
         $order->save();
 
         OrderUpdate::create([

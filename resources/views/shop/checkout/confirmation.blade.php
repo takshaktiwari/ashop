@@ -1,18 +1,14 @@
 <x-app-layout>
     <x-breadcrumb title="Checkout" :links="[
+        ['text' => 'Home', 'url' => url('/')],
         ['text' => 'Shop', 'url' => route('shop.index')],
-        ['text' => 'Orders', 'url' => '#'],
-        ['text' => 'Confirmation'],
+        ['text' => 'Checkout'],
+        ['text' => 'Complete'],
     ]" />
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/ashop/style.css') }}">
-        <style>
-            .order_confirmation .tick_icon {
-                font-size: 6rem;
-            }
-        </style>
     @endpush
-    <section class="py-5">
+    <section class="ashop_page_wrapper">
         <div class="container shop_page">
             <div class="row g-4">
                 <div class="col-md-6 mx-auto  order_confirmation">

@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-breadcrumb title="My Cart" :links="[['text' => 'Cart']]" />
+    <x-breadcrumb title="My Cart" :links="[['text' => 'Home', 'url' => url('/')], ['text' => 'Shop', 'url' => route('shop.index')], ['text' => 'Cart']]" />
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/ashop/style.css') }}">
     @endpush
@@ -9,8 +9,8 @@
             max-height: 6rem;
         }
     </style>
-    <section class="">
-        <div class="container cart_page py-5">
+    <section class="ashop_page_wrapper">
+        <div class="container cart_page">
             <div class="row g-4 mb-5">
                 <div class="col-md-8 mx-auto">
                     @if (!$carts->count())

@@ -1,6 +1,7 @@
 <x-app-layout>
-    <x-breadcrumb title="Categories" :links="[['text' => 'Categories']]" />
-    <section class="py-5">
+    <x-breadcrumb title="Categories" :links="[['text' => 'Home', 'url' => url('/')], ['text' => 'Shop', 'url' => route('shop.index')], ['text' => 'Categories']]" />
+
+    <section class="ashop_page_wrapper">
         <div class="container">
             <div class="row g-4" data-masonry='{"percentPosition": true }'>
                 @foreach ($categories as $category)
@@ -8,12 +9,14 @@
                         <div class="card">
                             <div class="card-header">
                                 <h6 class="my-auto py-2">
-                                    <a href="">{{ $category->name }}</a>
+                                    <a href="{{ route('shop.products.index', ['category' => $category->slug]) }}">
+                                        {{ $category->name }}
+                                    </a>
                                 </h6>
                             </div>
                             <ul class="list-group list-group-flush">
                                 @foreach ($category->children as $childCategory)
-                                    <a href="" class="list-group-item">
+                                    <a href="{{ route('shop.products.index', ['category' => $childCategory->slug]) }}" class="list-group-item">
                                         {{ $childCategory->name }}
                                     </a>
                                 @endforeach

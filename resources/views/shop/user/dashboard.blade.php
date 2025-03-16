@@ -1,4 +1,8 @@
 <x-ashop-ashop:user-account>
+    <x-slot:breadcrumb>
+        <x-breadcrumb title="Dashboard" :links="[['text' => 'Home', 'url' => url('/')], ['text' => 'Dashboard']]" />
+    </x-slot:breadcrumb>
+
     <x-slot:title>
         <h4 class="my-auto">
             <i class="fa-solid fa-gauge-high me-2"></i> Dashboard

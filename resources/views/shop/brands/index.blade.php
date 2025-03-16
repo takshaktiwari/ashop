@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-breadcrumb title="Brands" :links="[['text' => 'Brands']]" />
-    <section class="py-5">
+    <section class="ashop_page_wrapper">
         <div class="container">
             <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-2"
                 data-masonry='{"percentPosition": true }'>

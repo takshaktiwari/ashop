@@ -1,8 +1,8 @@
 <div class="product_group py-5">
     <div class="container">
-        <h2 class="fw-bold mb-0">
-            {{ $title }}
-            <span class="buttons">
+        <div class="d-flex gap-3">
+            <h2 class="fw-bold mb-0 text-nowrap">{{ $title }}</h2>
+            <span class="buttons my-auto">
                 @foreach ($buttons as $button)
                     @isset($button['text'])
                         <a href="{{ $button['url'] ?? 'javascript:void(0)' }}" class="fs-6">
@@ -11,7 +11,8 @@
                     @endisset
                 @endforeach
             </span>
-        </h2>
+        </div>
+
         @if ($subtitle)
             <p class="mb-0">{{ $subtitle }}</p>
         @endif
@@ -22,7 +23,8 @@
                     <div class="card brand_card">
                         <img class="card-img-top" src="{{ $brand->image() }}" alt="Card image">
                         <div class="card-body">
-                            <a href="{{ route('shop.products.index', ['brand_id' => $brand->id]) }}" class="card-text">{{ $brand->name }}</a>
+                            <a href="{{ route('shop.products.index', ['brand_id' => $brand->id]) }}"
+                                class="card-text">{{ $brand->name }}</a>
                         </div>
                     </div>
                 </div>
