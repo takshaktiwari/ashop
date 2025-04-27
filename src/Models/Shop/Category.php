@@ -90,21 +90,28 @@ class Category extends Model
         return $query->where('is_top', true);
     }
 
-    public function getMeta($key)
+    public function getMeta($key, $default = null)
     {
         if (!$this->relationLoaded('metas')) {
             $this->load('metas');
         }
 
         $meta = $this->metas->where('key', $key)->first();
-        if (!$meta) {
+
+        if (!$meta && is_null($default)) {
             return null;
         }
 
-        return $meta->is_file ? storage($meta->value) : $meta->value;
+        if (!$meta && !is_null($default)) {
+            return $default;
+        }
+
+        $value = ($meta->is_file && $meta->value) ? storage($meta->value) : $meta->value;
+
+        return $value ?? $default;
     }
 
-    public function getTaxes($default = false)
+    public function getTaxes($default = true)
     {
         if (!$this->relationLoaded('metas')) {
             $this->load('metas');
@@ -114,7 +121,15 @@ class Category extends Model
             return [$tax->name => $tax->value];
         });
 
-        return count($taxes) ? $taxes : $default;
+        if(count($taxes)){
+            return $taxes;
+        }
+
+        if($default){
+            return config('ashop.taxes', []);
+        }
+
+        return [];
     }
 
     public function banner()

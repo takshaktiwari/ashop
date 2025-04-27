@@ -70,8 +70,13 @@
             <div class="col-md-6">
                 <div class="card h-100">
                     <div class="card-body">
-                        <p class="fw-bold">Shipping Address:</p>
+                        <p class="fw-bold mb-2">Shipping Address:</p>
                         <p class="mb-0">{!! $order->address() !!}</p>
+
+                        <a href="{{ route('shop.user.orders.invoice', [$order]) }}"
+                                class="btn btn-sm btn-primary px-3 mt-3">
+                                <i class="fas fa-file-invoice"></i> Invoice
+                        </a>
 
                         @if ($order->cancellable())
                             <a href="{{ route('shop.user.orders.cancel', [$order]) }}"

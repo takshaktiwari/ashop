@@ -18,55 +18,52 @@
         </a>
     </p>
 
-    <p>
-        <b>Email:</b> {{ auth()->user()->email }} <br />
-        <span>
-            <b>Shipping Address:</b>
-            @if ($defaultAddr)
-                <span>{{ $defaultAddr->address_line_1 }},</span>
-                <span>{{ $defaultAddr->address_line_2 }},</span>
-                <span>{{ $defaultAddr->landmark }},</span>
-                <span>{{ $defaultAddr->city }},</span>
-                <span>{{ $defaultAddr->pincode }},</span>
-                <span>{{ $defaultAddr->state }}</span>
-                <a href="{{ route('shop.user.addresses.edit', [$defaultAddr]) }}"
-                    class="badge bg-light text-success border">
-                    <i class="fa-solid fa-edit"></i> Edit
-                </a>
-            @else
-                <span>No Address</span>
-                <a href="{{ route('shop.user.addresses.create') }}" class="badge bg-light text-success border">
-                    <i class="fa-solid fa-edit"></i> Edit
-                </a>
-            @endif
-        </span>
-        <br />
-        <span>
-            <b>Billing Address:</b>
-            @if ($billingAddr)
-                <span>{{ $billingAddr->address_line_1 }},</span>
-                <span>{{ $billingAddr->address_line_2 }},</span>
-                <span>{{ $billingAddr->landmark }},</span>
-                <span>{{ $billingAddr->city }},</span>
-                <span>{{ $billingAddr->pincode }},</span>
-                <span>{{ $billingAddr->state }}</span>
-                <a href="{{ route('shop.user.addresses.edit', [$billingAddr]) }}"
-                    class="badge bg-light text-success border">
-                    <i class="fa-solid fa-edit"></i> Edit
-                </a>
-            @else
-                <span>No Address</span>
-                <a href="{{ route('shop.user.addresses.create') }}" class="badge bg-light text-success border">
-                    <i class="fa-solid fa-edit"></i> Edit
-                </a>
-            @endif
+    <p class="mb-1"><b>Email:</b> {{ auth()->user()->email }} </p>
+    <p class="mb-1">
+        <b>Shipping Address:</b>
+        @if ($defaultAddr)
+            <span>{{ $defaultAddr->address_line_1 }},</span>
+            <span>{{ $defaultAddr->address_line_2 }},</span>
+            <span>{{ $defaultAddr->landmark }},</span>
+            <span>{{ $defaultAddr->city }},</span>
+            <span>{{ $defaultAddr->pincode }},</span>
+            <span>{{ $defaultAddr->state }}</span>
+            <a href="{{ route('shop.user.addresses.edit', [$defaultAddr]) }}" class="badge bg-light text-success border">
+                <i class="fa-solid fa-edit"></i> Edit
+            </a>
+        @else
+            <span>No Address</span>
+            <a href="{{ route('shop.user.addresses.create') }}" class="badge bg-light text-success border">
+                <i class="fa-solid fa-edit"></i> Edit
+            </a>
+        @endif
+    </p>
+    <p class="mb-1">
+        <b>Billing Address:</b>
+        @if ($billingAddr)
+            <span>{{ $billingAddr->address_line_1 }},</span>
+            <span>{{ $billingAddr->address_line_2 }},</span>
+            <span>{{ $billingAddr->landmark }},</span>
+            <span>{{ $billingAddr->city }},</span>
+            <span>{{ $billingAddr->pincode }},</span>
+            <span>{{ $billingAddr->state }}</span>
+            <a href="{{ route('shop.user.addresses.edit', [$billingAddr]) }}"
+                class="badge bg-light text-success border">
+                <i class="fa-solid fa-edit"></i> Edit
+            </a>
+        @else
+            <span>No Address</span>
+            <a href="{{ route('shop.user.addresses.create') }}" class="badge bg-light text-success border">
+                <i class="fa-solid fa-edit"></i> Edit
+            </a>
+        @endif
         </span>
     </p>
 
     <p class="mb-2"><b>Orders:</b> You have <b>{{ $pendingOrdersCount }}</b> pending orders and
         <b>{{ $deliveredOrdersCount }}</b> completed orders.
     </p>
-    <p><b>Wishlist:</b> {{ $wishlistItemsCount }} items in your wishlist.</p>
+    <p class="mb-2"><b>Wishlist:</b> {{ $wishlistItemsCount }} items in your wishlist.</p>
 
     <div class="card">
         <div class="card-header">

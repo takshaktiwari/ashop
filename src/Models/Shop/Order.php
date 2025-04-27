@@ -93,6 +93,30 @@ class Order extends Model
         return $this->hasMany(OrderUpdate::class);
     }
 
+    /**
+     * Get the invoice associated with the Order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function invoice(): HasOne
+    {
+        return $this->hasOne(Invoice::class);
+    }
+
+    public function getInvoiceNo()
+    {
+        if($this->invoice) {
+            return $this->invoice->invoice_no;
+        }
+
+        $nextInvNo = Invoice::latest()->first()
+            ? Invoice::latest()->first()->invoice_no + 1
+            : 1;
+        $nextInvNo = str_pad($nextInvNo, 6, '0', STR_PAD_LEFT);
+
+        return $nextInvNo;
+    }
+
     public function paymentStatus()
     {
         return $this->payment_status ? 'Paid' : 'Not Paid';
@@ -130,7 +154,7 @@ class Order extends Model
         if ($lines > 3) {
             $address .= '<br />';
         }
-        $address .= '['.$this->pincode . '], ';
+        $address .= '[' . $this->pincode . '], ';
         $address .= $this->country;
         return $address;
     }
@@ -138,7 +162,7 @@ class Order extends Model
     public function cancellable()
     {
         $cancellable = true;
-        if(!in_array($this->order_status, config('ashop.order.cancel.order_status', []))) {
+        if (!in_array($this->order_status, config('ashop.order.cancel.order_status', []))) {
             return false;
         }
 
@@ -167,7 +191,7 @@ class Order extends Model
     public function returnable()
     {
         $returnable = true;
-        if(!in_array($this->order_status, config('ashop.order.return.order_status', []))) {
+        if (!in_array($this->order_status, config('ashop.order.return.order_status', []))) {
             return false;
         }
 
@@ -196,7 +220,7 @@ class Order extends Model
     public function replaceable()
     {
         $replaceable = true;
-        if(!in_array($this->order_status, config('ashop.order.replace.order_status', []))) {
+        if (!in_array($this->order_status, config('ashop.order.replace.order_status', []))) {
             return false;
         }
 

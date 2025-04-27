@@ -182,5 +182,8 @@ return [
         'CGST' => 9,
         'SGST' => 9,
         'IGST' => 18
+    ],
+    'invoices' => [
+        'prefix' => 'INV',
     ]
 ];

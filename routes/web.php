@@ -55,6 +55,7 @@ Route::middleware('web')->group(function () {
                 Route::get('orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
                 Route::get('orders/{order}/return', [OrderController::class, 'orderReturn'])->name('orders.return');
                 Route::get('orders/{order}/replace', [OrderController::class, 'replace'])->name('orders.replace');
+                Route::get('orders/{order}/invoice', [OrderController::class, 'invoice'])->name('orders.invoice');
 
                 Route::resource('addresses', AddressController::class);
                 Route::get('addresses/{address}/make-default', [AddressController::class, 'makeDefault'])
