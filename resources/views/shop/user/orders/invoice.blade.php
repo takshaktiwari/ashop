@@ -63,7 +63,8 @@
 
         .details-table .tax-row td {
             background-color: #fafafa;
-            font-size: 85%;
+            font-size: 80%;
+            padding: 4px 10px;
         }
 
         .details-table tfoot td {
@@ -141,16 +142,21 @@
             </thead>
             <tbody>
                 @foreach ($order->orderProducts as $oProduct)
+                    @php
+                        $priceBreakDown = $oProduct->getPriceBreakDown();
+                    @endphp
                     <tr>
                         <td>{{ $oProduct->name }}</td>
                         <td>{{ $oProduct->quantity }}</td>
-                        <td>{{ $oProduct->priceFormat('price') }}</td>
-                        <td>{{ $oProduct->priceFormat('subtotal') }}</td>
+                        <td>{{ $priceBreakDown['basePrice'] }}</td>
+                        <td>{{ $priceBreakDown['subtotal'] }}</td>
                     </tr>
-                    <tr class="tax-row">
-                        <td colspan="3">GST (10%)</td>
-                        <td>$10.00</td>
-                    </tr>
+                    @foreach ($priceBreakDown['taxAmounts'] as $key => $taxAmount)
+                        <tr class="tax-row">
+                            <td colspan="3" style="text-align: right">{{ $key }} ({{ $taxAmount['percent'] }}%)</td>
+                            <td>{{ $taxAmount['amount'] }}</td>
+                        </tr>
+                    @endforeach
                     <tr>
                         <td colspan="4"></td>
                     </tr>

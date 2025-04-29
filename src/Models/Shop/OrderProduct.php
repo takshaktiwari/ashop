@@ -12,7 +12,8 @@ use Takshak\Imager\Facades\Placeholder;
 
 class OrderProduct extends Model
 {
-    use HasFactory, AshopModelTrait;
+    use HasFactory;
+    use AshopModelTrait;
     protected $guarded = [];
 
     protected $casts = [
@@ -22,7 +23,7 @@ class OrderProduct extends Model
     protected function subtotal(): Attribute
     {
         return Attribute::make(
-            get: function(){
+            get: function () {
                 return $this->price * $this->quantity;
             }
         );
@@ -46,6 +47,46 @@ class OrderProduct extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function getPriceBreakDown()
+    {
+        $taxBreakups = [
+            'sellPrice' => null,
+            'basePrice' => null,
+            'taxes' => [],
+            'taxAmounts' => [],
+        ];
+        $currencySign = config('ashop.currency.sign', '₹');
+
+        $this->product->load('categories.metas');
+        foreach ($this->product->categories as $category) {
+            $taxes = $category->metas->where('key', 'taxes')->mapWithKeys(function ($tax, $key) {
+                return [$tax->name => $tax->value];
+            });
+
+            foreach ($taxes as $key => $value) {
+                if (!isset($taxBreakups['taxes'][$key])) {
+                    $taxBreakups['taxes'][$key] = $value;
+                } elseif ($taxBreakups['taxes'][$key] < $value) {
+                    $taxBreakups['taxes'][$key] = $value;
+                }
+            }
+        }
+
+        $taxBreakups['basePrice'] = $this->product->sell_price / (1 + array_sum($taxBreakups['taxes']) / 100);
+        foreach ($taxBreakups['taxes'] as $key => $percent) {
+            $taxBreakups['taxAmounts'][$key]['percent'] = $percent;
+
+            $taxAmount = $taxBreakups['basePrice'] * ($percent / 100);
+            $taxAmount = $taxAmount * $this->quantity;
+            $taxBreakups['taxAmounts'][$key]['amount'] =  $currencySign . number_format($taxAmount, 2);
+        }
+
+        $taxBreakups['subtotal'] = $currencySign . number_format($taxBreakups['basePrice'] * $this->quantity, 2);
+        $taxBreakups['basePrice'] = $currencySign . number_format($taxBreakups['basePrice'], 2);
+
+        return $taxBreakups;
     }
 
     public function image()

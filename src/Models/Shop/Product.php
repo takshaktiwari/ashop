@@ -18,7 +18,8 @@ use Takshak\Ashop\Traits\AshopModelTrait;
 
 class Product extends Model
 {
-    use HasFactory, AshopModelTrait;
+    use HasFactory;
+    use AshopModelTrait;
     use ReviewModelTrait;
     protected $guarded = [];
     protected $casts = [

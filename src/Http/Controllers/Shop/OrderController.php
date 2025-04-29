@@ -94,13 +94,13 @@ class OrderController extends Controller
             'invoice_no' => $order->getInvoiceNo()
         ]);
 
-        return View::first([
-            'shop.user.orders.invoice',
-            'ashop::shop.user.orders.invoice'
-        ])->with([
-            'order' => $order,
-            'invoice' => $invoice
-        ]);
+        // return View::first([
+        //     'shop.user.orders.invoice',
+        //     'ashop::shop.user.orders.invoice'
+        // ])->with([
+        //     'order' => $order,
+        //     'invoice' => $invoice
+        // ]);
 
         $pdf = SnappyPdf::loadHTML(
             View::first([
