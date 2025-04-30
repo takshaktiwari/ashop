@@ -25,13 +25,15 @@ class ProductViewedDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->addIndexColumn()
             ->addColumn('action', function ($item) {
-                return '';
+                return '<a href="' . route('admin.shop.products.viewed.history.delete', [$item]) . '" class="load-circle btn btn-sm btn-danger delete-alert" title="Delete this">
+                    <i class="fas fa-trash"></i>
+                </a>';
             })
             ->addColumn('checkbox', function ($item) {
                 return '
                     <div class="form-check">
                         <label class="form-check-label mb-0">
-                            <input class="form-check-input selected_items" type="checkbox" name="selected_items[]" value="' . $item->id . '">
+                            <input class="form-check-input selected_items" type="checkbox" name="item_ids[]" value="' . $item->id . '">
                         </label>
                     </div>
                 ';
@@ -97,7 +99,7 @@ class ProductViewedDataTable extends DataTable
                 Button::make('reload'),
                 Button::raw('deleteItems')
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
-                    ->action($this->rawButtonActionUrl(route('admin.shop.coupons.bulk.not-featured'))),
+                    ->action($this->rawButtonActionUrl(route('admin.shop.products.viewed.history.bulk.delete'))),
             ])
             ->initComplete('function(settings, json) {
                 $("#check_all_items").click(function(){
@@ -136,6 +138,13 @@ class ProductViewedDataTable extends DataTable
                 ->width(20)
                 ->addClass('text-center'),
 
+            Column::computed('action')
+                ->exportable(false)
+                ->printable(false)
+                ->orderable(false)
+                ->width(60)
+                ->addClass('text-center'),
+
             Column::make('user.name')->title('User'),
             Column::make('user_ip'),
             Column::make('product.name')->title('Product'),
@@ -148,12 +157,7 @@ class ProductViewedDataTable extends DataTable
             Column::make('product.featured')->title('Featured'),
             Column::make('product.status')->title('Status'),
             Column::make('created_at'),
-            Column::computed('action')
-                ->exportable(false)
-                ->printable(false)
-                ->orderable(false)
-                ->width(60)
-                ->addClass('text-center'),
+
         ];
     }
 

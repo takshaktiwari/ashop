@@ -17,6 +17,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Takshak\Ashop\DataTables\ProductsDataTable;
 use Takshak\Ashop\DataTables\ProductViewedDataTable;
 use Takshak\Ashop\Exports\ProductsExport;
+use Takshak\Ashop\Models\Shop\ProductViewed;
 
 class ProductController extends Controller
 {
@@ -227,16 +228,19 @@ class ProductController extends Controller
         return back()->withSuccess('SUCCESS !! Featured product list is updated');
     }
 
-    public function selectedDelete(Request $request)
+    public function bulkDelete(Request $request)
     {
         $request->validate([
-            'products'  =>  'required|array|min:1'
+            'item_ids'  =>  'required|array|min:1'
         ]);
 
-        return ShopMeta::whereIn('metable_id', $request->products)->get();
+        ShopMeta::query()
+            ->where('metable_type', Product::class)
+            ->whereIn('metable_id', $request->item_ids)
+            ->delete();
 
-        $products = Product::whereIn('id', $request->post('products'))->get();
-        $images = ProductImage::whereIn('product_id', $request->post('products'))->get();
+        $products = Product::whereIn('id', $request->input('item_ids'))->get();
+        $images = ProductImage::whereIn('product_id', $request->input('item_ids'))->get();
 
         Storage::delete(
             $products->pluck('image_sm')
@@ -248,7 +252,7 @@ class ProductController extends Controller
                 ->toArray()
         );
 
-        Product::whereIn('id', $request->post('products'))->delete();
+        Product::whereIn('id', $request->input('item_ids'))->delete();
 
         return redirect()->route('admin.shop.products.index')->withSuccess('SUCCESS !! Products are successfully deleted');
     }
@@ -335,5 +339,23 @@ class ProductController extends Controller
                 'users'         =>  $users,
             ]
         );
+    }
+
+    public function viewedHistoryDelete(ProductViewed $productViewed)
+    {
+        return $productViewed->delete()
+            ? back()->withSuccess('SUCCESS !! Product viewed has been successfully deleted')
+            : back()->withError('ERROR !! Product viewed has not been deleted');
+    }
+
+    public function viewedHistoryBulkDelete(Request $request)
+    {
+        $request->validate([
+            'item_ids'  =>  'required|array|min:1',
+        ]);
+
+        return ProductViewed::whereIn('id', $request->input('item_ids'))->delete()
+            ? back()->withSuccess('SUCCESS !! Product viewed has been successfully deleted')
+            : back()->withError('ERROR !! Product viewed has not been deleted');
     }
 }

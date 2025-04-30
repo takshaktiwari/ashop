@@ -44,7 +44,7 @@ class CouponsDataTable extends DataTable
                 return '
                     <div class="form-check">
                         <label class="form-check-label mb-0">
-                            <input class="form-check-input selected_items" type="checkbox" name="selected_items[]" value="' . $cart->id . '">
+                            <input class="form-check-input selected_items" type="checkbox" name="item_ids[]" value="' . $cart->id . '">
                         </label>
                     </div>
                 ';
@@ -96,7 +96,7 @@ class CouponsDataTable extends DataTable
                 Button::raw('deleteItems')
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
                     ->addClass('bg-danger text-white')
-                    ->action($this->rawButtonActionUrl(route('admin.shop.coupons.bulk.delete'))),
+                    ->action($this->rawButtonActionUrl(route('admin.shop.coupons.bulk.delete'), true)),
 
                 Button::raw('activeItems')
                     ->text('<i class="bi bi-check-circle-fill" title="Make Items Active"></i>')

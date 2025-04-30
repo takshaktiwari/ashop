@@ -3,6 +3,7 @@
 namespace Takshak\Ashop\DataTables;
 
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Takshak\Adash\Traits\AdashDataTableTrait;
 use Takshak\Ashop\Models\Shop\Cart;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -12,6 +13,7 @@ use Yajra\DataTables\Services\DataTable;
 
 class CartsDataTable extends DataTable
 {
+    use AdashDataTableTrait;
     /**
      * Build the DataTable class.
      *
@@ -30,7 +32,7 @@ class CartsDataTable extends DataTable
                 return '
                     <div class="form-check">
                         <label class="form-check-label mb-0">
-                            <input class="form-check-input selected_carts" type="checkbox" name="selected_carts[]" value="' . $cart->id . '">
+                            <input class="form-check-input selected_items" type="checkbox" name="item_ids[]" value="' . $cart->id . '">
                         </label>
                     </div>
                 ';
@@ -120,22 +122,11 @@ class CartsDataTable extends DataTable
                 Button::make('reload'),
                 Button::raw('deleteItems')
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
-                    ->action("
-                        let selectedValues = [];
-                        $('.selected_carts:checked').each(function() {
-                            selectedValues.push($(this).val());
-                        });
-
-                        let baseUrl = '" . route('admin.shop.carts.destroy.checked') . "';
-                        let params = selectedValues.map(value => `cart_ids[]=`+value).join('&');
-                        let fullUrl = baseUrl+`?`+params;
-
-                        window.location.href = fullUrl;
-                    "),
+                    ->action($this->rawButtonActionUrl(url: route('admin.shop.carts.destroy.checked'), confirm: true)),
             ])
             ->initComplete('function(settings, json) {
                 $("#check_all_items").click(function(){
-                    $(".selected_carts").prop("checked", $(this).is(":checked"));
+                    $(".selected_items").prop("checked", $(this).is(":checked"));
                 });
             }');
     }

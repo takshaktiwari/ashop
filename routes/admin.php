@@ -46,6 +46,9 @@ Route::middleware('web')->group(function () {
             Route::prefix('products')->name('products.')->group(function () {
                 Route::controller(ProductController::class)->group(function () {
                     Route::get('viewed/history', 'viewedHistory')->name('viewed.history');
+                    Route::get('viewed/history/bulk/delete', 'viewedHistoryBulkDelete')->name('viewed.history.bulk.delete');
+                    Route::get('viewed/history/{productViewed}/delete', 'viewedHistoryDelete')->name('viewed.history.delete');
+
                     Route::get('delete/{product}', 'delete')->name('delete');
                     Route::get('detail/{product}', 'detail')->name('detail');
                     Route::post('detail/update/{product}', 'detailUpdate')->name('detail.update');
@@ -53,8 +56,7 @@ Route::middleware('web')->group(function () {
                     Route::get('attributes/{product}', 'attributes')->name('attributes');
                     Route::post('attributes/update/{product}', 'attributesUpdate')->name('attributes.update');
 
-                    Route::post('selected/delete', 'selectedDelete')->name('selected.delete');
-                    Route::post('selected/featured/{value}', 'selectedFeatured')->name('selected.featured');
+                    Route::get('bulk/delete', 'bulkDelete')->name('bulk.delete');
                     Route::get('copy/{product}', 'copy')->name('copy');
 
                     Route::get('export/excel', 'exportExcel')->name('export.excel');

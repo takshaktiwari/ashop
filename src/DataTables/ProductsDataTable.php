@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Takshak\Ashop\Actions\ProductAction;
 use Takshak\Ashop\Models\Shop\Cart;
 use Takshak\Ashop\Models\Shop\Product;
+use Takshak\Ashop\Traits\AshopDataTableTrait;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
@@ -14,6 +15,7 @@ use Yajra\DataTables\Services\DataTable;
 
 class ProductsDataTable extends DataTable
 {
+    use AshopDataTableTrait;
     /**
      * Build the DataTable class.
      *
@@ -40,7 +42,7 @@ class ProductsDataTable extends DataTable
                 return '
                     <div class="form-check">
                         <label class="form-check-label mb-0">
-                            <input class="form-check-input selected_products" type="checkbox" name="selected_products[]" value="' . $item->id . '">
+                            <input class="form-check-input selected_items" type="checkbox" name="item_ids[]" value="' . $item->id . '">
                         </label>
                     </div>
                 ';
@@ -122,22 +124,11 @@ class ProductsDataTable extends DataTable
                 Button::make('reload'),
                 Button::raw('deleteItems')
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
-                    ->action("
-                        let selectedValues = [];
-                        $('.selected_items:checked').each(function() {
-                            selectedValues.push($(this).val());
-                        });
-
-                        let baseUrl = '" . route('admin.shop.wishlist.destroy.checked') . "';
-                        let params = selectedValues.map(value => `wishlist_ids[]=`+value).join('&');
-                        let fullUrl = baseUrl+`?`+params;
-
-                        window.location.href = fullUrl;
-                    "),
+                    ->action($this->rawButtonActionUrl(route('admin.shop.products.bulk.delete'), true)),
             ])
             ->initComplete('function(settings, json) {
                 $("#check_all_items").click(function(){
-                    $(".selected_products").prop("checked", $(this).is(":checked"));
+                    $(".selected_items").prop("checked", $(this).is(":checked"));
                 });
             }');
     }

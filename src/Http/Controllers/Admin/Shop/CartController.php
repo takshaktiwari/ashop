@@ -27,10 +27,10 @@ class CartController extends Controller
     public function destroyChecked(Request $request)
     {
         $request->validate([
-            'cart_ids' => 'required|array|min:1'
+            'item_ids' => 'required|array|min:1'
         ]);
 
-        Cart::whereIn('id', $request->input('cart_ids'))->delete();
+        Cart::whereIn('id', $request->input('item_ids'))->delete();
         return back()->withSuccess('Carts has been deleted');
     }
 }

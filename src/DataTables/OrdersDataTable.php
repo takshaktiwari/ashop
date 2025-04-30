@@ -3,6 +3,7 @@
 namespace Takshak\Ashop\DataTables;
 
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Takshak\Adash\Traits\AdashDataTableTrait;
 use Takshak\Ashop\Models\Shop\Order;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -12,6 +13,8 @@ use Yajra\DataTables\Services\DataTable;
 
 class OrdersDataTable extends DataTable
 {
+    use AdashDataTableTrait;
+
     /**
      * Build the DataTable class.
      *
@@ -35,7 +38,7 @@ class OrdersDataTable extends DataTable
                 return '
                     <div class="form-check">
                         <label class="form-check-label mb-0">
-                            <input class="form-check-input selected_items" type="checkbox" name="selected_items[]" value="' . $item->id . '">
+                            <input class="form-check-input selected_items" type="checkbox" name="item_ids[]" value="' . $item->id . '">
                         </label>
                     </div>
                 ';
@@ -117,18 +120,7 @@ class OrdersDataTable extends DataTable
                 Button::make('reload'),
                 Button::raw('deleteItems')
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
-                    ->action("
-                        let selectedValues = [];
-                        $('.selected_items:checked').each(function() {
-                            selectedValues.push($(this).val());
-                        });
-
-                        let baseUrl = '" . route('admin.shop.orders.bulk.delete') . "';
-                        let params = selectedValues.map(value => `item_ids[]=`+value).join('&');
-                        let fullUrl = baseUrl+`?`+params;
-
-                        window.location.href = fullUrl;
-                    "),
+                    ->action($this->rawButtonActionUrl(route('admin.shop.orders.bulk.delete'), true)),
             ])
             ->initComplete('function(settings, json) {
                 $("#check_all_items").click(function(){

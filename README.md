@@ -26,6 +26,10 @@ Add `AshopUserTrait` to User model:
 
 Publish assets `php artisan vendor:publish --tag=ashop-assets`
 
+Add components to admin sidebar for admin links `ashop-ashop:admin-sidebar-links`
+
+Publish config file `php artisan vendor:publish --tag=ashop-config` 
+
 # Publishable Files
 
     php artisan vendor:publish --tag=ashop-config
