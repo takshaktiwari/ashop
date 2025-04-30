@@ -9,14 +9,12 @@
             font-family: Arial, sans-serif;
             color: #333;
             margin: 0;
-            padding: 20px;
             font-size: 14px;
         }
 
         .invoice-container {
-            max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px 30px;
         }
 
         .header {
@@ -63,7 +61,7 @@
 
         .details-table .tax-row td {
             background-color: #fafafa;
-            font-size: 80%;
+            font-size: 85%;
             padding: 4px 10px;
         }
 
@@ -104,7 +102,6 @@
 
     <div class="invoice-container">
         <div class="header">
-            <img src="{{ setting('logo_full') }}" alt="Company Logo">
             <h2>INVOICE</h2>
         </div>
 
@@ -153,7 +150,8 @@
                     </tr>
                     @foreach ($priceBreakDown['taxAmounts'] as $key => $taxAmount)
                         <tr class="tax-row">
-                            <td colspan="3" style="text-align: right">{{ $key }} ({{ $taxAmount['percent'] }}%)</td>
+                            <td colspan="3" style="text-align: right">{{ $key }}
+                                ({{ $taxAmount['percent'] }}%)</td>
                             <td>{{ $taxAmount['amount'] }}</td>
                         </tr>
                     @endforeach

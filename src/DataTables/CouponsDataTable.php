@@ -155,6 +155,13 @@ class CouponsDataTable extends DataTable
                 ->width(20)
                 ->addClass('text-center'),
 
+            Column::computed('action')
+                ->exportable(false)
+                ->printable(false)
+                ->orderable(false)
+                ->width(60)
+                ->addClass('text-center text-nowrap'),
+
             Column::make('code'),
             Column::make('discount_type')->title('Type'),
             Column::make('percent'),
@@ -167,12 +174,7 @@ class CouponsDataTable extends DataTable
             Column::make('featured'),
             Column::make('title'),
             Column::make('created_at'),
-            Column::computed('action')
-                ->exportable(false)
-                ->printable(false)
-                ->orderable(false)
-                ->width(60)
-                ->addClass('text-center'),
+
         ];
     }
 

@@ -4,17 +4,18 @@ namespace Takshak\Ashop\Http\Controllers\Shop;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Barryvdh\Snappy\Facades\SnappyPdf;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Takshak\Ashop\Mail\OrderUpdateMail;
-use Takshak\Ashop\Models\Shop\Invoice;
 use Takshak\Ashop\Models\Shop\Order;
 use Takshak\Ashop\Models\Shop\OrderUpdate;
+use Takshak\Ashop\Traits\AshopInvoiceTrait;
 
 class OrderController extends Controller
 {
+    use AshopInvoiceTrait;
+
     public function index()
     {
         $orders = Order::query()
@@ -89,32 +90,7 @@ class OrderController extends Controller
 
     public function invoice(Order $order)
     {
-        $invoice = Invoice::firstOrCreate([
-            'order_id' => $order->id,
-            'invoice_no' => $order->getInvoiceNo()
-        ]);
-
-        // return View::first([
-        //     'shop.user.orders.invoice',
-        //     'ashop::shop.user.orders.invoice'
-        // ])->with([
-        //     'order' => $order,
-        //     'invoice' => $invoice
-        // ]);
-
-        $pdf = SnappyPdf::loadHTML(
-            View::first([
-                'shop.user.orders.invoice',
-                'ashop::shop.user.orders.invoice'
-            ])->with([
-                'order' => $order,
-                'invoice' => $invoice
-            ])->render()
-        );
-
-        $fileName = 'invoices/' . $invoice->invoice_no . '.pdf';
-        Storage::disk('public')->put($fileName, $pdf->output());
-
-        return Storage::disk('public')->download($fileName);
+        $invoiceFile = $this->getInvoice($order);
+        return Storage::disk('public')->download($invoiceFile);
     }
 }

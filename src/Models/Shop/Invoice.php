@@ -10,7 +10,7 @@ class Invoice extends Model
 {
     protected $guarded = [];
 
-    protected function address(): Attribute
+    protected function invoiceNoPrefixed(): Attribute
     {
         return Attribute::make(
             get: function () {

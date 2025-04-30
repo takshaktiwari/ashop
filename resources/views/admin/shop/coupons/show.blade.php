@@ -1,16 +1,17 @@
 <x-admin.layout>
-	<x-admin.breadcrumb
-		title='Coupon Details'
-		:links="[
-			['text' => 'Dashboard', 'url' => route('admin.dashboard')],
-			['text' => 'All Coupons', 'url' => route('admin.shop.coupons.index')],
-            ['text' => 'All Coupons'],
-		]"
-		:actions="[
-			['text' => 'All Coupon', 'url' => route('admin.shop.coupons.index'), 'icon' => 'fas fa-list', 'class' => 'btn btn-success btn-loader' ],
-            ['text' => 'New Coupon', 'url' => route('admin.shop.coupons.create'), 'icon' => 'fas fa-plus' ]
-		]"
-		/>
+    <x-admin.breadcrumb title='Coupon Details' :links="[
+        ['text' => 'Dashboard', 'url' => route('admin.dashboard')],
+        ['text' => 'All Coupons', 'url' => route('admin.shop.coupons.index')],
+        ['text' => 'All Coupons'],
+    ]" :actions="[
+        [
+            'text' => 'All Coupon',
+            'url' => route('admin.shop.coupons.index'),
+            'icon' => 'fas fa-list',
+            'class' => 'btn btn-success btn-loader',
+        ],
+        ['text' => 'New Coupon', 'url' => route('admin.shop.coupons.create'), 'icon' => 'fas fa-plus'],
+    ]" />
 
     <div class="row">
         <div class="col-md-6">
@@ -26,13 +27,13 @@
                             <td>{{ ucfirst($coupon->discount_type) }}</td>
                         </tr>
 
-                        @if($coupon->discount_type == 'percent')
+                        @if ($coupon->discount_type == 'percent')
                             <tr>
                                 <td><b>Percent</b></td>
                                 <td>{{ $coupon->formattedPercent() }}</td>
                             </tr>
                         @endif
-                        @if($coupon->discount_type == 'amount')
+                        @if ($coupon->discount_type == 'amount')
                             <tr>
                                 <td><b>Amount</b></td>
                                 <td>{{ $coupon->formattedAmount() }}</td>
@@ -46,11 +47,11 @@
                             <td><b>Max Discount</b></td>
                             <td>{{ $coupon->formattedMaxDiscount() }}</td>
                         </tr>
-                        @if($coupon->expires_at)
-                        <tr>
-                            <td><b>Expires At</b></td>
-                            <td>{{ $coupon->expires_at->format('d-M-Y') }}</td>
-                        </tr>
+                        @if ($coupon->expires_at)
+                            <tr>
+                                <td><b>Expires At</b></td>
+                                <td>{{ $coupon->expires_at->format('d-M-Y') }}</td>
+                            </tr>
                         @endif
                         <tr>
                             <td><b>Status</b></td>
@@ -68,7 +69,7 @@
                             <td><b>Disposable</b></td>
                             <td>{{ $coupon->disposable ? 'Yes' : 'No' }}</td>
                         </tr>
-                        @if($coupon->disposable)
+                        @if ($coupon->disposable)
                             <tr>
                                 <td><b>Max Usable</b></td>
                                 <td>{{ $coupon->max_usable }} Times</td>
@@ -76,7 +77,7 @@
                         @endif
                         <tr>
                             <td><b>Times Used</b></td>
-                            <td>{{ (int)$coupon->times_used }} Times</td>
+                            <td>{{ (int) $coupon->times_used }} Times</td>
                         </tr>
                     </table>
                 </div>
@@ -96,19 +97,20 @@
                         </tr>
 
                         <td>
-                            <td colspan="2">
-                                @can('coupons_update')
+                        <td colspan="2">
+                            @can('coupons_update')
                                 <a href="{{ route('admin.shop.coupons.edit', [$coupon]) }}" class="btn btn-success">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
-                                @endcan
+                            @endcan
 
-                                @can('coupons_delete')
-                                <a href="{{ route('admin.shop.coupons.destroy', [$coupon]) }}" class="btn btn-danger delete-btn">
+                            @can('coupons_delete')
+                                <a href="{{ route('admin.shop.coupons.destroy', [$coupon]) }}"
+                                    class="btn btn-danger delete-btn">
                                     <i class="fas fa-trash"></i> Delete
                                 </a>
-                                @endcan
-                            </td>
+                            @endcan
+                        </td>
                         </td>
                     </table>
                 </div>
@@ -116,24 +118,25 @@
         </div>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-header">
-            <h4>Coupon Used</h4>
+    @if ($coupon->users->count())
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h4>Coupon Used</h4>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    @foreach ($coupon->users as $user)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->pivot_created_at ? date('d-M-Y h:i A', strtotime($user->pivot_created_at)) : '' }}
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
+            </div>
         </div>
-        <div class="card-body">
-            <table class="table">
-                @foreach($coupon->users as $user)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td>{{ $user->pivot_created_at
-                                    ? date('d-M-Y h:i A', strtotime($user->pivot_created_at))
-                                    : '' }}</td>
-                    </tr>
-                @endforeach
-            </table>
-        </div>
-    </div>
+    @endif
 
 </x-admin.layout>

@@ -2,13 +2,13 @@
     <x-breadcrumb title="Products" :links="[
         ['text' => 'Home', 'url' => url('/')],
         ['text' => 'Shop', 'url' => route('shop.index')],
-        ['text' => $product->name]
+        ['text' => $product->name],
     ]" />
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/ashop/style.css') }}">
     @endpush
     <section class="ashop_page_wrapper">
-        <div class="container product_page">
+        <div class="container product_page mb-5">
             <div class="row g-4">
                 <div class="col-lg-4 col-md-5">
                     <div class="product_images sticky-top">
@@ -138,12 +138,14 @@
                     <div class="reviews_listing mt-4" id="reviews_listing">
                         <x-areviews-areviews:reviews :model="$product" :addReview="auth()->check()" column="col-12" />
 
-                        <div class="text-center">
-                            <a href="{{ route('shop.products.reviews', [$product]) }}"
-                                class="btn btn-sm px-4 btn-dark">
-                                <i class="fas fa-star"></i> See all reviews
-                            </a>
-                        </div>
+                        @if ($product->reviews_count)
+                            <div class="text-center">
+                                <a href="{{ route('shop.products.reviews', [$product]) }}"
+                                    class="btn btn-sm px-4 btn-dark">
+                                    <i class="fas fa-star"></i> See all reviews
+                                </a>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
