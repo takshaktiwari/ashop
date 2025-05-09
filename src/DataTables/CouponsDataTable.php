@@ -50,16 +50,16 @@ class CouponsDataTable extends DataTable
                 ';
             })
             ->editColumn('created_at', function ($item) {
-                return '<span class="text-nowrap">' . $item->created_at->format('Y-m-d h:i A') . '</span>';
+                return '<span class="text-nowrap">' . $item->created_at?->format('Y-m-d h:i A') . '</span>';
             })
-            ->editColumn('discount_type', fn($item) =>  ucfirst($item->discount_type))
-            ->editColumn('percent', fn($item) => $item->percent ? $item->percent . '%' : '')
-            ->editColumn('amount', fn($item) => $item->priceFormat('amount', true))
-            ->editColumn('min_purchase', fn($item) => $item->priceFormat('min_purchase', true))
-            ->editColumn('max_discount', fn($item) => $item->priceFormat('max_discount', true))
-            ->editColumn('expires_at', fn($item) => $item->expires_at->format('d-m-Y h:i A'))
-            ->editColumn('status', fn($q) => $q->status ? 'Active' : '')
-            ->editColumn('featured', fn($q) => $q->featured ? 'Featured' : '')
+            ->editColumn('discount_type', fn ($item) =>  ucfirst($item->discount_type))
+            ->editColumn('percent', fn ($item) => $item->percent ? $item->percent . '%' : '')
+            ->editColumn('amount', fn ($item) => $item->priceFormat('amount', true))
+            ->editColumn('min_purchase', fn ($item) => $item->priceFormat('min_purchase', true))
+            ->editColumn('max_discount', fn ($item) => $item->priceFormat('max_discount', true))
+            ->editColumn('expires_at', fn ($item) => $item->expires_at?->format('d-m-Y h:i A'))
+            ->editColumn('status', fn ($q) => $q->status ? 'Active' : '')
+            ->editColumn('featured', fn ($q) => $q->featured ? 'Featured' : '')
             ->rawColumns(['action', 'checkbox', 'created_at']);
     }
 
