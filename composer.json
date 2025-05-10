@@ -16,7 +16,8 @@
         "takshak/adash-reviews": "^1.3",
         "barryvdh/laravel-snappy": "^1.0",
         "awobaz/compoships": "^2.4",
-        "jenssegers/agent": "^2.6"
+        "jenssegers/agent": "^2.6",
+        "takshak/adash-metas": "^1.1"
     },
     "autoload": {
         "psr-4" : {

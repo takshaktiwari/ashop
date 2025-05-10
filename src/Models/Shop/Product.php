@@ -202,7 +202,7 @@ class Product extends Model
         $meta = $this->metas->where('key', 'product_details')->where('name', $name)->first();
         $mDetail = $value ? $meta?->value : $meta;
 
-        return $mDetail ?? $default;
+        return $mDetail ?: $default;
     }
 
     public function attribute($name = null, $value = true)

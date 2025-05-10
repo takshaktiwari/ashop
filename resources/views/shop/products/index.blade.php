@@ -2,8 +2,14 @@
     <x-breadcrumb title="Products" :links="[
         ['text' => 'Home', 'url' => url('/')],
         ['text' => 'Shop', 'url' => route('shop.index')],
-        ['text' => 'Products']
+        ['text' => 'Products'],
+    ]" />
+    @section('metatags')
+        <x-ametas-ametas:metatags :tags="[
+            'title' => config('ashop.shop.name') . ' | ' . $category->display_name,
+            'description' => $category->description,
         ]" />
+    @endsection
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/ashop/style.css') }}">
     @endpush
@@ -93,7 +99,8 @@
                 </div>
             </div>
 
-            <x-ashop-ashop:products-viewed-history title="Products Viewed " subtitle="Here are the products you have viewed recently" limit="25" class="py-0" />
+            <x-ashop-ashop:products-viewed-history title="Products Viewed "
+                subtitle="Here are the products you have viewed recently" limit="25" class="py-0" />
         </div>
     </section>
 

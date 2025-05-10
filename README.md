@@ -30,6 +30,17 @@ Add components to admin sidebar for admin links `ashop-ashop:admin-sidebar-links
 
 Publish config file `php artisan vendor:publish --tag=ashop-config` 
 
+Configure `takshak/adash-metas` package (for more details goto [https://github.com/takshaktiwari/adash-metas] which is already included with this package, follow these given steps if not already done:
+
+-  Add meta tag component for sidebar menu (if not already added) `ametas-ametas:admin-sidebar-links`. 
+
+- Add this section to _head_ tab of you master layout (app.blade.php)
+
+        @section('metatags')
+            <x-ametas-ametas:metatags />
+        @show
+
+
 # Publishable Files
 
     php artisan vendor:publish --tag=ashop-config

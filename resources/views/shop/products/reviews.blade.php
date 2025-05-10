@@ -5,6 +5,14 @@
         ['text' => str($product->name)->limit(20), 'url' => route('shop.products.show', $product)],
         ['text' => 'Reviews', 'url' => route('shop.products.reviews', $product)],
     ]" />
+    @section('metatags')
+        <x-ametas-ametas:metatags :tags="[
+            'title' => config('ashop.shop.name') .' | Reviews - '.$product->getDetail(name: 'm_title', default: $product->name),
+            'keywords' => $product->getDetail('m_keywords'),
+            'description' => $product->getDetail('m_description'),
+        ]" />
+    @endsection
+
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/ashop/style.css') }}">
     @endpush

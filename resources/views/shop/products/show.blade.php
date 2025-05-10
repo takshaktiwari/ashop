@@ -4,6 +4,14 @@
         ['text' => 'Shop', 'url' => route('shop.index')],
         ['text' => $product->name],
     ]" />
+    @section('metatags')
+        <x-ametas-ametas:metatags :tags="[
+            'title' => config('ashop.shop.name') . ' | ' . $product->getDetail(name: 'm_title', default: $product->name),
+            'keywords' => $product->getDetail('m_keywords'),
+            'description' => $product->getDetail('m_description'),
+        ]" />
+    @endsection
+
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/ashop/style.css') }}">
     @endpush
