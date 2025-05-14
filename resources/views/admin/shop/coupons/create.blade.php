@@ -117,8 +117,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="">Title </label>
-                <textarea name="title" class="form-control" placeholder="title">{{ old('title') }}</textarea>
+                <label for="">Title <span class="text-danger">*</span></label>
+                <input type="text" name="title" class="form-control" value="{{ old('title') }}"
+                    placeholder="Title" required>
             </div>
             <div class="form-group">
                 <label for=""> Description <span class="text-danger">*</span></label>

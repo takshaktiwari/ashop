@@ -2,21 +2,33 @@
 
 namespace Takshak\Ashop\Traits;
 
+use Yajra\DataTables\Html\Button;
+
 trait AshopDataTableTrait
 {
-    public function rawButtonActionUrl(string $url)
+    public function getButtons(): array
     {
-        return "
-            let selectedValues = [];
-            $('.selected_items:checked').each(function() {
-                selectedValues.push($(this).val());
-            });
+        $buttons = [];
 
-            let baseUrl = '" . $url . "';
-            let params = selectedValues.map(value => `item_ids[]=`+value).join('&');
-            let fullUrl = baseUrl+`?`+params;
+        if (config('ashop.dataTables.actionBtns.exportExcel', false)) {
+            $buttons[] = Button::make('excel');
+        }
+        if (config('ashop.dataTables.actionBtns.exportCSV', true)) {
+            $buttons[] = Button::make('csv');
+        }
+        if (config('ashop.dataTables.actionBtns.exportPDF', false)) {
+            $buttons[] = Button::make('pdf');
+        }
+        if (config('ashop.dataTables.actionBtns.print', true)) {
+            $buttons[] = Button::make('print');
+        }
+        if (config('ashop.dataTables.actionBtns.reset', false)) {
+            $buttons[] = Button::make('reset');
+        }
+        if (config('ashop.dataTables.actionBtns.reload', true)) {
+            $buttons[] = Button::make('reload');
+        }
 
-            window.location.href = fullUrl;
-        ";
+        return $buttons;
     }
 }

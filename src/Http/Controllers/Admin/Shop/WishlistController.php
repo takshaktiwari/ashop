@@ -26,10 +26,10 @@ class WishlistController extends Controller
     public function destroyChecked(Request $request)
     {
         $request->validate([
-            'wishlist_ids' => 'required|array|min:1'
+            'item_ids' => 'required|array|min:1'
         ]);
 
-        WishlistItem::whereIn('id', $request->input('wishlist_ids'))->delete();
+        WishlistItem::whereIn('id', $request->input('item_ids'))->delete();
         return back()->withSuccess('Wishlist item has been deleted');
     }
 }

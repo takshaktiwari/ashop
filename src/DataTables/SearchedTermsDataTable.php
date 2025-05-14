@@ -4,8 +4,7 @@ namespace Takshak\Ashop\DataTables;
 
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Takshak\Adash\Traits\AdashDataTableTrait;
-use Takshak\Ashop\Actions\ProductAction;
-use Takshak\Ashop\Models\Shop\ProductViewed;
+use Takshak\Ashop\Models\Shop\SearchedTerm;
 use Takshak\Ashop\Traits\AshopDataTableTrait;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -13,7 +12,7 @@ use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
 
-class ProductViewedDataTable extends DataTable
+class SearchedTermsDataTable extends DataTable
 {
     use AdashDataTableTrait, AshopDataTableTrait;
     /**
@@ -26,7 +25,7 @@ class ProductViewedDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->addIndexColumn()
             ->addColumn('action', function ($item) {
-                return '<a href="' . route('admin.shop.products.viewed.history.delete', [$item]) . '" class="load-circle btn btn-sm btn-danger delete-alert" title="Delete this">
+                return '<a href="' . route('admin.shop.searched-terms.destroy', [$item]) . '" class="load-circle btn btn-sm btn-danger delete-alert" title="Delete this">
                     <i class="fas fa-trash"></i>
                 </a>';
             })
@@ -39,26 +38,10 @@ class ProductViewedDataTable extends DataTable
                     </div>
                 ';
             })
-            ->editColumn('user.name', function ($item) {
-                if ($item->user) {
-                    return '<a href="' . route('admin.users.show', [$item->user]) . '" target="_blank">' . $item->user?->name . '</a>';
-                }
-            })
-            ->editColumn('product.name', function ($item) {
-                if ($item) {
-                    return '<a href="' . route('admin.shop.products.edit', [$item->product]) . '" target="_blank">' . $item->product?->name . '</a>';
-                }
-            })
-            ->editColumn('product.net_price', fn($item) => $item->product?->priceFormat('net_price'))
-            ->editColumn('product.sell_price', fn($item) => $item->product?->priceFormat('sell_price'))
-            ->editColumn('product.deal_price', fn($item) => $item->product?->priceFormat('deal_price'))
-            ->editColumn('product.deal_expiry', fn($item) => $item->product?->deal_expiry?->format('d-m-Y h:i A'))
-            ->editColumn('product.featured', fn($item) => $item->product?->featured ? 'Featured' : '')
-            ->editColumn('product.status', fn($item) => $item->product?->status ? 'Active' : '')
             ->editColumn('created_at', function ($item) {
-                return '<span class="text-nowrap">' . $item->created_at?->format('Y-m-d h:i A') . '</span>';
+                return '<span class="text-nowrap">' . $item->created_at->format('Y-m-d h:i A') . '</span>';
             })
-            ->rawColumns(['action', 'checkbox', 'created_at', 'user.name', 'product.name']);
+            ->rawColumns(['action', 'checkbox', 'created_at']);
     }
 
     /**
@@ -66,13 +49,8 @@ class ProductViewedDataTable extends DataTable
      */
     public function query(): QueryBuilder
     {
-        return ProductViewed::query()
-            ->select('product_vieweds.*')
-            ->with('user')
-            ->with('product')
-            ->whereHas('product', function ($query) {
-                return  $query = (new ProductAction())->searchFilter($query);
-            })
+        return SearchedTerm::query()
+            ->with('user:id,name,email,mobile')
             ->newQuery();
     }
 
@@ -82,7 +60,7 @@ class ProductViewedDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-            ->setTableId('products-viewed-table')
+            ->setTableId('searched-terms-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('<"d-flex mb-2 justify-content-between flex-wrap gap-3"<"d-flex gap-3"lB>f>rt<"d-flex justify-content-between flex-wrap gap-3 mt-3"ip>')
@@ -95,7 +73,7 @@ class ProductViewedDataTable extends DataTable
                 ...$this->getButtons(),
                 Button::raw('deleteItems')
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
-                    ->action($this->rawButtonActionUrl(route('admin.shop.products.viewed.history.bulk.delete'))),
+                    ->action($this->rawButtonActionUrl(url: route('admin.shop.searched-terms.destroy.checked'), confirm: true)),
             ])
             ->initComplete('function(settings, json) {
                 $("#check_all_items").click(function(){
@@ -140,18 +118,12 @@ class ProductViewedDataTable extends DataTable
                 ->orderable(false)
                 ->width(60)
                 ->addClass('text-center'),
-
-            Column::make('user.name')->title('User'),
-            Column::make('user_ip'),
-            Column::make('product.name')->title('Product'),
-            Column::make('product.net_price')->title('Net Price')->addClass('text-nowrap'),
-            Column::make('product.sell_price')->title('Sell Price')->addClass('text-nowrap'),
-            Column::make('product.deal_price')->title('Deal Price')->addClass('text-nowrap'),
-            Column::make('product.deal_expiry')->title('Deal Expiry')->addClass('text-nowrap'),
-            Column::make('product.stock')->title('Stock'),
-            Column::make('product.sku')->title('SKU'),
-            Column::make('product.featured')->title('Featured'),
-            Column::make('product.status')->title('Status'),
+            Column::make('term'),
+            Column::make('count'),
+            Column::make('user.name'),
+            Column::make('user.email'),
+            Column::make('user.mobile'),
+            Column::make('user_ip')->width(120),
             Column::make('created_at'),
 
         ];
@@ -162,6 +134,6 @@ class ProductViewedDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Carts_' . date('YmdHis');
+        return 'SearchedTerms_' . date('YmdHis');
     }
 }

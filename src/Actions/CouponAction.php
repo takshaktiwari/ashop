@@ -17,9 +17,7 @@ class CouponAction
         $coupon->expires_at     =  $request->post('expires_at');
         $coupon->min_purchase   =  $request->post('min_purchase');
         $coupon->max_discount   =  $request->post('max_discount');
-        $coupon->max_usable     =  ($request->post('discount_type') == 'percent')
-            ? $request->post('max_discount')
-            : null;
+        $coupon->max_usable     =  $request->input('max_usable');
         $coupon->status         =  $request->boolean('status');
         $coupon->featured       =  $request->boolean('featured');
         $coupon->title          =  $request->post('title');

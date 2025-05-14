@@ -5,6 +5,7 @@ namespace Takshak\Ashop\DataTables;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Takshak\Adash\Traits\AdashDataTableTrait;
 use Takshak\Ashop\Models\Shop\Cart;
+use Takshak\Ashop\Traits\AshopDataTableTrait;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
@@ -13,7 +14,7 @@ use Yajra\DataTables\Services\DataTable;
 
 class CartsDataTable extends DataTable
 {
-    use AdashDataTableTrait;
+    use AdashDataTableTrait, AshopDataTableTrait;
     /**
      * Build the DataTable class.
      *
@@ -114,12 +115,7 @@ class CartsDataTable extends DataTable
             ->serverSide(true) // Enable server-side processing
             ->processing(true)
             ->buttons([
-                Button::make('excel'),
-                Button::make('csv'),
-                Button::make('pdf'),
-                Button::make('print'),
-                Button::make('reset'),
-                Button::make('reload'),
+                ...$this->getButtons(),
                 Button::raw('deleteItems')
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
                     ->action($this->rawButtonActionUrl(url: route('admin.shop.carts.destroy.checked'), confirm: true)),

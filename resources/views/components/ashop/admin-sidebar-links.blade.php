@@ -52,4 +52,10 @@
         <span>Coupons</span>
     </a>
 </li>
+<li>
+    <a href="{{ route('admin.shop.searched-terms.index') }}" class="waves-effect">
+        <i class="fas fa-search"></i>
+        <span>Searched Terms</span>
+    </a>
+</li>
 <x-areviews-areviews:admin-sidebar-links />

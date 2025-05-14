@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\View;
 use Takshak\Ashop\Models\Shop\Category;
+use Takshak\Ashop\Models\Shop\Coupon;
 use Takshak\Ashop\Models\Shop\Product;
 use Takshak\Ashop\Models\Shop\ProductViewed;
+use Takshak\Ashop\Models\Shop\SearchedTerm;
 
 class ProductController extends Controller
 {
@@ -33,6 +35,17 @@ class ProductController extends Controller
             ->when($request->get('featured'), function ($query) {
                 $query->featured();
             });
+
+        if ($request->get('search')) {
+            $term = SearchedTerm::firstOrCreate([
+                'term' => $request->get('search'),
+                'user_id' => auth()->id(),
+                'user_ip' => $request->ip()
+            ]);
+            if (!$term->wasRecentlyCreated) {
+                $term->increment('count');
+            }
+        }
 
         $products = (clone $productQuery)->loadCardDetails()
             ->when(is_array($request->get('attributes')), function ($query) use ($request) {
@@ -115,9 +128,28 @@ class ProductController extends Controller
             'user_ip' => $request->ip()
         ]);
 
+        $coupons = Coupon::available()
+            ->orderBy('created_at', 'DESC')
+            ->orderBy('featured', 'DESC')
+            ->limit(3)
+            ->get();
+
+        $productOrdered = false;
+        if (auth()->check()){
+            $orders = auth()->user()->load(['orders' => function ($query) use ($product) {
+                $query->select('orders.id');
+                $query->with(['orderProducts' => function($query) use ($product) {
+                    $query->where('product_id', $product->id);
+                }]);
+            }]);
+            $productOrdered = $orders->orders->first() ? true : false;
+        }
+
         return View::first(['shop.products.show', 'ashop::shop.products.show'])
             ->with([
-                'product'    =>  $product,
+                'product' =>  $product,
+                'coupons' => $coupons,
+                'productOrdered' => $productOrdered
             ]);
     }
 

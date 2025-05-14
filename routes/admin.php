@@ -12,6 +12,7 @@ use Takshak\Ashop\Http\Controllers\Admin\Shop\CartController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\WishlistController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\OrderController;
 use Takshak\Ashop\Http\Controllers\Admin\Shop\OrderUpdateController;
+use Takshak\Ashop\Http\Controllers\Admin\Shop\SearchedTermController;
 
 Route::middleware('web')->group(function () {
     Route::middleware(['auth', GatesMiddleware::class])
@@ -95,5 +96,11 @@ Route::middleware('web')->group(function () {
             Route::get('orders/{order}/delete', [OrderController::class, 'destroy'])->name('orders.destroy')->where('order', '[0-9]+');
             Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
             Route::post('orders/{order}/updates', [OrderUpdateController::class, 'store'])->name('orders.updates.store');
+
+            Route::prefix('searched-terms')->name('searched-terms.')->group(function () {
+                Route::get('index', [SearchedTermController::class, 'index'])->name('index');
+                Route::get('delete/checked', [SearchedTermController::class, 'destroyChecked'])->name('destroy.checked');
+                Route::get('delete/{searchedTerm}', [SearchedTermController::class, 'destroy'])->name('destroy');
+            });
         });
 });

@@ -67,7 +67,7 @@
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>Total MRP:</span>
                                 <span>
-                                    {{ config('ashop.currency.sign', '₹') . $cartService->subtotalNetPrice() }}
+                                    {{ config('ashop.currency.sign', '₹') . number_format($cartService->subtotalNetPrice(), 2) }}
                                 </span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">

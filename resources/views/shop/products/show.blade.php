@@ -6,7 +6,8 @@
     ]" />
     @section('metatags')
         <x-ametas-ametas:metatags :tags="[
-            'title' => config('ashop.shop.name') . ' | ' . $product->getDetail(name: 'm_title', default: $product->name),
+            'title' =>
+                config('ashop.shop.name') . ' | ' . $product->getDetail(name: 'm_title', default: $product->name),
             'keywords' => $product->getDetail('m_keywords'),
             'description' => $product->getDetail('m_description'),
         ]" />
@@ -104,7 +105,25 @@
                             @endif
                         </div>
                     </form>
-                    <hr />
+                    @if ($coupons->count())
+                        <div class="card my-3 product_page_coupons">
+                            <div class="card-header">
+                                <p class="my-auto fw-bold">Available Coupons</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                @foreach ($coupons as $coupon)
+                                    <li class="list-group-item small">
+                                        <i class="fa-solid fa-tag me-1 text-primary"></i>
+                                        <span><b>{{ $coupon->code }}</b> {{ $coupon->title }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    @if (!$coupons->count())
+                        <hr />
+                    @endif
+
                     @if ($product->brand)
                         <div class="brand mb-2">
                             <b class="me-1">Brand: </b>
@@ -144,7 +163,7 @@
                     {!! $product->getDetail('description') !!}
 
                     <div class="reviews_listing mt-4" id="reviews_listing">
-                        <x-areviews-areviews:reviews :model="$product" :addReview="auth()->check()" column="col-12" />
+                        <x-areviews-areviews:reviews :model="$product" :addReview="auth()->check() && $productOrdered" column="col-12" />
 
                         @if ($product->reviews_count)
                             <div class="text-center">
@@ -159,8 +178,8 @@
             </div>
         </div>
         <hr />
-        <x-ashop-ashop:products-group title="Related Products" subtitle="Browse other products related to this category"
-            :categories="$product->categories->pluck('id')->toArray()" limit="10" />
+        <x-ashop-ashop:products-group title="Related Products"
+            subtitle="Browse other products related to this category" :categories="$product->categories->pluck('id')->toArray()" limit="10" />
 
         <div class="container">
             <x-ashop-ashop:products-viewed-history title="Products Viewed "

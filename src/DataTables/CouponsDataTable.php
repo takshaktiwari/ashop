@@ -3,6 +3,7 @@
 namespace Takshak\Ashop\DataTables;
 
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Takshak\Adash\Traits\AdashDataTableTrait;
 use Takshak\Ashop\Models\Shop\Cart;
 use Takshak\Ashop\Models\Shop\Coupon;
 use Takshak\Ashop\Traits\AshopDataTableTrait;
@@ -14,7 +15,7 @@ use Yajra\DataTables\Services\DataTable;
 
 class CouponsDataTable extends DataTable
 {
-    use AshopDataTableTrait;
+    use AdashDataTableTrait, AshopDataTableTrait;
 
     /**
      * Build the DataTable class.
@@ -87,12 +88,7 @@ class CouponsDataTable extends DataTable
             ->serverSide(true) // Enable server-side processing
             ->processing(true)
             ->buttons([
-                Button::make('excel'),
-                Button::make('csv'),
-                Button::make('pdf'),
-                Button::make('print'),
-                Button::make('reset'),
-                Button::make('reload'),
+                ...$this->getButtons(),
                 Button::raw('deleteItems')
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
                     ->addClass('bg-danger text-white')

@@ -3,7 +3,9 @@
 namespace Takshak\Ashop\DataTables;
 
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Takshak\Adash\Traits\AdashDataTableTrait;
 use Takshak\Ashop\Models\Shop\WishlistItem;
+use Takshak\Ashop\Traits\AshopDataTableTrait;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
@@ -12,6 +14,7 @@ use Yajra\DataTables\Services\DataTable;
 
 class WishlistDataTable extends DataTable
 {
+    use AdashDataTableTrait, AshopDataTableTrait;
     /**
      * Build the DataTable class.
      *
@@ -92,26 +95,10 @@ class WishlistDataTable extends DataTable
             ->serverSide(true) // Enable server-side processing
             ->processing(true)
             ->buttons([
-                Button::make('excel'),
-                Button::make('csv'),
-                Button::make('pdf'),
-                Button::make('print'),
-                Button::make('reset'),
-                Button::make('reload'),
+                ...$this->getButtons(),
                 Button::raw('deleteItems')
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
-                    ->action("
-                        let selectedValues = [];
-                        $('.selected_items:checked').each(function() {
-                            selectedValues.push($(this).val());
-                        });
-
-                        let baseUrl = '" . route('admin.shop.wishlist.destroy.checked') . "';
-                        let params = selectedValues.map(value => `wishlist_ids[]=`+value).join('&');
-                        let fullUrl = baseUrl+`?`+params;
-
-                        window.location.href = fullUrl;
-                    "),
+                    ->action($this->rawButtonActionUrl(route('admin.shop.wishlist.destroy.checked'))),
             ])
             ->initComplete('function(settings, json) {
                 $("#check_all_items").click(function(){
@@ -150,10 +137,6 @@ class WishlistDataTable extends DataTable
                 ->width(20)
                 ->addClass('text-center'),
 
-            Column::make('user.name'),
-            Column::make('product'),
-            Column::make('sell_price')->width(120),
-            Column::make('created_at')->addClass('text-nowrap'),
             Column::computed('action')
                 ->width(60)
                 ->addClass('text-center')
@@ -161,6 +144,12 @@ class WishlistDataTable extends DataTable
                 ->orderable(false)
                 ->exportable(false)
                 ->printable(false),
+
+            Column::make('user.name'),
+            Column::make('product'),
+            Column::make('sell_price')->width(120),
+            Column::make('created_at')->addClass('text-nowrap'),
+
         ];
     }
 

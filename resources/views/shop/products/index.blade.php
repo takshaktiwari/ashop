@@ -4,12 +4,16 @@
         ['text' => 'Shop', 'url' => route('shop.index')],
         ['text' => 'Products'],
     ]" />
-    @section('metatags')
-        <x-ametas-ametas:metatags :tags="[
-            'title' => config('ashop.shop.name') . ' | ' . $category->display_name,
-            'description' => $category->description,
-        ]" />
-    @endsection
+
+    @if ($category)
+        @section('metatags')
+            <x-ametas-ametas:metatags :tags="[
+                'title' => config('ashop.shop.name') . ' | ' . $category->display_name,
+                'description' => $category->description,
+            ]" />
+        @endsection
+    @endif
+
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/ashop/style.css') }}">
     @endpush

@@ -78,6 +78,16 @@ return [
             'show_banner' =>  true,
         ]
     ],
+    'dataTables' => [
+        'actionBtns' => [
+            'exportExcel' =>  false,
+            'exportCSV' =>  true,
+            'exportPDF' =>  false,
+            'print' =>  true,
+            'reset' =>  false,
+            'reload' =>  true,
+        ]
+    ],
     'shop' => [
         'name'  =>  config('app.name'),
         'website'  =>  config('app.url'),

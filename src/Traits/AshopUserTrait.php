@@ -5,7 +5,9 @@ namespace Takshak\Ashop\Traits;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Takshak\Ashop\Models\Shop\Address;
+use Takshak\Ashop\Models\Shop\Order;
 use Takshak\Ashop\Models\Shop\Product;
+use Takshak\Ashop\Models\Shop\SearchedTerm;
 
 trait AshopUserTrait
 {
@@ -37,5 +39,25 @@ trait AshopUserTrait
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class);
+    }
+
+    /**
+     * Get all of the searchedTerms for the AshopUserTrait
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function searchedTerms(): HasMany
+    {
+        return $this->hasMany(SearchedTerm::class);
+    }
+
+    /**
+     * Get all of the orders for the AshopUserTrait
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 }

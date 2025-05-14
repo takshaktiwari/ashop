@@ -123,17 +123,13 @@ class CheckoutController extends Controller
         }
 
         $coupons = Coupon::query()
-            ->active()
+            ->available()
             ->where(function ($query) {
                 $query->whereNull('min_purchase');
                 $query->orWhere('min_purchase', '<=', $this->cartService->subtotal());
             })
             ->whereDoesntHave('users', function ($query) {
                 $query->where('users.id', auth()->id());
-            })
-            ->where(function ($query) {
-                $query->whereNull('expires_at');
-                $query->orWhere('expires_at', '>', now());
             })
             ->get();
 
@@ -151,17 +147,13 @@ class CheckoutController extends Controller
         ]);
 
         $coupon = Coupon::where('code', $request->post('coupon'))
-            ->active()
+            ->available()
             ->where(function ($query) {
                 $query->whereNull('min_purchase');
                 $query->orWhere('min_purchase', '<=', $this->cartService->subtotal());
             })
             ->whereDoesntHave('users', function ($query) {
                 $query->where('users.id', auth()->id());
-            })
-            ->where(function ($query) {
-                $query->whereNull('expires_at');
-                $query->orWhere('expires_at', '>', now());
             })
             ->first();
 
@@ -231,6 +223,8 @@ class CheckoutController extends Controller
             'payment_status' => $order->payment_status ?? false,
             'notes' => 'Order has been successfully placed.',
         ]);
+
+        Coupon::find(session('coupon.id'))->users()->attach(auth()->id());
 
         if ($order->user?->email) {
             dispatch(function () use ($order) {

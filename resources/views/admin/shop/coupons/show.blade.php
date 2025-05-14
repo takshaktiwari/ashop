@@ -16,6 +16,13 @@
     <div class="row">
         <div class="col-md-6">
             <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between gap-3">
+                    <h5 class="my-auto">{{ $coupon->code }}</h5>
+                    <div class="my-auto">
+                        <x-admin.btns.action-edit text="Edit" :url="route('admin.shop.coupons.edit', [$coupon])" />
+                        <x-admin.btns.action-delete text="Delete" :url="route('admin.shop.coupons.destroy', [$coupon])" />
+                    </div>
+                </div>
                 <div class="card-body">
                     <table class="table">
                         <tr>
@@ -77,7 +84,7 @@
                         @endif
                         <tr>
                             <td><b>Times Used</b></td>
-                            <td>{{ (int) $coupon->times_used }} Times</td>
+                            <td>{{ (int) $coupon->users->count() }} Times</td>
                         </tr>
                     </table>
                 </div>

@@ -35,7 +35,7 @@ class CouponController extends Controller
             'expires_at'    =>  'nullable|date',
         ]);
 
-        $coupon = $action->save($request, new Coupon);
+        $coupon = $action->save($request, new Coupon());
         return to_route('admin.shop.coupons.show', [$coupon])->withSuccess('SUCCESS !! Coupon has been created.');
     }
 
@@ -78,7 +78,8 @@ class CouponController extends Controller
         return to_route('admin.shop.coupons.index')->withSuccess('SUCCESS !! Coupons are successfully deleted.');
     }
 
-    public function bulkActive(Request $request) {
+    public function bulkActive(Request $request)
+    {
         $request->validate([
             'item_ids'  =>  'required|array|min:1'
         ]);
@@ -88,7 +89,8 @@ class CouponController extends Controller
         return to_route('admin.shop.coupons.index')->withSuccess('SUCCESS !! Coupons are successfully updated.');
     }
 
-    public function bulkInactive(Request $request) {
+    public function bulkInactive(Request $request)
+    {
         $request->validate([
             'item_ids'  =>  'required|array|min:1'
         ]);
@@ -98,7 +100,8 @@ class CouponController extends Controller
         return to_route('admin.shop.coupons.index')->withSuccess('SUCCESS !! Coupons are successfully updated.');
     }
 
-    public function bulkFeatured(Request $request) {
+    public function bulkFeatured(Request $request)
+    {
         $request->validate([
             'item_ids'  =>  'required|array|min:1'
         ]);
@@ -108,7 +111,8 @@ class CouponController extends Controller
         return to_route('admin.shop.coupons.index')->withSuccess('SUCCESS !! Coupons are successfully updated.');
     }
 
-    public function bulkNotFeatured(Request $request) {
+    public function bulkNotFeatured(Request $request)
+    {
         $request->validate([
             'item_ids'  =>  'required|array|min:1'
         ]);

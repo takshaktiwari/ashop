@@ -124,13 +124,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="">Title </label>
+                <label for="">Title <span class="text-danger">*</span></label>
                 <input type="text" name="title" class="form-control" value="{{ $coupon->title }}"
-                    placeholder="Title">
+                    placeholder="Title" required>
             </div>
             <div class="form-group">
                 <label for=""> Description <span class="text-danger">*</span></label>
-                <textarea name="description" rows="4" id="" class="form-control text-editor"
+                <textarea name="description" rows="4" id="" class="form-control summernote-editor"
                     placeholder="Your Description">{{ $coupon->description }}</textarea>
             </div>
         </div>
