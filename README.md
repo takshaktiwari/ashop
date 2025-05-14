@@ -194,3 +194,11 @@ Configure `takshak/adash-metas` package (for more details goto [https://github.c
 
 - **ashop-ashop:mail-layout**
     This can be used when creating a emil to send to users.
+
+# In-built commands
+
+- **ashop:clear-junk-orders** : Clear those orders which is not successfully placed or not valid
+- **ashop:clear-products-deal-price** : Clear products deal price if deal is expired
+- **ashop:product-attach-parent-categories** : Attach the parent categories to a subcategory which is attached to the product.
+- **ashop:products-search-tags-optimize** : Prepare search tags and save in products table for optimized search
+- **ashop:products-viewed-delete {--keep=50}** : delete products viewed history after keeping some of them
