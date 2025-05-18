@@ -206,6 +206,10 @@ class CheckoutController extends Controller
         if ($order->payment_mode == 'cod') {
             return to_route('shop.checkout.place.order');
         }
+
+        abort_if(!config('ashop.payment.url.pay'), 403, 'Payment route not setup.');
+
+        return to_route(config('ashop.payment.url.pay'));
     }
 
     public function placeOrder()

@@ -122,6 +122,10 @@ return [
         'modes'     =>  [
             'cod'   =>  'Cash On Delivery',
             'online'    =>  'Pay Online',
+        ],
+        'url' => [
+            'pay' => 'shop.payments.pay',
+            'callback' => 'shop.payments.callback',
         ]
     ],
 
