@@ -7,6 +7,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Takshak\Ashop\Console\Commands\ClearJunkOrdersCommand;
 use Takshak\Ashop\Console\Commands\ClearProductDealPriceCommand;
+use Takshak\Ashop\Console\Commands\FeedProductReviews;
 use Takshak\Ashop\Console\Commands\ProductAttachParentCategoriesCommand;
 use Takshak\Ashop\Console\Commands\ProductsSearchTagsOptimizeCommand;
 use Takshak\Ashop\Console\Commands\ProductsViewedDeleteCommand;
@@ -22,7 +23,8 @@ class AshopServiceProvider extends ServiceProvider
             SeedCommand::class,
             ClearJunkOrdersCommand::class,
             ProductsViewedDeleteCommand::class,
-            ClearProductDealPriceCommand::class
+            ClearProductDealPriceCommand::class,
+            FeedProductReviews::class
         ]);
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'ashop');
         $this->loadViewComponentsAs('ashop', [

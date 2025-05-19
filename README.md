@@ -202,3 +202,4 @@ Configure `takshak/adash-metas` package (for more details goto [https://github.c
 - **ashop:product-attach-parent-categories** : Attach the parent categories to a subcategory which is attached to the product.
 - **ashop:products-search-tags-optimize** : Prepare search tags and save in products table for optimized search
 - **ashop:products-viewed-delete {--keep=50}** : delete products viewed history after keeping some of them
+- **ashop:feed-product-reviews {--min=2} {--max=15} {--min-rating=4} {--max-rating=5}** : feed some reviews to look the shop more trusted
