@@ -228,7 +228,12 @@ class CheckoutController extends Controller
             'notes' => 'Order has been successfully placed.',
         ]);
 
-        Coupon::find(session('coupon.id'))->users()->attach(auth()->id());
+        if (session('coupon.id')) {
+            $coupon = Coupon::find(session('coupon.id'));
+            if ($coupon) {
+                $coupon->users()->attach(auth()->id());
+            }
+        }
 
         if ($order->user?->email) {
             dispatch(function () use ($order) {
