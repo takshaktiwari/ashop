@@ -1,5 +1,9 @@
 <div class="shop_header pb-4">
-    <div class="d-flex justify-content-between gap-4">
+    <div class="d-flex justify-content-between gap-3">
+        <a href="javascript: void(0);" class="fs-5 rounded-circle mobile-filter-btn d-block d-md-none">
+            <i class="fa-solid fa-sliders-h"></i>
+        </a>
+
         <div class="flex-fill">
             @if (config('ashop.sections.products.search', true))
                 <form action="{{ route('shop.products.index') }}" class="search d-flex">

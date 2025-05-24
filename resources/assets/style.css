@@ -114,7 +114,7 @@
 
 .shop_header .search #search_form_category {
 	border-radius: 3rem 0rem 0rem 3rem;
-	max-width: 8rem;
+	max-width: 7rem;
 }
 
 .shop_header .search #search_form_search {
@@ -128,42 +128,91 @@
 .products_viewed .scroll-item {
 	width: clamp(100px, 10%, 200px);
 }
-.coupon_form .form-control[name='coupon'] {
-    border-top-right-radius: 0rem;
-    border-bottom-right-radius: 0rem;
+.coupon_form .form-control[name="coupon"] {
+	border-top-right-radius: 0rem;
+	border-bottom-right-radius: 0rem;
 }
 
 .coupon_form .btn {
-    border-top-left-radius: 0rem;
-    border-bottom-left-radius: 0rem;
+	border-top-left-radius: 0rem;
+	border-bottom-left-radius: 0rem;
 }
 
 #couponsModal .coupons .coupon_code {
-    border: 2px dashed;
+	border: 2px dashed;
 }
 .order_confirmation .tick_icon {
-    font-size: 6rem;
+	font-size: 6rem;
 }
 .user_account .user_nav .list-group a i {
-    width: 24px;
-    font-size: 110%;
+	width: 24px;
+	font-size: 110%;
 }
 
 .user_account .user_nav .nav-block {
-    display: none;
+	display: none;
 }
 
 .user_account .user_nav .nav-block.collapse.show {
-    display: block;
+	display: block;
 }
 
 .user_account .user_nav .nav-block a {
-    padding: 0.75rem 1.5rem;
-    transition: all 0.2s ease;
+	padding: 0.75rem 1.5rem;
+	transition: all 0.2s ease;
 }
 
 .user_account .user_nav .nav-block a:hover {
-    padding-left: 2rem;
-    background-color: #eaeaea;
-    transition: all 0.2s ease;
+	padding-left: 2rem;
+	background-color: #eaeaea;
+	transition: all 0.2s ease;
+}
+
+/* Responsive Properties */
+/* Responsive Properties */
+/* Responsive Properties */
+
+/* Less than 768px (col-md) */
+@media (max-width: 767.98px) {
+	.shop_sidebar_wrapper {
+		border-radius: 0.25rem;
+		position: fixed;
+		z-index: 1;
+		width: 100%;
+		left: 0;
+		bottom: 0;
+		height: 70vh;
+		padding: 0.75rem 1.5rem 1rem 1.5rem;
+		background-color: #47474794;
+		overflow-y: scroll;
+		display: none;
+	}
+
+	.shop_sidebar_wrapper .shop_sidebar_close {
+		display: block;
+	}
+
+	.shop_sidebar_wrapper .shop_sidebar_close_btn {
+		display: flex;
+		width: 2rem;
+		height: 2rem;
+		color: white;
+		border-radius: 1rem;
+		text-decoration: none;
+		position: fixed;
+		right: 1rem;
+		overflow: visible;
+		margin-top: -2.75rem;
+	}
+
+	.shop_sidebar_wrapper .shop_sidebar {
+		background-color: white;
+	}
+}
+
+/* Greater than 768px (col-md) */
+@media (min-width: 768px) {
+	.shop_sidebar_wrapper .shop_sidebar_close {
+		display: none;
+	}
 }

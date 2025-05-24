@@ -14,9 +14,6 @@
         @endsection
     @endif
 
-    @push('styles')
-        <link rel="stylesheet" href="{{ asset('assets/ashop/style.css') }}">
-    @endpush
     <section class="ashop_page_wrapper">
         <div class="container products_page">
             <div class="row g-4 mb-5">
@@ -108,9 +105,13 @@
         </div>
     </section>
 
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('assets/ashop/style.css') }}">
+    @endpush
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
             integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async>
         </script>
+        <script src="{{ asset('assets/ashop/script.js') }}"></script>
     @endpush
 </x-app-layout>

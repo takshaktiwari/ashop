@@ -264,37 +264,6 @@
             integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="{{ asset('assets/ashop/jquery.zoom.min.js') }}"></script>
-        <script>
-            $(document).ready(function() {
-
-                $("#buy_now_btn").click(function(e) {
-                    $("#buy_now_btn").before('<input type="hidden" name="buy_now" value="1">');
-                    return true;
-                });
-
-                $('a.zoomImage').zoom({
-                    magnify: 1.75,
-                    url: $(this).attr('href')
-                });
-
-                $('.product_md_images').slick({
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    arrows: false,
-                    autoplay: true,
-                    fade: true,
-                    asNavFor: '.product_sm_images'
-                });
-                $('.product_sm_images').slick({
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                    asNavFor: '.product_md_images',
-                    dots: true,
-                    centerMode: true,
-                    focusOnSelect: true
-                });
-
-            });
-        </script>
+        <script src="{{ asset('assets/ashop/script.js') }}"></script>
     @endpush
 </x-app-layout>
