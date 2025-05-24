@@ -1,10 +1,11 @@
 <div class="shop_header pb-4">
-    <div class="d-flex justify-content-between gap-3">
-        <a href="javascript: void(0);" class="fs-5 rounded-circle mobile-filter-btn d-flex d-md-none">
-            <i class="fa-solid fa-sliders-h m-auto"></i>
-        </a>
-
-        <div class="flex-fill">
+    <div class="d-flex flex-sm-nowrap flex-wrap justify-content-between gap-3">
+        <div class="flex-fill d-flex gap-3">
+            <div class="d-flex d-md-none m-auto">
+                <a href="javascript: void(0);" class="rounded mobile-filter-btn btn btn-primary btn-sm text-nowrap">
+                    <i class="fa-solid fa-sliders-h m-auto"></i>
+                </a>
+            </div>
             @if (config('ashop.sections.products.search', true))
                 <form action="{{ route('shop.products.index') }}" class="search d-flex">
                     <select name="category" id="search_form_category" class="form-control">
@@ -81,12 +82,12 @@
                 </form>
             @endif
             @if (config('ashop.sections.products.display_style', true))
-                <div class="list-type fs-5 text-nowrap">
+                <div class="list-type my-auto text-nowrap">
                     <a href="{{ route('shop.products.index', request()->except('display') + ['display' => 'grid']) }}"
-                        class="me-2">
+                        class="me-2 fs-5">
                         <i class="fa-solid fa-table-cells-large"></i>
                     </a>
-                    <a href="{{ route('shop.products.index', request()->except('display') + ['display' => 'list']) }}">
+                    <a href="{{ route('shop.products.index', request()->except('display') + ['display' => 'list']) }}" class="fs-5">
                         <i class="fa-solid fa-list"></i>
                     </a>
                 </div>
