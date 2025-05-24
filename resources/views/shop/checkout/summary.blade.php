@@ -90,7 +90,7 @@
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>Shipping Fee:</span>
-                                <span>{{ config('ashop.currency.sign', '₹').$cartService->shippingCharge() }}</span>
+                                <span>{{ config('ashop.currency.sign', '₹') . $cartService->shippingCharge() }}</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between fw-bold">
                                 <span>Total:</span>
@@ -104,18 +104,14 @@
                     <form action="{{ route('shop.checkout.payment') }}" method="POST" class="card">
                         @csrf
                         <div class="card-body">
-                            <div class="form-check">
-                                <label class="form-check-label py-2" for="cod">
-                                    <input type="radio" class="form-check-input" id="cod" name="payment_mode"
-                                        value="cod"> Cash On Delivery
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <label class="form-check-label py-2" for="online">
-                                    <input type="radio" class="form-check-input" id="online" name="payment_mode"
-                                        value="online" checked> Pay online
-                                </label>
-                            </div>
+                            @foreach (config('ashop.payment.modes') as $value => $title)
+                                <div class="form-check">
+                                    <label class="form-check-label py-2" for="{{ $value }}">
+                                        <input type="radio" class="form-check-input" id="{{ $value }}"
+                                            name="payment_mode" value="{{ $value }}"> {{ $title }}
+                                    </label>
+                                </div>
+                            @endforeach
                         </div>
                         <div class="card-footer py-3 text-end">
                             <button type="submit" class="btn btn-dark px-3">
@@ -155,7 +151,7 @@
                             </li>
                         @endforeach
 
-                        @if($coupons->isEmpty())
+                        @if ($coupons->isEmpty())
                             <li class="coupon list-group-item py-4">
                                 <h4 class="text-center">No coupons found</h4>
                             </li>
