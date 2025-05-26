@@ -43,7 +43,7 @@
                 </div>
                 <div class="col-md-8">
                     <div id="reviews_list">
-                        <x-areviews-areviews:reviews :model="$product" :addReview="auth()->check()" paginate="true" limit="50"
+                        <x-areviews-areviews:reviews :model="$product" :addReview="auth()->check() && $product->isOrderedByUser()" paginate="true" limit="50"
                             column="col-12" />
                     </div>
                 </div>

@@ -282,4 +282,29 @@ class Product extends Model
             return $this->image_md();
         }
     }
+
+    public function isOrderedByUser($user = null)
+    {
+        if ($user && !($user instanceof User)) {
+            $user = User::find($user);
+        } elseif ($user instanceof User) {
+            $user = $user;
+        } else {
+            $user = auth()->user();
+        }
+
+        if (!$user) {
+            return false;
+        }
+
+        $orders = Order::where('user_id', $user->id)->pluck('id');
+
+        if(!$orders->count()){
+            return false;
+        }
+
+        $orderCount = OrderProduct::whereIn('order_id', $orders)->where('product_id', $this->id)->count();
+
+        return $orderCount ? true : false;
+    }
 }

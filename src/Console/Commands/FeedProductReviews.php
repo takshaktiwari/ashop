@@ -45,7 +45,7 @@ class FeedProductReviews extends Command
             return;
         }
 
-        if($this->option('max-rating') < $this->option('min-rating')) {
+        if ($this->option('max-rating') < $this->option('min-rating')) {
             error('Max rating should be greater than min rating');
             return;
         }
@@ -66,13 +66,14 @@ class FeedProductReviews extends Command
 
                 $reviews_count = rand($min, $max);
 
-                foreach ($reviews->take($reviews_count) as $review) {
+                foreach ($reviews->take($reviews_count) as $key => $review) {
                     $product->reviews()->create([
                         'name' => $review['name'],
                         'email' => $review['email'],
                         'rating' => rand($this->option('min-rating'), $this->option('max-rating')),
                         'title' => $review['title'],
                         'content' => $review['content'],
+                        'created_at' => now()->subDays(365)->addDays(rand(0, now()->dayOfYear))
                     ]);
                 }
             }

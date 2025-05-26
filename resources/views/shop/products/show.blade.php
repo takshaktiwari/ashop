@@ -163,7 +163,7 @@
                     {!! $product->getDetail('description') !!}
 
                     <div class="reviews_listing mt-4" id="reviews_listing">
-                        <x-areviews-areviews:reviews :model="$product" :addReview="auth()->check() && $productOrdered" column="col-12" />
+                        <x-areviews-areviews:reviews :model="$product" :addReview="auth()->check() && $product->isOrderedByUser()" column="col-12" />
 
                         @if ($product->reviews_count)
                             <div class="text-center">

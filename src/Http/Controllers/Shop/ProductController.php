@@ -134,22 +134,10 @@ class ProductController extends Controller
             ->limit(3)
             ->get();
 
-        $productOrdered = false;
-        if (auth()->check()){
-            $orders = auth()->user()->load(['orders' => function ($query) use ($product) {
-                $query->select('orders.id');
-                $query->with(['orderProducts' => function($query) use ($product) {
-                    $query->where('product_id', $product->id);
-                }]);
-            }]);
-            $productOrdered = $orders->orders->first() ? true : false;
-        }
-
         return View::first(['shop.products.show', 'ashop::shop.products.show'])
             ->with([
                 'product' =>  $product,
-                'coupons' => $coupons,
-                'productOrdered' => $productOrdered
+                'coupons' => $coupons
             ]);
     }
 
