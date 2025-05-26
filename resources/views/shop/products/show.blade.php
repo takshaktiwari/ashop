@@ -22,11 +22,11 @@
                 <div class="col-lg-4 col-md-5">
                     <div class="product_images sticky-top">
                         <div class="product_md_images">
-                            <a href="{{ $product->image('lg') }}" class="zoomImage">
+                            <a href="{{ $product->image('lg') }}" data-fancybox="gallery" class="zoomImage">
                                 <img src="{{ $product->image() }}" alt="primary img" class="w-100">
                             </a>
                             @foreach ($product->images as $image)
-                                <a href="{{ $image->image('lg') }}" class="zoomImage">
+                                <a href="{{ $image->image('lg') }}" data-fancybox="gallery" class="zoomImage">
                                     <img src="{{ $image->image() }}" alt="primary img" class="w-100">
                                 </a>
                             @endforeach
@@ -263,6 +263,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"
             integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
         <script src="{{ asset('assets/ashop/jquery.zoom.min.js') }}"></script>
         <script src="{{ asset('assets/ashop/script.js') }}"></script>
     @endpush
