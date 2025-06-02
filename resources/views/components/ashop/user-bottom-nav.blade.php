@@ -15,14 +15,16 @@
             <h6 class="text-nowrap">All Orders</h6>
         </a>
     </div>
-    <div class="card flex-fill">
-        <a href="{{ route('shop.user.wishlist.items.index') }}" class="card-body text-center">
-            <span class="fs-3 d-block">
-                <i class="fa-regular fa-heart"></i>
-            </span>
-            <h6 class="text-nowrap">Your Wishlist</h6>
-        </a>
-    </div>
+    @if (config('ashop.features.favorites.status', true))
+        <div class="card flex-fill">
+            <a href="{{ route('shop.user.wishlist.items.index') }}" class="card-body text-center">
+                <span class="fs-3 d-block">
+                    <i class="fa-regular fa-heart"></i>
+                </span>
+                <h6 class="text-nowrap">Your Wishlist</h6>
+            </a>
+        </div>
+    @endif
     <div class="card flex-fill">
         <a href="{{ route('shop.user.profile') }}" class="card-body text-center">
             <span class="fs-3 d-block">

@@ -34,12 +34,14 @@
         <span>Carts</span>
     </a>
 </li>
-<li>
-    <a href="{{ route('admin.shop.wishlist.index') }}" class="waves-effect">
-        <i class="fas fa-heart"></i>
-        <span>Wishlist</span>
-    </a>
-</li>
+@if (config('ashop.features.favorites.status', true))
+    <li>
+        <a href="{{ route('admin.shop.wishlist.index') }}" class="waves-effect">
+            <i class="fas fa-heart"></i>
+            <span>Wishlist</span>
+        </a>
+    </li>
+@endif
 <li>
     <a href="{{ route('admin.shop.orders.index') }}" class="waves-effect">
         <i class="fas fa-box"></i>

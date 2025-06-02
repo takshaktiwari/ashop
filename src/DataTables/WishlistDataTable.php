@@ -14,7 +14,8 @@ use Yajra\DataTables\Services\DataTable;
 
 class WishlistDataTable extends DataTable
 {
-    use AdashDataTableTrait, AshopDataTableTrait;
+    use AdashDataTableTrait;
+    use AshopDataTableTrait;
     /**
      * Build the DataTable class.
      *
@@ -52,7 +53,7 @@ class WishlistDataTable extends DataTable
             ->filterColumn('product', function ($query, $keyword) {
                 $query->whereRaw('products.name like ?', ["%{$keyword}%"]);
             })
-            ->editColumn('sell_price', fn($item) => config('ashop.currency.sign', '₹') . $item->product->sell_price)
+            ->editColumn('sell_price', fn ($item) => config('ashop.currency.sign', '₹') . $item->product->sell_price)
             ->orderColumn('sell_price', function ($query, $order) {
                 $query->orderByRaw('products.sell_price ' . $order);
             })
@@ -94,8 +95,14 @@ class WishlistDataTable extends DataTable
             ->pageLength(100)
             ->serverSide(true) // Enable server-side processing
             ->processing(true)
+            ->stateSave(true)
             ->buttons([
                 ...$this->getButtons(),
+                Button::raw([
+                    'extend' => 'colvis',
+                    'text' => '<i class="fas fa-columns"></i>',
+                    'className' => 'btn btn-secondary btn-sm'
+                ]),
                 Button::raw('deleteItems')
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
                     ->action($this->rawButtonActionUrl(route('admin.shop.wishlist.destroy.checked'))),

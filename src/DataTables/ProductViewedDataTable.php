@@ -15,7 +15,8 @@ use Yajra\DataTables\Services\DataTable;
 
 class ProductViewedDataTable extends DataTable
 {
-    use AdashDataTableTrait, AshopDataTableTrait;
+    use AdashDataTableTrait;
+    use AshopDataTableTrait;
     /**
      * Build the DataTable class.
      *
@@ -49,12 +50,12 @@ class ProductViewedDataTable extends DataTable
                     return '<a href="' . route('admin.shop.products.edit', [$item->product]) . '" target="_blank">' . $item->product?->name . '</a>';
                 }
             })
-            ->editColumn('product.net_price', fn($item) => $item->product?->priceFormat('net_price'))
-            ->editColumn('product.sell_price', fn($item) => $item->product?->priceFormat('sell_price'))
-            ->editColumn('product.deal_price', fn($item) => $item->product?->priceFormat('deal_price'))
-            ->editColumn('product.deal_expiry', fn($item) => $item->product?->deal_expiry?->format('d-m-Y h:i A'))
-            ->editColumn('product.featured', fn($item) => $item->product?->featured ? 'Featured' : '')
-            ->editColumn('product.status', fn($item) => $item->product?->status ? 'Active' : '')
+            ->editColumn('product.net_price', fn ($item) => $item->product?->priceFormat('net_price'))
+            ->editColumn('product.sell_price', fn ($item) => $item->product?->priceFormat('sell_price'))
+            ->editColumn('product.deal_price', fn ($item) => $item->product?->priceFormat('deal_price'))
+            ->editColumn('product.deal_expiry', fn ($item) => $item->product?->deal_expiry?->format('d-m-Y h:i A'))
+            ->editColumn('product.featured', fn ($item) => $item->product?->featured ? 'Featured' : '')
+            ->editColumn('product.status', fn ($item) => $item->product?->status ? 'Active' : '')
             ->editColumn('created_at', function ($item) {
                 return '<span class="text-nowrap">' . $item->created_at?->format('Y-m-d h:i A') . '</span>';
             })
@@ -91,8 +92,14 @@ class ProductViewedDataTable extends DataTable
             ->pageLength(100)
             ->serverSide(true) // Enable server-side processing
             ->processing(true)
+            ->stateSave(true)
             ->buttons([
                 ...$this->getButtons(),
+                Button::raw([
+                    'extend' => 'colvis',
+                    'text' => '<i class="fas fa-columns"></i>',
+                    'className' => 'btn btn-secondary btn-sm'
+                ]),
                 Button::raw('deleteItems')
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
                     ->action($this->rawButtonActionUrl(route('admin.shop.products.viewed.history.bulk.delete'))),

@@ -14,7 +14,8 @@ use Yajra\DataTables\Services\DataTable;
 
 class OrdersDataTable extends DataTable
 {
-    use AdashDataTableTrait, AshopDataTableTrait;
+    use AdashDataTableTrait;
+    use AshopDataTableTrait;
 
     /**
      * Build the DataTable class.
@@ -71,7 +72,7 @@ class OrdersDataTable extends DataTable
             ->editColumn('total_amount', function ($item) {
                 return config('ashop.currency.sign') . $item->total_amount;
             })
-            ->editColumn('payment_mode', fn($item) => $item->paymentMode())
+            ->editColumn('payment_mode', fn ($item) => $item->paymentMode())
             ->editColumn('order_status', function ($item) {
                 return '<span>' . $item->orderStatus() . '</span>';
             })
@@ -112,8 +113,14 @@ class OrdersDataTable extends DataTable
             ->pageLength(100)
             ->serverSide(true) // Enable server-side processing
             ->processing(true)
+            ->stateSave(true)
             ->buttons([
                 ...$this->getButtons(),
+                Button::raw([
+                    'extend' => 'colvis',
+                    'text' => '<i class="fas fa-columns"></i>',
+                    'className' => 'btn btn-secondary btn-sm'
+                ]),
                 Button::raw('deleteItems')
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
                     ->action($this->rawButtonActionUrl(route('admin.shop.orders.bulk.delete'), true)),

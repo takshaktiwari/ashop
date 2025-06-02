@@ -61,10 +61,12 @@ Route::middleware('web')->group(function () {
                 Route::get('addresses/{address}/make-default', [AddressController::class, 'makeDefault'])
                     ->name('addresses.make-default');
 
-                Route::prefix('wishlist')->name('wishlist.')->group(function () {
-                    Route::get('items', [WishlistController::class, 'items'])->name('items.index');
-                    Route::get('items/toggle/{product}', [WishlistController::class, 'itemToggle'])->name('items.toggle');
-                });
+                if (config('ashop.features.favorites.status', true)) {
+                    Route::prefix('wishlist')->name('wishlist.')->group(function () {
+                        Route::get('items', [WishlistController::class, 'items'])->name('items.index');
+                        Route::get('items/toggle/{product}', [WishlistController::class, 'itemToggle'])->name('items.toggle');
+                    });
+                }
             });
         });
     });

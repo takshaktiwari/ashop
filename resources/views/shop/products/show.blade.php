@@ -75,7 +75,7 @@
                         <div class="d-flex gap-2 mt-3">
                             @if ($product->checkout_type == 'checkout')
                                 <button type="submit" id="add_to_cart_btn" class="btn btn-primary px-3 rounded-pill">
-                                    <i class="fas fa-shopping-cart"></i> Add cart
+                                    {!! config('ashop.features.cart.button_text', 'Add to cart') !!}
                                 </button>
                                 <button type="submit" id="buy_now_btn" class="btn btn-primary px-3 rounded-pill">
                                     <i class="fas fa-external-link-alt"></i> Buy Now
@@ -92,16 +92,18 @@
                                 </button>
                             @endif
 
-                            @if ($product->wishlistAuthUser->count())
-                                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
-                                    id="add_to_cart_btn" class="btn btn-danger px-3 rounded-pill">
-                                    <i class="fas fa-heart"></i> Wishlist
-                                </a>
-                            @else
-                                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
-                                    id="add_to_cart_btn" class="btn btn-primary px-3 rounded-pill">
-                                    <i class="far fa-heart"></i> Wishlist
-                                </a>
+                            @if (config('ashop.features.favorites.status', true))
+                                @if ($product->wishlistAuthUser->count())
+                                    <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
+                                        id="add_to_cart_btn" class="btn btn-danger px-3 rounded-pill">
+                                        <i class="fas fa-heart"></i> Wishlist
+                                    </a>
+                                @else
+                                    <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
+                                        id="add_to_cart_btn" class="btn btn-primary px-3 rounded-pill">
+                                        <i class="far fa-heart"></i> Wishlist
+                                    </a>
+                                @endif
                             @endif
                         </div>
                     </form>

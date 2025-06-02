@@ -119,12 +119,25 @@ return [
             'height' => 900,
         ]
     ],
-
+    'features' => [
+        'favorites' => [
+            'status' => true
+        ],
+        'cart' => [
+            'status' => true,
+            'button_text' => '<i class="fas fa-shopping-cart"></i> <span>Add to</span> cart'
+        ],
+        'buy_now' => [
+            'status' => true,
+            'button_text' => 'Buy Now'
+        ],
+    ],
     'payment' => [
         'modes'     =>  [
             'cod'   =>  'Cash On Delivery',
             'online'    =>  'Pay Online',
         ],
+        'default_mode' => 'cod',
         'url' => [
             'pay' => 'shop.payments.pay',
             'callback' => 'shop.payments.callback',

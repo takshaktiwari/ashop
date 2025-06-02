@@ -33,9 +33,11 @@
                             <a href="{{ route('shop.user.orders.index') }}" class="list-group-item">
                                 <i class="fa-solid fa-box"></i> All Orders
                             </a>
-                            <a href="{{ route('shop.user.wishlist.items.index') }}" class="list-group-item">
-                                <i class="fa-solid fa-heart"></i> Wishlist Items
-                            </a>
+                            @if (config('ashop.features.favorites.status', true))
+                                <a href="{{ route('shop.user.wishlist.items.index') }}" class="list-group-item">
+                                    <i class="fa-solid fa-heart"></i> Wishlist Items
+                                </a>
+                            @endif
                             <a href="{{ route('shop.user.profile') }}" class="list-group-item">
                                 <i class="fa-solid fa-user-edit"></i> My Profile
                             </a>

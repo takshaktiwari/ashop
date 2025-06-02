@@ -18,22 +18,25 @@
             <i class="fas fa-star"></i>
             <i class="fas fa-star"></i>
             <i class="fas fa-star"></i>
-            (1024 reviews)
+            ({{ $product->reviews_count }} reviews)
         </div>
         <div class="mt-3">
-            <a href="{{ route('shop.carts.store', [$product]) }}" class="btn btn-sm btn-primary rounded-pill px-3 add_to_cart">
-                <i class="fas fa-shopping-cart"></i> Add to cart
+            <a href="{{ route('shop.carts.store', [$product]) }}"
+                class="btn btn-sm btn-primary rounded-pill px-3 add_to_cart">
+                {!! config('ashop.features.cart.button_text', 'Add to cart') !!}
             </a>
-            @if ($product->wishlistAuthUser->count())
-                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
-                    class="btn btn-sm rounded-pill wishlist_btn fs-5 text-danger">
-                    <i class="fas fa-heart"></i>
-                </a>
-            @else
-                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
-                    class="btn btn-sm rounded-pill wishlist_btn fs-5 ">
-                    <i class="far fa-heart"></i>
-                </a>
+            @if (config('ashop.features.favorites.status', true))
+                @if ($product->wishlistAuthUser->count())
+                    <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
+                        class="btn btn-sm rounded-pill wishlist_btn fs-5 text-danger">
+                        <i class="fas fa-heart"></i>
+                    </a>
+                @else
+                    <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
+                        class="btn btn-sm rounded-pill wishlist_btn fs-5 ">
+                        <i class="far fa-heart"></i>
+                    </a>
+                @endif
             @endif
         </div>
     </div>

@@ -108,7 +108,7 @@
                                 <div class="form-check">
                                     <label class="form-check-label py-2" for="{{ $value }}">
                                         <input type="radio" class="form-check-input" id="{{ $value }}"
-                                            name="payment_mode" value="{{ $value }}"> {{ $title }}
+                                            name="payment_mode" value="{{ $value }}" @checked(config('ashop.payment.default_mode') == $value)> {{ $title }}
                                     </label>
                                 </div>
                             @endforeach

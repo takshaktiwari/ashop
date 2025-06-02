@@ -14,7 +14,8 @@ use Yajra\DataTables\Services\DataTable;
 
 class CartsDataTable extends DataTable
 {
-    use AdashDataTableTrait, AshopDataTableTrait;
+    use AdashDataTableTrait;
+    use AshopDataTableTrait;
     /**
      * Build the DataTable class.
      *
@@ -38,7 +39,7 @@ class CartsDataTable extends DataTable
                     </div>
                 ';
             })
-            ->editColumn('ip', fn($item) => $item->user_ip)
+            ->editColumn('ip', fn ($item) => $item->user_ip)
             ->orderColumn('ip', function ($query, $order) {
                 $query->orderByRaw('carts.user_ip ' . $order);
             })
@@ -65,14 +66,14 @@ class CartsDataTable extends DataTable
             ->filterColumn('product', function ($query, $keyword) {
                 $query->whereRaw('products.name like ?', ["%{$keyword}%"]);
             })
-            ->editColumn('qty', fn($item) => $item->quantity)
+            ->editColumn('qty', fn ($item) => $item->quantity)
             ->orderColumn('qty', function ($query, $order) {
                 $query->orderByRaw('carts.quantity ' . $order);
             })
             ->filterColumn('qty', function ($query, $keyword) {
                 $query->whereRaw('carts.quantity like ?', ["%{$keyword}%"]);
             })
-            ->editColumn('sell_price', fn($item) => config('ashop.currency.sign', '₹') . $item->product->sell_price)
+            ->editColumn('sell_price', fn ($item) => config('ashop.currency.sign', '₹') . $item->product->sell_price)
             ->orderColumn('sell_price', function ($query, $order) {
                 $query->orderByRaw('products.sell_price ' . $order);
             })
@@ -114,8 +115,14 @@ class CartsDataTable extends DataTable
             ->pageLength(100)
             ->serverSide(true) // Enable server-side processing
             ->processing(true)
+            ->stateSave(true)
             ->buttons([
                 ...$this->getButtons(),
+                Button::raw([
+                    'extend' => 'colvis',
+                    'text' => '<i class="fas fa-columns"></i>',
+                    'className' => 'btn btn-secondary btn-sm'
+                ]),
                 Button::raw('deleteItems')
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
                     ->action($this->rawButtonActionUrl(url: route('admin.shop.carts.destroy.checked'), confirm: true)),

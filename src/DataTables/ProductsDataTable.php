@@ -15,7 +15,8 @@ use Yajra\DataTables\Services\DataTable;
 
 class ProductsDataTable extends DataTable
 {
-    use AdashDataTableTrait, AshopDataTableTrait;
+    use AdashDataTableTrait;
+    use AshopDataTableTrait;
     /**
      * Build the DataTable class.
      *
@@ -115,8 +116,14 @@ class ProductsDataTable extends DataTable
             ->pageLength(100)
             ->serverSide(true) // Enable server-side processing
             ->processing(true)
+            ->stateSave(true)
             ->buttons([
                 ...$this->getButtons(),
+                Button::raw([
+                    'extend' => 'colvis',
+                    'text' => '<i class="fas fa-columns"></i>',
+                    'className' => 'btn btn-secondary btn-sm'
+                ]),
                 Button::raw('deleteItems')
                     ->text('<i class="bi bi-archive" title="Delete Items"></i>')
                     ->action($this->rawButtonActionUrl(route('admin.shop.products.bulk.delete'), true)),

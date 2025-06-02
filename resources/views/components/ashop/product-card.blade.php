@@ -1,19 +1,21 @@
 <div class="card product">
     <div class="product_image">
         <img class="card-img-top" src="{{ $product->image() }}" alt="Card image">
-        <div class="d-flex overlay">
-            @if ($product->wishlistAuthUser->count())
-                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
-                    class="btn btn-sm rounded-pill wishlist_btn fs-5 text-danger">
-                    <i class="fas fa-heart"></i>
-                </a>
-            @else
-                <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
-                    class="btn btn-sm rounded-pill wishlist_btn fs-5">
-                    <i class="far fa-heart"></i>
-                </a>
-            @endif
-        </div>
+        @if (config('ashop.features.favorites.status', true))
+            <div class="d-flex overlay">
+                @if ($product->wishlistAuthUser->count())
+                    <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
+                        class="btn btn-sm rounded-pill wishlist_btn fs-5 text-danger">
+                        <i class="fas fa-heart"></i>
+                    </a>
+                @else
+                    <a href="{{ route('shop.user.wishlist.items.toggle', [$product]) }}"
+                        class="btn btn-sm rounded-pill wishlist_btn fs-5">
+                        <i class="far fa-heart"></i>
+                    </a>
+                @endif
+            </div>
+        @endif
     </div>
     <div class="card-body">
         <a href="{{ route('shop.products.show', [$product]) }}" class="card-text lc-2">{{ $product->name }}</a>
@@ -33,7 +35,7 @@
     <div class="card-footer text-center ">
         <a href="{{ route('shop.carts.store', [$product]) }}"
             class="btn btn-sm btn-dark rounded-pill px-3 add_to_cart">
-            <i class="fas fa-shopping-cart"></i> <span>Add to</span> cart
+            {!! config('ashop.features.cart.button_text', 'Add to cart') !!}
         </a>
     </div>
 </div>
