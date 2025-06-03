@@ -270,5 +270,13 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
         <script src="{{ asset('assets/ashop/jquery.zoom.min.js') }}"></script>
         <script src="{{ asset('assets/ashop/script.js') }}"></script>
+
+        <script>
+            $(document).ready(function() {
+                @if (request('modal'))
+                    $('#{{ request("modal") }}').modal('show');
+                @endif
+            });
+        </script>
     @endpush
 </x-app-layout>

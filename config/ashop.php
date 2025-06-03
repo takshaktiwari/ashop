@@ -124,12 +124,12 @@ return [
             'status' => true
         ],
         'cart' => [
-            'status' => true,
+            'status' => true, // not used currently
             'button_text' => '<i class="fas fa-shopping-cart"></i> <span>Add to</span> cart'
         ],
         'buy_now' => [
             'status' => true,
-            'button_text' => 'Buy Now'
+            'button_text' => '<i class="fas fa-info-circle"></i> Buy Now'
         ],
     ],
     'payment' => [

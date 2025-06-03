@@ -33,9 +33,26 @@
         </div>
     </div>
     <div class="card-footer text-center ">
-        <a href="{{ route('shop.carts.store', [$product]) }}"
-            class="btn btn-sm btn-dark rounded-pill px-3 add_to_cart">
-            {!! config('ashop.features.cart.button_text', 'Add to cart') !!}
-        </a>
+        @if ($product->checkout_type == 'checkout')
+            <a href="{{ route('shop.carts.store', [$product]) }}"
+                class="btn btn-sm btn-dark rounded-pill px-3 add_to_cart">
+                {!! config('ashop.features.cart.button_text', 'Add to cart') !!}
+            </a>
+        @elseif($product->checkout_type == 'external_url')
+            <a href="{{ $product->external_url }}" target="_blank"
+                class="btn btn-sm btn-dark rounded-pill px-3 add_to_cart">
+                {!! config('ashop.features.buy_now.button_text', 'Buy Now') !!}
+            </a>
+        @elseif($product->checkout_type == 'query')
+            <a href="{{ route('shop.products.show', [$product]) }}?modal=product_query_modal"
+                class="btn btn-sm btn-dark rounded-pill px-3 add_to_cart">
+                {!! config('ashop.features.buy_now.button_text', 'Buy Now') !!}
+            </a>
+        @else
+            <a href="{{ route('shop.products.show', [$product]) }}') }}"
+                class="btn btn-sm btn-dark rounded-pill px-3 add_to_cart">
+                {!! config('ashop.features.buy_now.button_text', 'Buy Now') !!}
+            </a>
+        @endif
     </div>
 </div>
