@@ -16,6 +16,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 class ProductSeeder extends Seeder
 {
+    public $checkoutTypes = ['checkout', 'query', 'external_url'];
     /**
      * Run the database seeds.
      */
@@ -41,6 +42,8 @@ class ProductSeeder extends Seeder
 
     public function product($name)
     {
+        shuffle($this->checkoutTypes);
+
         $net_price = rand(10, 99) * 5;
         $sell_price = $net_price - $net_price * (rand(5, 30) / 100);
         $deal_price = $sell_price - $sell_price * (rand(5, 30) / 100);
@@ -58,6 +61,7 @@ class ProductSeeder extends Seeder
         $product->status        =  true;
         $product->featured      =  true;
         $product->info          =  fake()->realText(rand(150, 300));
+        $product->checkout_type =  end($this->checkoutTypes);
         $product->user_id       =  User::inRandomOrder()->first()->id;
 
         $product->slug          = str()->of($product->name)->slug('-') . time();
@@ -73,6 +77,10 @@ class ProductSeeder extends Seeder
             ->save($product->image_md, $imgWidth / 2)
             ->save($product->image_sm, $imgWidth / 4)
             ->destroy();
+
+        if ($product->checkout_type == 'external_url') {
+            $product->external_url = fake()->url();
+        }
 
         $product->save();
 
