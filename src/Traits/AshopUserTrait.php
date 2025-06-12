@@ -60,4 +60,12 @@ trait AshopUserTrait
     {
         return $this->hasMany(Order::class);
     }
+
+    public function hasRole(string $role)
+    {
+        if (!$this->relationLoaded('roles')) {
+            $this->load('roles');
+        }
+        return $this->roles->contains('name', $role);
+    }
 }

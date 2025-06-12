@@ -96,7 +96,7 @@
 
 .products_page .shop_sidebar .widget .widget_body {
 	overflow-y: scroll;
-	max-height: 20rem;
+	max-height: 12rem;
 }
 .product_page #add_to_cart_form input#cart_quantity {
 	max-width: 5rem;

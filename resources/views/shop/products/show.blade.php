@@ -46,6 +46,11 @@
                 <div class="col-lg-8 col-md-7">
                     <h3 class="fw-bold">
                         {{ $product->name }}
+                        @if(auth()->user() && auth()->user()->hasRole('admin'))
+                            <a href="{{ route('admin.shop.products.edit', [$product]) }}" target="_blank">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        @endif
                     </h3>
                     @if ($product->subtitle)
                         <p class="mb-2">{{ $product->subtitle }}</p>

@@ -36,7 +36,7 @@
         </div>
 
         <form action="{{ route('shop.products.index') }}" id="attributes_filter">
-            @if ($primaryCategory)
+            @if ($primaryCategory && $primaryCategory->brands?->count())
                 <div class="widget">
                     <h6 class="shop_sidebar_title">
                         <i class="fa-solid fa-caret-right"></i> Brands
