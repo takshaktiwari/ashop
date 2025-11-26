@@ -4,6 +4,7 @@ namespace Takshak\Ashop\View\Components\Ashop;
 
 use Illuminate\View\Component;
 use Illuminate\Support\Facades\View;
+use Takshak\Ashop\Models\Shop\Category;
 
 class ProductNav extends Component
 {
@@ -24,10 +25,18 @@ class ProductNav extends Component
             ['text' =>  'Details', 'url' => route('admin.shop.products.detail', [$product])]
         );
 
-        array_push(
-            $this->links,
-            ['text' =>  'Attributes', 'url' => route('admin.shop.products.attributes', [$product])]
-        );
+        $attributes = Category::query()
+            ->with('attributes')
+            ->whereHas('products', function ($query) use ($product) {
+                $query->where('products.id', $product->id);
+            })
+            ->count();
+        if ($attributes) {
+            array_push(
+                $this->links,
+                ['text' =>  'Attributes', 'url' => route('admin.shop.products.attributes', [$product])]
+            );
+        }
 
         array_push(
             $this->links,
