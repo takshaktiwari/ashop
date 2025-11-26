@@ -1,53 +1,65 @@
 <x-admin.layout>
     <style>
-        .tox-notifications-container{ display: none; }
+        .tox-notifications-container {
+            display: none;
+        }
     </style>
 
-	<x-admin.breadcrumb
-			title='Product Detail'
-			:links="[
-				['text' => 'Dashboard', 'url' => route('admin.dashboard') ],
-				['text' => 'Products', 'url' => route('admin.shop.products.index')],
-				['text' => 'Detail']
-			]"
-			:actions="[
-                ['text' => 'Create New', 'icon' => 'fas fa-plus', 'class' => 'btn-success', 'url' => route('admin.shop.products.create') ],
-				['text' => 'All Products', 'icon' => 'fas fa-list', 'url' => route('admin.shop.products.index') ],
-			]"
-		/>
+    <x-admin.breadcrumb title='Product Detail' :links="[
+        ['text' => 'Dashboard', 'url' => route('admin.dashboard')],
+        ['text' => 'Products', 'url' => route('admin.shop.products.index')],
+        ['text' => 'Attributes'],
+    ]" :actions="[
+        [
+            'text' => 'Create New',
+            'icon' => 'fas fa-plus',
+            'class' => 'btn-success',
+            'url' => route('admin.shop.products.create'),
+        ],
+        ['text' => 'All Products', 'icon' => 'fas fa-list', 'url' => route('admin.shop.products.index')],
+    ]" />
 
     <x-ashop-ashop:product-nav :product="$product" />
-	<form action="{{ route('admin.shop.products.attributes.update', [$product]) }}" method="POST" class="card shadow-sm">
+    <form action="{{ route('admin.shop.products.attributes.update', [$product]) }}" method="POST" class="card shadow-sm">
         @csrf
         <div class="card-body">
-            <table class="table">
-                <thead>
-                	<th>#</th>
-                	<th>Attributes</th>
-                	<th>Options</th>
-                </thead>
-                <tbody>
-                	@foreach($attributes as $attribute)
-                		<tr>
-                			<td>{{ $loop->iteration }}</td>
-                			<td>{{ $attribute->name }}</td>
-                			<td>
-                				<select name="metas[{{ $attribute->name }}][]"  class="form-control" multiple="" >
-                					@foreach($attribute->options as $option)
-                						<option value="{{ $option }}" {{ $product->attribute($attribute->name)?->contains($option)? 'selected' : '' }}>
-                                            {{ $option }}
-                                        </option>
-                					@endforeach
-                				</select>
-                			</td>
-                		</tr>
-                	@endforeach
-                </tbody>
-            </table>
+            @if ($attributes && $attributes->count())
+                <table class="table">
+                    <thead>
+                        <th>#</th>
+                        <th>Attributes</th>
+                        <th>Options</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($attributes as $attribute)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $attribute->name }}</td>
+                                <td>
+                                    <select name="metas[{{ $attribute->name }}][]" class="form-control" multiple="">
+                                        @foreach ($attribute->options as $option)
+                                            <option value="{{ $option }}"
+                                                {{ $product->attribute($attribute->name)?->contains($option) ? 'selected' : '' }}>
+                                                {{ $option }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <div class="text-center py-5">
+                    <p class="text-muted h3">No attributes to add.</p>
+                </div>
+            @endif
         </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-dark px-3 btn-loader">Submit</button>
-        </div>
+        @if ($attributes && $attributes->count())
+            <div class="card-footer">
+                <button type="submit" class="btn btn-dark px-3 btn-loader">Submit</button>
+            </div>
+        @endif
     </form>
 
 </x-admin.layout>
