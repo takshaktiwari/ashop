@@ -34,10 +34,13 @@ class CartController extends Controller
         $productQty = $request->input('quantity') ? $request->input('quantity') : 1;
 
         $cart = Cart::query()
-            ->where(function ($query) {
-                $query->where('user_id', auth()->id());
-                $query->orWhere('user_ip', request()->ip());
+            ->when(auth()->id(), function($query) {
+                $query->where('user_id', auth()->id())
+                    ->orWhere('user_ip', request()->ip());
             })
+            ->when(!auth()->id(), function($query) {
+                $query->where('user_ip', request()->ip());
+            })     
             ->where('product_id', $product->id)
             ->first();
 
