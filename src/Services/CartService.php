@@ -20,8 +20,10 @@ class CartService
             }])
             ->has('product')
             ->when(auth()->id(), function($query) {
-                $query->where('user_id', auth()->id())
-                    ->orWhere('user_ip', request()->ip());
+                $query->where(function ($query) {
+                    $query->where('user_id', auth()->id())
+                        ->orWhere('user_ip', request()->ip());
+                });
             })
             ->when(!auth()->id(), function($query) {
                 $query->where('user_ip', request()->ip());
