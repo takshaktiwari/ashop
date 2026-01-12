@@ -10,8 +10,14 @@ use Takshak\Ashop\Models\Shop\Order;
 
 class OrderController extends Controller
 {
-    public function index(OrdersDataTable $dataTable)
+    public function index()
     {
+        if(class_exists('\App\DataTables\Shop\Admin\OrdersDataTable')) {
+            $dataTable = new \App\DataTables\Shop\Admin\OrdersDataTable();
+        }else{
+            $dataTable = new OrdersDataTable();
+        }
+
         return $dataTable->render(
             View::exists('admin.shop.orders.index') ? 'admin.shop.orders.index' : 'ashop::admin.shop.orders.index'
         );
